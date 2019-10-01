@@ -16,7 +16,7 @@ CREATE TABLE Game(
 	winner			VARCHAR(20),
 	startTime		datetime				NOT NULL,
 	endTime			datetime,
-	PRIMARY KEY 	(gameID)
+	PRIMARY KEY 		(gameID)
 );
 
 CREATE TABLE Played_By(
