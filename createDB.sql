@@ -21,9 +21,8 @@ CREATE TABLE Game(
 
 CREATE TABLE Played_By(
 	gameID			INT						NOT NULL,
-	nickname			VARCHAR(20)				NOT NULL,
+	nickname			VARCHAR(20)						NOT NULL,
 	FOREIGN KEY		(gameID)					REFERENCES		Game (gameID)		ON DELETE CASCADE,
 	FOREIGN KEY		(nickname)				REFERENCES		Player (nickname)	ON DELETE CASCADE,
-	PRIMARY KEY 	(gameID, nickname)	
+	PRIMARY KEY 	(gameID, nickname)
 );
-
