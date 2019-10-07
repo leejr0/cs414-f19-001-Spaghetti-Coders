@@ -1,7 +1,0 @@
-com/jungleapp/cs414/server/MicroServer.class
-com/jungleapp/cs414/server/RetrieveMatches.class
-com/jungleapp/cs414/server/Match.class
-com/jungleapp/cs414/server/RetrieveProfile.class
-com/jungleapp/cs414/server/ValidateMove.class
-com/jungleapp/cs414/server/InitServer.class
-com/jungleapp/cs414/server/HTTPRestful.class

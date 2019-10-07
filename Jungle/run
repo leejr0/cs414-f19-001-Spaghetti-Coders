@@ -1,8 +1,0 @@
-#!/bin/bash
-
-npm install --prefix client && \
-npm run build --prefix client && \
-mvn package
-java -jar target/server-*.jar $*
-
-
