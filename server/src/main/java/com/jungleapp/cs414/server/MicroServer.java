@@ -9,7 +9,7 @@ import static spark.Spark.*;
 public class MicroServer {
     private int port;
     private String name;
-    private String path = "/public/";
+    private String path = System.getProperty("user.home");
 
     MicroServer(int port, String name) {
         this.port = port;
@@ -18,10 +18,8 @@ public class MicroServer {
         port(port);
 
         // serve the static files: index.html and bundle.js
-        Spark.staticFiles.location(this.path);
+        Spark.staticFiles.externalLocation(path + "/IdeaProjects/cs414/client/dist/public");
 
-//        get("/", (req, res) -> {res.redirect("index.js"); return null;});
-        redirect.get("/", "index.html");
         // register all micro-services and the function that services them.
         // start with HTTP GET
         get("/hello", (req, res) -> "Hello World");

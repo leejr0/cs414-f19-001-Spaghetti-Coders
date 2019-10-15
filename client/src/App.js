@@ -1,26 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {Component} from 'react';
 import './App.css';
+import Application from  './Game/Application'
+import { HashRouter as Router, Route, Switch} from 'react-router-dom';
+import { TransitionGroup, CSSTransition } from 'react-transition-group';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor (props) {
+    super(props);
+  }
+
+  render() {
+    return (
+        <div>
+          <Router>
+              <div className="App">
+                  <Route render={({ location }) => (
+                      <div>
+                        <header></header>
+
+                        <TransitionGroup>
+                          <CSSTransition
+                              key={location.pathname}
+                              appear
+                              timeout={{enter:900, exit:0}}
+                              classNames='pagefade'>
+                            <Switch location={location}>
+                              [<Route exact path={'/'} key="route_home" render={() => <Application page={'home'}/>} />]
+                            </Switch>
+                          </CSSTransition>
+                        </TransitionGroup>
+
+                        <footer></footer>
+                      </div>
+                  )}/>
+              </div>
+          </Router>
+        </div>
+    );
+  }
 }
 
 export default App;
