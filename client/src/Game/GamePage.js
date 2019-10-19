@@ -6,22 +6,23 @@ class GamePage extends Component {
         super(props);
 
         this.state = {
+            //TODO: reset initialization to all null, and set state from server-side gamestate in DB
             gameBoard: [
+                [null, null, null, null, 'C', null, null],
                 [null, null, null, null, null, null, null],
+                [null, null, 'a', null, null, null, null],
+                [null, null, null, null, 'b', null, null],
                 [null, null, null, null, null, null, null],
+                [null, null, null, 'c', null, null, null],
                 [null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null],
-                [null, null, null, null, null, null, null],
-                [null, null, null, 'P', null, null, null],
-                [null, null, null, null, null, null, null],
+                ['A', null, null, null, null, null, null],
+                [null, null, null, 'B', null, null, null],
             ],
             possibleMoves: [],
             selectedPiece: {
                 row: null,
                 col: null,
-                rank: null
+                rank: null //TODO: rank may need to be displayed for each piece
             },
             chosenMove: {
                 toRow: null,
@@ -58,7 +59,6 @@ class GamePage extends Component {
         let move = this.state.chosenMove;
         if (piece.row === null || piece.col === null) {
             //selecting piece
-            console.log("piece selected");
             piece.row = i;
             piece.col = j;
             this.setState({possibleMoves: this.generateMoves(i, j)});
@@ -67,7 +67,6 @@ class GamePage extends Component {
             move.toCol = null;
         } else {
             //selecting move
-            console.log("move selected");
             move.toRow = i;
             move.toCol = j;
         }
@@ -75,14 +74,12 @@ class GamePage extends Component {
         if (move.toRow !== null && move.toCol !== null) {
             if (piece.row === move.toRow && piece.col === move.toCol) {
                 //move is to same square, so reset selections to allow player to try again with valid move
-                console.log("same square");
                 piece.row = null;
                 piece.col = null;
                 move.toRow = null;
                 move.toCol = null;
                 this.setState({selectedPiece: piece, chosenMove: move});
             } else {
-                console.log("good move, about to be validated");
                 if (this.validateMove(piece.row, piece.col, move.toRow, move.toCol)) {
                     this.setState({selectedPiece: piece, chosenMove: move},
                         this.makeMove);
@@ -93,26 +90,30 @@ class GamePage extends Component {
     }
 
     colorSquare(i, j) {
-        //selection
+        //picks a background color for square based on type or selection
+        //selection (yellow)
         if (i === this.state.selectedPiece.row && j === this.state.selectedPiece.col) {return 'ffe536'}
-        //water
+        //water (light blue)
         if (i===3 || i===4 || i===5) {
             if (j===1 || j===2 || j===4 || j===5) {
                 return '0077be'
             }
         }
-        //land
+        //land (light green)
         return '7ec850'
     }
 
     renderSquare(i, j) {
-
-        return <div style={{width: '24px', height: '24px', backgroundColor: this.colorSquare(i,j)}} onClick={this.handleClick.bind(this, i, j)} >
-            <h2>{this.state.gameBoard[i][j]}</h2>
+        //renders the square at the given position, using the gameBoard 2d array
+        return <div
+            style={{width: '24px', height: '24px', backgroundColor: this.colorSquare(i,j), verticalAlign: 'bottom'}}
+            onClick={this.handleClick.bind(this, i, j)}>
+            <h5>{this.state.gameBoard[i][j]}</h5>
         </div>
     }
 
     renderBoard() {
+        //responsible for rendering all 63 squares within the board
         let board = [];
         for (let i=0; i<9; i++) {
             let row = [];
