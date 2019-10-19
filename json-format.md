@@ -60,5 +60,5 @@ When the user moves a piece, the client sends `gameBoard`, `possibleMoves`, `sel
 |Blue Tiger|'t'|Red Tiger|'T'|
 |Blue Lion|'l'|Red Lion|'L'|
 |Blue Elephant|'e'|Red Elephant|'E'|
-|Blue TRAP|'x'|Red TRAP|'X'
+|Blue TRAP|'x'|Red TRAP|'X'|
 |Blue DEN|'o'|Red DEN|'O'|
