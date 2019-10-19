@@ -1,21 +1,31 @@
 import React, {Component} from 'react';
+import Welcome from './Welcome';
+import Main from './Main';
 
 class Application extends Component {
     constructor(props) {
         super(props);
+
+        this.state = {
+            login: false
+        }
     }
 
 
 
     render() {
+        if(this.state.login) {
+            return (
+                <div id="main" style={{backgroundColor: 'gray'}}>
+                    <Main/>
+                </div>
+            );
+        }
+
         return (
             <div id="main" style={{backgroundColor: 'gray'}}>
-                <h4>The Spaghetti Coder roll call!</h4>
-                <h5>EJ!</h5>
-                <h5>Jeff!</h5>
-                <h5>John!</h5>
-                <h5>Sam!</h5>
-                <h5>Vlad!</h5>
+                <h4>From the Spaghetti Coders:</h4>
+                <Welcome/>
             </div>
         )
     }
