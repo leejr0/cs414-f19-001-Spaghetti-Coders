@@ -66,9 +66,7 @@ class GamePage extends Component {
                 //selecting blank space is illegal, reset selection
                 piece.row = null;
                 piece.col = null;
-                move.toRow = null;
-                move.toCol = null;
-                this.setState({selectedPiece: piece, chosenMove: move});
+                this.setState({selectedPiece: piece});
             }
             this.setState({possibleMoves: this.generateMoves(i, j)});
             //ensure no move is set, since new piece was selected
