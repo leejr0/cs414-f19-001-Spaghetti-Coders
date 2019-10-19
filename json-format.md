@@ -45,7 +45,7 @@ When the user moves a piece, the client sends `gameBoard`, `possibleMoves`, `sel
                          ],
   "possibleMoves"      : [{"row": 9, "col": 6}, {"row": 8, "col": 7}],
   "selectedPiece"      : {"row": 9, "col": 7, "rank": 7},
-  "chosenMove"         : {"toRow": 8, "toCol": 7},
+  "chosenMove"         : {"toRow": 8, "toCol": 7}
 }
 ```
 
