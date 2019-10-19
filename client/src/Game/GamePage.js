@@ -106,9 +106,9 @@ class GamePage extends Component {
     renderSquare(i, j) {
         //renders the square at the given position, using the gameBoard 2d array
         return <div
-            style={{width: '24px', height: '24px', backgroundColor: this.colorSquare(i,j), verticalAlign: 'bottom'}}
+            style={{width: '24px', height: '24px', backgroundColor: this.colorSquare(i,j)}}
             onClick={this.handleClick.bind(this, i, j)}>
-            <h5>{this.state.gameBoard[i][j]}</h5>
+            {this.state.gameBoard[i][j]}
         </div>
     }
 
@@ -120,7 +120,7 @@ class GamePage extends Component {
             for (let j=0; j<7; j++) {
                 row.push(<td>{this.renderSquare(i, j)}</td>);
             }
-            board.push(<tr>{row}</tr>);
+            board.push(<tr style={{textAlign: 'center', verticalAlign: 'middle'}}>{row}</tr>);
         }
         return <Table borderless><tbody>{board}</tbody></Table>
     }
