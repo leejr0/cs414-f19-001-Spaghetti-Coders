@@ -57,10 +57,19 @@ class GamePage extends Component {
     handleClick(i, j) {
         let piece = this.state.selectedPiece;
         let move = this.state.chosenMove;
+        let gb = this.state.gameBoard;
         if (piece.row === null || piece.col === null) {
             //selecting piece
             piece.row = i;
             piece.col = j;
+            if (gb[piece.row][piece.col] === null) {
+                //selecting blank space is illegal, reset selection
+                piece.row = null;
+                piece.col = null;
+                move.toRow = null;
+                move.toCol = null;
+                this.setState({selectedPiece: piece, chosenMove: move});
+            }
             this.setState({possibleMoves: this.generateMoves(i, j)});
             //ensure no move is set, since new piece was selected
             move.toRow = null;
