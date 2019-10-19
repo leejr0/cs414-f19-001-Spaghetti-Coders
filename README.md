@@ -1,4 +1,5 @@
 # cs414-f19-001-Spaghetti-Coders
+![Jungle Title](/JungleTitle.png)
 
 We'll be creating the board game Jungle through Java code implementation
 
