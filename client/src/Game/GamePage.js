@@ -87,6 +87,7 @@ class GamePage extends Component {
 
     colorSquare(i, j) {
         //pick a background color for square based on type, selection, or hover (priority: selection, hover, type)
+        //independent of server, since the coloring is always the same except for the (client-side) piece selection
         if (i === this.state.selectedPiece.row && j === this.state.selectedPiece.col) { //selection (yellow)
             return 'ecc530'
         }
