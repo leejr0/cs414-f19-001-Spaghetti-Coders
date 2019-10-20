@@ -12,7 +12,8 @@ Upon login, the entered `nickname` and `password` are sent to the server,. If a 
 When a user registers, their `nickname`, `password`, `verifyPassword`, and `email` are sent to the server to create an account. The following criteria must be met for an account to be created:
 - `nickname` is not already taken, fits within our constraints (i.e length, characters)
 - `password` == `verifyPassword`, both fit within our constraints (i.e length, characters)
-- `email` is correctly formatted 
+- `email` is correctly formatted
+
 If all the above criteria are met, the server sends **true** back to the client to indicate success.
 *In the future, the password and verifyPassword will be hashed before they are sent to the server for security.*
 ```json
@@ -64,7 +65,13 @@ When a game is opened, the server sends the current gamestate in `board` as a 2d
   "player2"            : { Object },
   "turnAction"         : { Object },
   "whoseTurn"          : { Object },
-  "selectedPiece"      : {"row": i, "col": j},
-  "chosenMove"         : {"toRow": i, "toCol": j}
+  "selectedPiece"      : {
+                            "row": i, 
+                            "col": j
+                         },
+  "chosenMove"         : {
+                            "toRow": i, 
+                            "toCol": j
+                         }
 }
 ```
