@@ -2,18 +2,7 @@ package com.jungleapp.cs414.server;
 
 public class InitServer {
     public static void main(String[] args) {
-        MicroServer microServer = new MicroServer(getPort(args), getName(args));
-    }
-
-    private static String getName(String[] args) {
-        if (args.length > 1) {
-            String name = args[1];
-            for (int i = 2; i < args.length; i++)
-                name = name + " " + args[i];
-            return name;
-        }
-        else
-            return "Unknown";
+        HTTPRestful restfulClient = new HTTPRestful(getPort(args));
     }
 
     private static int getPort(String[] args) {
