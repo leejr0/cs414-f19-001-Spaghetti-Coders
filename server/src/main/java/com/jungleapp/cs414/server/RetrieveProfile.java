@@ -7,11 +7,11 @@ import com.google.gson.JsonParser;
 import spark.Request;
 import java.sql.*;
 
-class RetrieveProfile {
-    Profile profile;
-    String MySQLConnectionURL = "jdbc:mysql://localhost:3306/jungle";
-    String DBUsername = "root";
-    String DBPassword = "spaghetti";
+public class RetrieveProfile {
+    Profile profile = new Profile();
+    String MySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
+    String DBUsername = "vstepa";
+    String DBPassword = "830982615";
     Connection connection;
 
     RetrieveProfile(Request request) {
@@ -24,23 +24,31 @@ class RetrieveProfile {
         establishMySQLConnection();
     }
 
-    private void establishMySQLConnection() {
+    // Default for testing purposes.
+    public RetrieveProfile(String nickname, String password, String email) {
+        profile.nickname = nickname;
+        profile.password = password;
+        profile.email = email;
+
+        establishMySQLConnection();
+    }
+
+
+    public void establishMySQLConnection() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(
-                    MySQLConnectionURL, DBUsername, DBPassword
-            );
-        } catch (Exception e) {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
+        } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    boolean establishProfileIdentity() {
+    public boolean establishProfileIdentity() {
         boolean result = false;
 
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from player;");
+            ResultSet resultSet = statement.executeQuery("select * from Player");
 
             while (resultSet.next()) {
                 if (resultSet.getString("nickname").equals(profile.nickname)
