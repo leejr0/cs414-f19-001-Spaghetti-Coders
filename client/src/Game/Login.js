@@ -16,7 +16,8 @@ class Login extends Component {
 
     login() {
         if(this.validateCredentials()) {
-            //TODO: Render the home page
+            this.props.updateLogin(true);
+
         }
         else{
             //TODO: Display an error message that the credentials are incorrect

@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
+import GamePage from "./GamePage";
 
 class Main extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            display: false
+            display: true
         }
     }
 
@@ -15,7 +16,13 @@ class Main extends Component {
         }
 
         return (
-            <h5>This is the home page.</h5>
+            <div>
+                <h5>This is the home page.</h5>
+                <h5>The game lives here for now.</h5>
+                <div id="GamePage">
+                    <GamePage/>
+                </div>
+            </div>
         );
     }
 }

@@ -8,10 +8,17 @@ class Application extends Component {
 
         this.state = {
             login: false
-        }
+        };
+
+        this.updateLogin = this.updateLogin.bind(this);
     }
 
+    updateLogin(loggedIn){
+        if (this.state.login !== loggedIn) {
+            this.setState({login: loggedIn});
+        }
 
+    }
 
     render() {
         if(this.state.login) {
@@ -25,8 +32,10 @@ class Application extends Component {
         return (
             <div id="main" style={{backgroundColor: 'gray'}}>
                 <h4>From the Spaghetti Coders:</h4>
-                <Welcome/>
+                <Welcome
+                updateLogin={this.updateLogin}/>
             </div>
+
         )
     }
 }
