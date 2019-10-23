@@ -4,7 +4,10 @@ import com.jungleapp.cs414.server.Elephant;
 import com.jungleapp.cs414.server.Piece;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ElephantTest {
 
@@ -13,11 +16,16 @@ class ElephantTest {
 
         Piece[][] board = new Piece[9][7];
 
-        Elephant elephant = new Elephant(board,"RED");
+        Elephant elephant1 = new Elephant(board,"RED");
+        Elephant elephant2 = new Elephant(board,"RED");
+        Elephant elephant3 = new Elephant(board,"RED");
 
-        board[2][3] = elephant;
+        elephant1.setPosition("22");
+        elephant1.setPosition("23");
+        elephant1.setPosition("12");
 
-        assertEquals("RED", board[2][3].getColor());
+        //assertTrue(elephant1.legalMoves().containsAll(Arrays.asList("")));
+        //assertEquals(Arrays.asList("32","21"),elephant1.legalMoves());
     }
 
 }
