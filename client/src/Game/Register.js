@@ -1,15 +1,19 @@
 import React, {Component} from 'react';
 import {Button, Card, CardBody, Input} from 'reactstrap';
 
+import {get, request} from '../api/api'
+
 class Register extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            nickname: "",
-            password: "",
-            verifyPassword: "",
-            email: ""
+            profileInfo: {
+                nickname: "",
+                password: "",
+                verifyPassword: "",
+                email: ""
+            }
         };
 
         this.createProfile = this.createProfile.bind(this);
@@ -25,17 +29,20 @@ class Register extends Component {
     createProfile() {
         if(this.validatePassword() === false) {
             //TODO: Output an error seen by the user that the passwords aren't the same
-            console.log("wow");
+
         }
         if(this.validateNickName() === false) {
             //TODO: Output an error seen by the user that the username is already taken
+
         }
         if(this.validateEmail() === false) {
             //TODO: Output an error seen by the user that the email isn't correctly formatted
+
         }
 
         else {
             //TODO: Communicate with the back-end to create a new user
+            request()
         }
     }
 
@@ -43,8 +50,14 @@ class Register extends Component {
         if(this.state.nickname === ""){
             return false;
         }
+
         //TODO: Communicate with back-end to check if nickname is unique
-        return true;
+        let result = false;
+        request(this.state.profileInfo,"validateNickname").then(serverResponse => {
+                result = serverResponse["nickname"]; //names may change!
+        });
+
+        return result;
     }
 
     validateEmail() {

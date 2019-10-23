@@ -1,13 +1,17 @@
 import React, {Component} from 'react';
 import {Button, Input} from "reactstrap";
 
+import {get, request} from '../api/api'
+
 class Login extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            nickname: "",
-            password: ""
+            loginInfo: {
+                nickname: "",
+                password: ""
+            }
         };
 
         this.login = this.login.bind(this);
@@ -17,7 +21,6 @@ class Login extends Component {
     login() {
         if(this.validateCredentials()) {
             this.props.updateLogin(true);
-
         }
         else{
             //TODO: Display an error message that the credentials are incorrect
@@ -27,7 +30,12 @@ class Login extends Component {
     validateCredentials() {
         //TODO: Hash given password
         //TODO: Communicate with backend to confirm correct username/password combination
-        return true;
+        let result = false;
+        request(this.state.loginInfo, "login").then(serverResponse => {
+            result = serverResponse["validation"];
+        });
+
+        return result;
     }
 
     updateValue(id, value) {

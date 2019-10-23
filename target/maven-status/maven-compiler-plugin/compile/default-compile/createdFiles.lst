@@ -1,6 +1,8 @@
-com/jungleapp/cs414/server/MicroServer.class
 com/jungleapp/cs414/server/RetrieveMatches.class
+com/jungleapp/cs414/server/Profile.class
+com/jungleapp/cs414/server/Piece.class
 com/jungleapp/cs414/server/Match.class
+com/jungleapp/cs414/server/Elephant.class
 com/jungleapp/cs414/server/RetrieveProfile.class
 com/jungleapp/cs414/server/ValidateMove.class
 com/jungleapp/cs414/server/InitServer.class

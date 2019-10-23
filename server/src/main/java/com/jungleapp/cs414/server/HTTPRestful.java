@@ -1,16 +1,17 @@
 package com.jungleapp.cs414.server;
 
 import com.google.gson.Gson;
+import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
 
-import static spark.Spark.get;
-import static spark.Spark.port;
+import static spark.Spark.*;
 
 class HTTPRestful {
     private int port;
     private String path = System.getProperty("user.home");
+    Gson gson = new Gson();
 
     HTTPRestful(int port) {
         this.port = port;
@@ -24,19 +25,32 @@ class HTTPRestful {
         // start with HTTP GET
         get("/hello", (req, res) -> "Hello World");
 
-        get("/login", this::login);
+        post("/login", this::login);
+
+        post("/validateNickname", this::validateNickname);
+        post("/register", (req, res) -> "Temporary");
+
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
     }
 
-    private boolean login(Request request, Response response) {
+    private String validateNickname(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        //returns true if nickname is unique
+        JSONObject validationJSON = new JSONObject("{\"nickname\":\"" + true + "\"}");
+        return validationJSON.toString();
+    }
+
+    private String login(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile loginProfile = new RetrieveProfile(request);
-
-        return loginProfile.establishProfileIdentity();
+        JSONObject loginJSON = new JSONObject("{\"validation\":\"" + loginProfile.establishProfileIdentity() + "\"}");
+        return loginJSON.toString();
     }
 
 }
