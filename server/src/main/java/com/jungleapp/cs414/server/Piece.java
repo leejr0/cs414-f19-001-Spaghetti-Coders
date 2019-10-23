@@ -4,13 +4,13 @@ import java.util.ArrayList;
 
 public abstract class Piece {
 
-    public Piece[][] board;
+    protected JungleBoard board;
     protected int rank;
     protected int row;
     protected int column;
     private String pieceColor;
 
-    public Piece (Piece[][] board, String color) {
+    public Piece (JungleBoard board, String color) {
         this.board = board;
         this.pieceColor = color;
     }
@@ -19,19 +19,22 @@ public abstract class Piece {
         return pieceColor;
     }
 
+    public int getRank() { return rank; }
 
-    public void setPosition(String position) {
-        if(position.length() == 2) {
-            int rowPos = position.charAt(0) - 48;
-            int colPos = position.charAt(1) - 48;
-            if(rowPos > 8 || rowPos < 0 || colPos < 0 || colPos > 6) {
+    public void setPosition(String position) throws IllegalPositionException{
 
-            }
-            else {
-                this.row = rowPos;
-                this.column = colPos;
-            }
+        if(position.length() != 2) {
+            throw new IllegalPositionException("The given position is not of valid form.");
         }
+        int rowPos = position.charAt(0) - 48;
+        int colPos = position.charAt(1) - 48;
+
+        if(rowPos > 8 || rowPos < 0 || colPos < 0 || colPos > 6) {
+            throw new IllegalPositionException("The given position is not on the board.");
+        }
+
+        this.row = rowPos;
+        this.column = colPos;
     }
 
     public String getPosition(){
@@ -47,39 +50,49 @@ public abstract class Piece {
 
         //check left
         if (column > 0) {
-            if (checkSpace(row, column-1)) {
-                moves.add(Integer.toString(row) + Integer.toString(column-1));
-            }
+            String checkLeft = moveMaker(row, column-1);
+            if (checkSpace(checkLeft)) { moves.add(checkLeft); }
         }
 
         //check right
         if (column < 8) {
-            if (checkSpace(row, column+1)) {
-                moves.add(Integer.toString(row) + Integer.toString(column+1));
-            }
+            String checkRight = moveMaker(row, column+1);
+            if (checkSpace(checkRight)) { moves.add(checkRight); }
         }
 
         //check up
         if (row > 0) {
-            if (checkSpace(row-1, column)) {
-                moves.add(Integer.toString(row-1) + Integer.toString(column));
-            }
+            String checkUp = moveMaker(row-1,column);
+            if (checkSpace(checkUp)) { moves.add(checkUp); }
         }
 
         //check down
         if (row < 8) {
-            if (checkSpace(row+1, column)){
-                moves.add(Integer.toString(row+1) + Integer.toString(column));
-            }
+            String checkDown = moveMaker(row+1,column);
+            if (checkSpace(checkDown)){ moves.add(checkDown); }
         }
 
         return moves;
 
     }
 
-    private boolean checkSpace(int r, int c) {
-        if (board[r][c] == null || (!board[r][c].pieceColor.equals(this.pieceColor) && board[r][c].rank <= this.rank)){
-            return true;
+    private String moveMaker(int row, int column) {
+        String move = "";
+        move += row;
+        move += column;
+        return move;
+    }
+
+    private boolean checkSpace(String position) {
+        try {
+            if (board.getPiece(position) == null){
+                return true;
+            }
+            else if(board.getPiece(position).getColor() != this.getColor() && board.getPiece(position).getRank() <= this.getRank()){
+                return true;
+            }
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
         }
         return false;
     }

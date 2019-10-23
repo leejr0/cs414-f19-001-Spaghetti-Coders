@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Elephant extends Piece {
 
-    public Elephant(Piece board[][], String color){
+    Elephant(JungleBoard board, String color){
         super(board, color);
         rank = 8;
     }

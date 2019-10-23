@@ -3,14 +3,13 @@ package com.jungleapp.cs414.server;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 public class PieceTest {
     @Test
     public void testGetColor() {
-        Piece[][] board = new Piece[9][7];
+        JungleBoard board = new JungleBoard();
         Elephant redElephant1 = new Elephant(board, "RED");
         Elephant blueElephant1 = new Elephant(board, "BLUE");
 
@@ -21,11 +20,35 @@ public class PieceTest {
 
     @Test
     public void testSetPosition() {
-        Piece[][] board = new Piece[9][7];
+        JungleBoard board = new JungleBoard();
         Elephant redElephant1 = new Elephant(board, "RED");
-        redElephant1.setPosition("22");
+        try {
+            redElephant1.setPosition("22");
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
 
         assertEquals("22", redElephant1.getPosition());
+    }
+
+    @Test
+    public void testIllegalPositions() {
+        JungleBoard board = new JungleBoard();
+        Elephant redElephant1 = new Elephant(board, "RED");
+
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition("position"));
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition("19"));
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition("/2"));
+
+    }
+
+    @Test
+    public void testGetPosition() {
+        JungleBoard board = new JungleBoard();
+        Elephant redElephant1 = new Elephant(board, "RED");
+        board.placePiece(redElephant1, "11");
+
+        assertEquals("11", redElephant1.getPosition());
     }
 }
 
