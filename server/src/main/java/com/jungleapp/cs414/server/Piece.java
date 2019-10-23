@@ -8,19 +8,19 @@ public abstract class Piece {
     protected int rank;
     protected int row;
     protected int column;
-    private String color;
+    private String pieceColor;
 
     public Piece (Piece[][] board, String color) {
         this.board = board;
-        this.color = color;
+        this.pieceColor = color;
     }
 
     public String getColor(){
-        return color;
+        return pieceColor;
     }
 
     public boolean checkSpace(int r, int c) {
-        if (board[r][c] == null || (!board[r][c].color.equals(this.color) && board[r][c].rank <= this.rank)){
+        if (board[r][c] == null || (!board[r][c].pieceColor.equals(this.pieceColor) && board[r][c].rank <= this.rank)){
             return true;
         }
         return false;
