@@ -11,18 +11,21 @@ class Login extends Component {
             loginInfo: {
                 nickname: "",
                 password: ""
-            }
+            },
+            validation: false
         };
 
         this.login = this.login.bind(this);
         this.updateValue = this.updateValue.bind(this);
+        this.validateCredentials = this.validateCredentials.bind(this);
+        this.updateValidation = this.updateValidation.bind(this);
     }
 
     login() {
-        if(this.validateCredentials()) {
-            this.props.updateLogin(true);
+        if(this.state.validation === true) {
+             this.props.updateLogin(true);
         }
-        else{
+        else {
             //TODO: Display an error message that the credentials are incorrect
         }
     }
@@ -30,12 +33,15 @@ class Login extends Component {
     validateCredentials() {
         //TODO: Hash given password
         //TODO: Communicate with backend to confirm correct username/password combination
-        let result = false;
         request(this.state.loginInfo, "login").then(serverResponse => {
-            result = serverResponse["validation"];
+            this.updateValidation(serverResponse);
         });
+    }
 
-        return result;
+    updateValidation(value) {
+        let state = this.state;
+        state["validation"] = value;
+        this.setState({state}, () => this.login());
     }
 
     updateValue(id, value) {
@@ -46,11 +52,11 @@ class Login extends Component {
 
     render() {
         return (
-            <div id="Register">
+            <div id="logIn">
                 <h5>Login and continue playing!</h5>
                 <Input type="text" placeholder="username" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
                 <Input type="password" placeholder="password" onChange={(input) => this.updateValue("password", input.target.value)}/>
-                <Button onClick={this.login}>Login</Button>
+                <Button onClick={this.validateCredentials}>Login</Button>
             </div>
         );
     }

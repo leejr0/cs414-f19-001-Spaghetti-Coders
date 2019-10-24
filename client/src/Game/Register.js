@@ -13,51 +13,67 @@ class Register extends Component {
                 password: "",
                 verifyPassword: "",
                 email: ""
-            }
+            },
+            validation: false
         };
 
+        this.login = this.login.bind(this);
         this.createProfile = this.createProfile.bind(this);
         this.updatePassword = this.updatePassword.bind(this);
         this.updateValue = this.updateValue.bind(this);
         this.updateVerifyPassword = this.updateVerifyPassword.bind(this);
-
         this.validateNickName = this.validateNickName.bind(this);
         this.validateEmail = this.validateEmail.bind(this);
         this.validatePassword = this.validatePassword.bind(this);
+        this.validateCredentials = this.validateCredentials.bind(this);
+        this.updateValidation = this.updateValidation.bind(this);
     }
 
-    createProfile() {
+    login() {
+        if(this.state.validation === true) {
+            this.props.updateLogin(true);
+        }
+        else {
+            //TODO: Display an error message that the credentials are incorrect
+        }
+    }
+
+    createProfile(status) {
+        let state = this.state;
+        state["validation"] = status;
+        this.setState({state}, () => this.login());
+    }
+
+    validateCredentials(){
         if(this.validatePassword() === false) {
             //TODO: Output an error seen by the user that the passwords aren't the same
-
-        }
-        if(this.validateNickName() === false) {
-            //TODO: Output an error seen by the user that the username is already taken
-
+            console.log("password error");
         }
         if(this.validateEmail() === false) {
             //TODO: Output an error seen by the user that the email isn't correctly formatted
-
+            console.log("email error");
         }
 
-        else {
-            //TODO: Communicate with the back-end to create a new user
-            request()
-        }
-    }
-
-    validateNickName() {
-        if(this.state.nickname === ""){
-            return false;
+        if(this.validateNickName() === false) {
+            console.log("nickname error");
         }
 
         //TODO: Communicate with back-end to check if nickname is unique
-        let result = false;
-        request(this.state.profileInfo,"validateNickname").then(serverResponse => {
-                result = serverResponse["nickname"]; //names may change!
+        request(this.state.profileInfo,"register").then(serverResponse => {
+            this.createProfile(serverResponse);
         });
+    }
 
-        return result;
+    validateNickName() {
+        if(this.state.nickname.length < 3){
+            //TODO: Output an error seen by the user that the nickname is invalid
+        }
+    }
+
+    updateValidation(value) {
+        let state = this.state;
+        state["validation"] = value;
+        this.setState({state}, () => this.createProfile());
     }
 
     validateEmail() {
@@ -69,10 +85,12 @@ class Register extends Component {
     }
 
     validatePassword() {
-        if(this.state.password !== this.state.verifyPassword || this.state.password === ""){
+        if(this.state.password !== this.state.verifyPassword || this.state.password === "") {
             return false;
         }
-
+        if(this.state.password.length < 3) {
+            return false;
+        }
         return true;
     }
 
@@ -104,7 +122,7 @@ class Register extends Component {
                 <Input type="password" placeholder="password" onChange={(input) => this.updatePassword(input.target.value)}/>
                 <Input type="password" placeholder="confirm password" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
                 <Input type="text" placeholder="email address" onChange={(input) => this.updateValue("email", input.target.value)}/>
-                <Button onClick={this.createProfile}>Submit</Button>
+                <Button onClick={this.validateCredentials}>Submit</Button>
             </div>
         );
     }

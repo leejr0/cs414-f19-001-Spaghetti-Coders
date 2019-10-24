@@ -27,30 +27,28 @@ class HTTPRestful {
 
         post("/login", this::login);
 
-        post("/validateNickname", this::validateNickname);
-        post("/register", (req, res) -> "Temporary");
+        post("/register", this::register);
 
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
     }
 
-    private String validateNickname(Request request, Response response) {
+    private boolean register(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
         //returns true if nickname is unique
-        JSONObject validationJSON = new JSONObject("{\"nickname\":\"" + true + "\"}");
-        return validationJSON.toString();
+        return true;
     }
 
-    private String login(Request request, Response response) {
+    private boolean login(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile loginProfile = new RetrieveProfile(request);
-        JSONObject loginJSON = new JSONObject("{\"validation\":\"" + loginProfile.establishProfileIdentity() + "\"}");
-        return loginJSON.toString();
+        //return loginProfile.establishProfileIdentity();
+        return true;
     }
 
 }

@@ -7,7 +7,10 @@ class Application extends Component {
         super(props);
 
         this.state = {
-            login: false
+            login: false,
+            profile: {
+                nickname: ""
+            }
         };
 
         this.updateLogin = this.updateLogin.bind(this);
