@@ -69,8 +69,7 @@ When a game is opened, the server sends the current gamestate in `board` as a 2d
                                "..."
                             ],
                             "..."
-                         ]
-                         
+                         ],                        
   "winner"             : null,
   "player1"            : "junglePlayer1",
   "player2"            : "junglePlayer2",
