@@ -49,7 +49,7 @@ class Welcome extends Component {
                     <h3>Welcome to the </h3>
                     <h2>JUNGLE</h2>
                     <h3>--------</h3>
-                    <Register/>
+                    <Register updateLogin={this.props.updateLogin}/>
                 </div>
             );
         }
