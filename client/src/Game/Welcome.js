@@ -55,7 +55,7 @@ class Welcome extends Component {
         }
         else if(this.state.loginBool) {
             return (
-                <div id="Welcome" style={{margin: '50 0 0 0'}}>
+                <div id="Welcome">
                     <h3 style={{color: "white"}}>Welcome to the </h3>
                     <h2 style={{color: "white"}}>JUNGLE</h2>
                     <h3 style={{color: "white"}}>--------</h3>
@@ -65,7 +65,7 @@ class Welcome extends Component {
         }
         else {
             return (
-                <div id="Welcome" style={{margin: '50 0 0 0'}}>
+                <div id="Welcome">
                     <h3 style={{color: "white"}}>Welcome to the </h3>
                     <h2 style={{color: "white"}}>JUNGLE</h2>
                     <h3 style={{color: "white"}}>--------</h3>

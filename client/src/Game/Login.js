@@ -48,7 +48,7 @@ class Login extends Component {
 
     updateValue(id, value) {
         let state = this.state;
-        state[id] = value;
+        state.loginInfo[id] = value;
         this.setState({state});
     }
 

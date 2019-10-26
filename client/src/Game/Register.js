@@ -78,7 +78,7 @@ class Register extends Component {
     }
 
     validateNickName() {
-        if(this.state.nickname.length < 3 || this.state.nickname.length > 15){
+        if(this.state.profileInfo.nickname.length < 3 || this.state.profileInfo.nickname.length > 15){
             //TODO: Output an error seen by the user that the nickname is invalid
         }
     }
@@ -90,7 +90,7 @@ class Register extends Component {
     }
 
     validateEmail() {
-        if(!this.state.email.includes("@") || this.state.email === ""){
+        if(!this.state.profileInfo.email.includes("@") || this.state.profileInfo.email === ""){
             return false;
         }
 
@@ -98,10 +98,10 @@ class Register extends Component {
     }
 
     validatePassword() {
-        if(this.state.password !== this.state.verifyPassword || this.state.password === "") {
+        if(this.state.profileInfo.password !== this.state.profileInfo.verifyPassword || this.state.profileInfo.password === "") {
             return false;
         }
-        if(this.state.password.length < 3) {
+        if(this.state.profileInfo.password.length < 3) {
             return false;
         }
         return true;
@@ -109,20 +109,20 @@ class Register extends Component {
 
     updateValue(id, value) {
         let state = this.state;
-        state[id] = value;
+        state.profileInfo[id] = value;
         this.setState({state});
     }
 
     updatePassword(password) {
         let state = this.state;
-        state.password = password;
+        state.profileInfo.password = password;
         this.setState({state});
         //TODO: Hash the given password for security
     }
 
     updateVerifyPassword(password) {
         let state = this.state;
-        state.verifyPassword = password;
+        state.profileInfo.verifyPassword = password;
         this.setState({state});
         //TODO: Hash the given password verification for security
     }

@@ -18,7 +18,10 @@ class Application extends Component {
 
     updateLogin(loggedIn, nickname){
         if (this.state.login !== loggedIn) {
-            this.setState({login: loggedIn, profile:{nickname: nickname}});
+            let state = this.state;
+            state.login = loggedIn;
+            state.profile.nickname = nickname;
+            this.setState(state);
         }
 
     }
@@ -27,20 +30,19 @@ class Application extends Component {
         if(this.state.login) {
             return (
                 <div id="main">
-                    <Main nickname={this.state.nickname}/>
+                    <Main nickname={this.state.profile.nickname}/>
                 </div>
             );
         }
 
         return (
-            <div id="main">
+            <div id="main" style={{margin: '50 0 0 0'}}>
                 <h4 style={{color: "white"}}>From the Spaghetti Coders:</h4>
                 <Welcome
                 updateLogin={this.updateLogin}/>
             </div>
-
-        )
+        )//In case we want more space at the top: style={{margin: '50 0 0 0'}}
     }
 }
 
-export default Application
+export default Application;

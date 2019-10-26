@@ -15,17 +15,14 @@ class Main extends Component {
         if(this.state.nickname === "") {
             this.setState({nickname: this.props.nickname});
         }
-        console.log(this.state.nickname);
         if(!this.state.display) {
             return (<h5></h5>);
         }
 
         return (
             <div>
-                <h5>{this.state.display}</h5>
-                <h5>{this.state.nickname}</h5>
-                <h5 style={{color: "white"}}>This is the home page.</h5>
-                <h5 style={{color: "white"}}>The game lives here for now. {this.state.nickname}</h5>
+                <h1 style={{color: "white", textAlign: "left"}}>JUNGLE</h1>
+                <h5 style={{color: "white"}}>Here's the board! Make a move!</h5>
                 <div id="GamePage">
                     <GamePage/>
                 </div>
