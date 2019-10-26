@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Card, CardBody, Input} from 'reactstrap';
+import {Button, Input, Alert} from 'reactstrap';
 
 import {get, request} from '../api/api'
 
@@ -14,7 +14,8 @@ class Register extends Component {
                 verifyPassword: "",
                 email: ""
             },
-            validation: false
+            validation: false,
+            errorMessage: ""
         };
 
         this.login = this.login.bind(this);
@@ -31,10 +32,11 @@ class Register extends Component {
 
     login() {
         if(this.state.validation === true) {
-            this.props.updateLogin(true);
+            this.props.updateLogin(true, this.state.profileInfo.nickname);
         }
         else {
             //TODO: Display an error message that the credentials are incorrect
+            this.setState({errorMessage: "Nickname is already taken."});
         }
     }
 
@@ -47,15 +49,26 @@ class Register extends Component {
     validateCredentials(){
         if(this.validatePassword() === false) {
             //TODO: Output an error seen by the user that the passwords aren't the same
+            if(this.state.password.length < 3) {
+                this.setState({errorMessage: "Passwords must be over 3 characters."});
+            }
+            else{
+                this.setState({errorMessage: "Passwords must match"});
+            }
             console.log("password error");
+            return;
         }
         if(this.validateEmail() === false) {
             //TODO: Output an error seen by the user that the email isn't correctly formatted
+            this.setState({errorMessage: "Please enter a valid email."});
             console.log("email error");
+            return;
         }
 
         if(this.validateNickName() === false) {
+            this.setState({errorMessage: "Nickname must be between 3 and 15 characters."});
             console.log("nickname error");
+            return;
         }
 
         //TODO: Communicate with back-end to check if nickname is unique
@@ -65,7 +78,7 @@ class Register extends Component {
     }
 
     validateNickName() {
-        if(this.state.nickname.length < 3){
+        if(this.state.nickname.length < 3 || this.state.nickname.length > 15){
             //TODO: Output an error seen by the user that the nickname is invalid
         }
     }
@@ -115,14 +128,20 @@ class Register extends Component {
     }
 
     render() {
+        let errorMessage;
+        if(this.state.errorMessage !== ""){
+            errorMessage = <Alert color="danger">{this.state.errorMessage}</Alert>
+        }
+
         return (
             <div id="Register">
-                <h5>Register with a new username, email, and password!</h5>
+                <h5 style={{color: "white"}}>Register with a new username, email, and password!</h5>
                 <Input type="text" placeholder="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
                 <Input type="password" placeholder="password" onChange={(input) => this.updatePassword(input.target.value)}/>
                 <Input type="password" placeholder="confirm password" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
                 <Input type="text" placeholder="email address" onChange={(input) => this.updateValue("email", input.target.value)}/>
                 <Button onClick={this.validateCredentials}>Submit</Button>
+                {errorMessage}
             </div>
         );
     }

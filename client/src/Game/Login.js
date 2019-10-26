@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Input} from "reactstrap";
+import {Button, Input, Alert} from "reactstrap";
 
 import {get, request} from '../api/api'
 
@@ -12,7 +12,8 @@ class Login extends Component {
                 nickname: "",
                 password: ""
             },
-            validation: false
+            validation: false,
+            errorMessage: ""
         };
 
         this.login = this.login.bind(this);
@@ -23,10 +24,11 @@ class Login extends Component {
 
     login() {
         if(this.state.validation === true) {
-             this.props.updateLogin(true);
+             this.props.updateLogin(true, this.state.loginInfo.nickname);
         }
         else {
             //TODO: Display an error message that the credentials are incorrect
+            this.setState({errorMessage: "Incorrect username/password combination."});
         }
     }
 
@@ -51,12 +53,18 @@ class Login extends Component {
     }
 
     render() {
+        let errorMessage;
+        if(this.state.errorMessage !== ""){
+            errorMessage = <Alert color="danger">{this.state.errorMessage}</Alert>
+        }
+
         return (
             <div id="logIn">
-                <h5>Login and continue playing!</h5>
+                <h5 style={{color: "white"}}>Login and continue playing!</h5>
                 <Input type="text" placeholder="username" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
                 <Input type="password" placeholder="password" onChange={(input) => this.updateValue("password", input.target.value)}/>
                 <Button onClick={this.validateCredentials}>Login</Button>
+                {errorMessage}
             </div>
         );
     }

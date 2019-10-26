@@ -16,9 +16,9 @@ class Application extends Component {
         this.updateLogin = this.updateLogin.bind(this);
     }
 
-    updateLogin(loggedIn){
+    updateLogin(loggedIn, nickname){
         if (this.state.login !== loggedIn) {
-            this.setState({login: loggedIn});
+            this.setState({login: loggedIn, profile:{nickname: nickname}});
         }
 
     }
@@ -26,15 +26,15 @@ class Application extends Component {
     render() {
         if(this.state.login) {
             return (
-                <div id="main" style={{backgroundColor: 'gray'}}>
-                    <Main/>
+                <div id="main">
+                    <Main nickname={this.state.nickname}/>
                 </div>
             );
         }
 
         return (
-            <div id="main" style={{backgroundColor: 'gray'}}>
-                <h4>From the Spaghetti Coders:</h4>
+            <div id="main">
+                <h4 style={{color: "white"}}>From the Spaghetti Coders:</h4>
                 <Welcome
                 updateLogin={this.updateLogin}/>
             </div>
