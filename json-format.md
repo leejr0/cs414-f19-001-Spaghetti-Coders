@@ -3,8 +3,8 @@ Upon login, the entered `nickname` and `password` are sent to the server,. If a 
 *In the future, the password will be hashed before it is sent to the server for security.*
 ```json
 "loginInfo"            : {
-                            "nickname"           : "junglePlayer1",
-                            "password"           : "spaghetti"
+                            "nickname" : "junglePlayer1",
+                            "password" : "spaghetti"
                          }
 ```
 Server-side validation handled by: **RetrieveProfile.establishProfileIdentity()**
@@ -18,16 +18,27 @@ When a user registers, their `nickname`, `password`, `verifyPassword`, and `emai
 If all the above criteria are met, the server sends **true** back to the client to indicate success.
 *In the future, the password and verifyPassword will be hashed before they are sent to the server for security.*
 ```json
-{
-  "nickname"           : "junglePlayer1",
-  "password"           : "spaghetti",
-  "verifyPassword"     : "spaghetti",
-  "email"              : "email@gmail.com"
-}
+"profileInfo"          : {
+                            "nickname"       : "junglePlayer1",
+                            "password"       : "spaghetti",
+                            "verifyPassword" : "spaghetti",
+                            "email"          : "email@gmail.com"
+                         }
 ```
+Server-side validation handled by: **RetrieveProfile() <default constructor>** ? (unsure)
 
 ## GamePage
-When a game is opened, the server sends the current gamestate in `board` as a 2d Object array. The following json is subject to change:
+When a game is opened, the server sends the current gamestate in `board` as a 2d Object array. The client also needs the following information from the server to display:
+
+|State Var|Description|
+|---|---|
+|`winner`| Used for displaying the winner of the game once it is finished (*null* while game is in progress) |
+|`player1`| Nickname of player 1 |
+|`player2`| Nickname of player 2 |
+|`turnAction`| Used for displaying the last *successful* **move** (i.e. highlight most recent move) |
+|`whoseTurn`| Contains the nickname of the player whose turn it is |
+
+The following jsons are subject to change:
 
 
 ```json
@@ -61,18 +72,34 @@ When a game is opened, the server sends the current gamestate in `board` as a 2d
                             ],
                             "..."
                          ],
-  "winner"             : { Object },
-  "player1"            : { Object },
-  "player2"            : { Object },
-  "turnAction"         : { Object },
-  "whoseTurn"          : { Object },
-  "selectedPiece"      : {
-                            "row": i, 
-                            "col": j
+                         
+  "winner"             : null,
+  "player1"            : "junglePlayer1",
+  "player2"            : "junglePlayer2",
+  "turnAction"         : {
+                             "selectedPiece" : {
+                                                   "row": i, 
+                                                   "col": j
+                                               },
+                             "chosenMove"    : {
+                                                   "toRow": i, 
+                                                   "toCol": j
+                                               }              
                          },
-  "chosenMove"         : {
-                            "toRow": i, 
-                            "toCol": j
+  "whoseTurn"          : { "junglePlayer2" },
+```
+Once a move is made client-side, the following move JSON is sent to the server. All move validation happens on the server, so the server will send the **updated game state** if the move is valid, or **nothing** if the move is invalid. 
+##### (maybe send {true, board} on success, {false, null} on failure?)
+
+```json
+"move"                 : {
+                            "selectedPiece" : {
+                                                  "row": i, 
+                                                  "col": j
+                                              },
+                            "chosenMove"    : {
+                                                  "toRow": i, 
+                                                  "toCol": j
+                                              }
                          }
-}
 ```
