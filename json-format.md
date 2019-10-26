@@ -89,7 +89,7 @@ The following jsons are subject to change:
   "whoseTurn"          : { "junglePlayer2" },
 ```
 Once a move is made client-side, the following move JSON is sent to the server. All move validation happens on the server, so the server will send the **updated game state** if the move is valid, or **nothing** if the move is invalid. 
-##### (maybe send {true, board} on success, {false, null} on failure?)
+##### (maybe send {true, {gamestate JSON} } on success, {false, null} on failure?)
 
 ```json
 "move"                 : {
