@@ -1,11 +1,11 @@
 ## Login
-Upon login, the entered `nickname` and `password` are sent to the server,. If a match for both `nickname` and `password` is found in the database, the server sends **true** back to the client to indicate that the login was successful.
+Upon login, the entered `nickname` and `password` are sent to the server. If a match for both `nickname` and `password` is found in the database, the server sends **true** back to the client to indicate that the login was successful.
 *In the future, the password will be hashed before it is sent to the server for security.*
 ```json
-"loginInfo"            : {
-                            "nickname" : "junglePlayer1",
-                            "password" : "spaghetti"
-                         }
+"loginInfo"    : {
+                    "nickname" : "junglePlayer1",
+                    "password" : "spaghetti"
+                 }
 ```
 Server-side validation handled by: **RetrieveProfile.establishProfileIdentity()**
 
@@ -18,14 +18,14 @@ When a user registers, their `nickname`, `password`, `verifyPassword`, and `emai
 If all the above criteria are met, the server sends **true** back to the client to indicate success.
 *In the future, the password and verifyPassword will be hashed before they are sent to the server for security.*
 ```json
-"profileInfo"          : {
-                            "nickname"       : "junglePlayer1",
-                            "password"       : "spaghetti",
-                            "verifyPassword" : "spaghetti",
-                            "email"          : "email@gmail.com"
-                         }
+"profileInfo"  : {
+                    "nickname"       : "junglePlayer1",
+                    "password"       : "spaghetti",
+                    "verifyPassword" : "spaghetti",
+                    "email"          : "email@gmail.com"
+                 }
 ```
-Server-side validation handled by: **RetrieveProfile() <default constructor>** ? (unsure)
+Server-side validation handled by: **RetrieveProfile() -default constructor**
 
 ## GamePage
 When a game is opened, the server sends the current gamestate in `board` as a 2d Object array. The client also needs the following information from the server to display:
@@ -38,11 +38,9 @@ When a game is opened, the server sends the current gamestate in `board` as a 2d
 |`turnAction`| Used for displaying the last *successful* **move** (i.e. highlight most recent move) |
 |`whoseTurn`| Contains the nickname of the player whose turn it is |
 
-The following jsons are subject to change:
-
-
+**Server -> Client**
 ```json
-{
+{ 
   "board"              : [
                             [
                                {
@@ -71,7 +69,7 @@ The following jsons are subject to change:
                                "..."
                             ],
                             "..."
-                         ],
+                         ]
                          
   "winner"             : null,
   "player1"            : "junglePlayer1",
@@ -84,12 +82,13 @@ The following jsons are subject to change:
                              "chosenMove"    : {
                                                    "toRow": i, 
                                                    "toCol": j
-                                               }              
+                                               }           
                          },
-  "whoseTurn"          : { "junglePlayer2" },
+  "whoseTurn"          : { "junglePlayer2" }
 ```
-Once a move is made client-side, the following move JSON is sent to the server. All move validation happens on the server, so the server will send the **updated game state** if the move is valid, or **nothing** if the move is invalid. 
-##### (maybe send {true, {gamestate JSON} } on success, {false, null} on failure?)
+Once a move is made client-side, the following move JSON is sent to the server. All move validation happens on the server, so the server will send the old gamestate if the move failed, or the updated gamestate if the move was successful.
+
+**Client -> Server**
 
 ```json
 "move"                 : {
