@@ -2,11 +2,12 @@
 Upon login, the entered `nickname` and `password` are sent to the server,. If a match for both `nickname` and `password` is found in the database, the server sends **true** back to the client to indicate that the login was successful.
 *In the future, the password will be hashed before it is sent to the server for security.*
 ```json
-{
-  "nickname"           : "junglePlayer1",
-  "password"           : "spaghetti"
-}
+"loginInfo"            : {
+                            "nickname"           : "junglePlayer1",
+                            "password"           : "spaghetti"
+                         }
 ```
+Server-side validation handled by: **RetrieveProfile.establishProfileIdentity()**
 
 ## Register
 When a user registers, their `nickname`, `password`, `verifyPassword`, and `email` are sent to the server to create an account. The following criteria must be met for an account to be created:
