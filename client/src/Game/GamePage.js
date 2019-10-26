@@ -77,6 +77,14 @@ class GamePage extends Component {
             //select move
             move.toRow = i;
             move.toCol = j;
+            if (move.toRow === piece.row && move.toCol === piece.col) {
+                //user wants to cancel move
+                piece.row = null;
+                piece.col = null;
+                move.toRow = null;
+                move.toCol = null;
+                this.setState({selectedPiece: piece, chosenMove: move});
+            }
         }
         //execute the move if the selection/move process is complete
         if (move.toRow !== null && move.toCol !== null) {
