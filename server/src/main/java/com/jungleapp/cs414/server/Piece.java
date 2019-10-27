@@ -67,7 +67,7 @@ public abstract class Piece {
         }
 
         //check down
-        if (row < 8) {
+        if (row < 9) {
             String checkDown = moveMaker(row+1,column);
             if (checkSpace(checkDown)){ moves.add(checkDown); }
         }
@@ -78,8 +78,8 @@ public abstract class Piece {
 
     private String moveMaker(int row, int column) {
         String move = "";
-        move += row;
-        move += column;
+        move += Integer.toString(row);
+        move += Integer.toString(column);
         return move;
     }
 
@@ -88,7 +88,7 @@ public abstract class Piece {
             if (board.getPiece(position) == null){
                 return true;
             }
-            else if(board.getPiece(position).getColor() != this.getColor() && board.getPiece(position).getRank() <= this.getRank()){
+            else if(!board.getPiece(position).getColor().equals(this.getColor()) && board.getPiece(position).getRank() <= this.getRank()){
                 return true;
             }
         } catch (IllegalPositionException e) {
