@@ -1,6 +1,7 @@
 package com.jungleapp.cs414.server;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Piece {
 
@@ -9,6 +10,7 @@ public abstract class Piece {
     protected int row;
     protected int column;
     private String pieceColor;
+    final ArrayList<String> waterTiles = new ArrayList<>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
 
     public Piece (JungleBoard board, String color) {
         this.board = board;
@@ -39,8 +41,8 @@ public abstract class Piece {
 
     public String getPosition(){
         String result = "";
-        result += this.row;
-        result += this.column;
+        result += Integer.toString(this.row);
+        result += Integer.toString(this.column);
 
         return result;
     }
@@ -76,7 +78,7 @@ public abstract class Piece {
 
     }
 
-    private String moveMaker(int row, int column) {
+    String moveMaker(int row, int column) {
         String move = "";
         move += Integer.toString(row);
         move += Integer.toString(column);
@@ -88,11 +90,16 @@ public abstract class Piece {
             if (board.getPiece(position) == null){
                 return true;
             }
-            else if(!board.getPiece(position).getColor().equals(this.getColor()) && board.getPiece(position).getRank() <= this.getRank()){
+
+            if(!board.getPiece(position).getColor().equals(this.getColor()) && board.getPiece(position).getRank() <= this.getRank()){
                 return true;
             }
+
+            if (waterTiles.contains(position)) {
+                return false;
+            }
         } catch (IllegalPositionException e) {
-            e.printStackTrace();
+            return false;
         }
         return false;
     }
