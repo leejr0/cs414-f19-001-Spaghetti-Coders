@@ -11,6 +11,7 @@ public class Lion extends Piece {
 
     public ArrayList<String> legalMoves() {
         return super.legalMoves();
+        //TODO Implement Special Set of Moves for lion
     }
 
 }
