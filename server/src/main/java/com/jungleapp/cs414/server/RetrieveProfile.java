@@ -4,6 +4,7 @@ package com.jungleapp.cs414.server;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
+import com.mysql.cj.protocol.Resultset;
 import spark.Request;
 import java.sql.*;
 
@@ -25,7 +26,7 @@ public class RetrieveProfile {
     }
 
     // Default for testing purposes.
-    public RetrieveProfile(String nickname, String password, String email) {
+    RetrieveProfile(String nickname, String password, String email) {
         profile.nickname = nickname;
         profile.password = password;
         profile.email = email;
@@ -34,16 +35,16 @@ public class RetrieveProfile {
     }
 
 
-    public void establishMySQLConnection() {
+    private void establishMySQLConnection() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
-        } catch (SQLException | ClassNotFoundException e) {
+            openMySQLConnection();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
-    public boolean establishProfileIdentity() {
+    boolean establishProfileIdentity() {
         boolean result = false;
 
         try {
@@ -61,6 +62,41 @@ public class RetrieveProfile {
             return result;
         } catch (Exception e) {
             return false; // Something went horribly wrong
+        }
+    }
+
+    public boolean createNewProfile() {
+        if (!establishProfileIdentity()) {
+            openMySQLConnection();
+            try {
+                Statement statement = connection.createStatement();
+
+                // Check if player already exists in database
+                ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+                                profile.nickname + "' or Player.email = '" +
+                        profile.email + "'");
+
+                if (resultSet.next())
+                    return false;
+
+                // Register player into the database
+                statement.execute("insert into Player values ('" + profile.nickname + "', " +
+                        "'" + profile.email + "','" + profile.password + "', 0, 0);");
+
+                return true;
+            } catch (SQLException e) {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private void openMySQLConnection() {
+        try {
+            connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 }

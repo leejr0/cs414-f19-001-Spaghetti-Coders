@@ -1,7 +1,6 @@
 package com.jungleapp.cs414.server;
 
 import com.google.gson.Gson;
-import org.json.JSONObject;
 import spark.Request;
 import spark.Response;
 import spark.Spark;
@@ -11,7 +10,6 @@ import static spark.Spark.*;
 class HTTPRestful {
     private int port;
     private String path = System.getProperty("user.home");
-    Gson gson = new Gson();
 
     HTTPRestful(int port) {
         this.port = port;
@@ -38,8 +36,9 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
-        //returns true if nickname is unique
-        return true;
+        RetrieveProfile retrieveProfile = new RetrieveProfile(request);
+
+        return retrieveProfile.createNewProfile();
     }
 
     private boolean login(Request request, Response response) {
@@ -47,8 +46,8 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile loginProfile = new RetrieveProfile(request);
-        //return loginProfile.establishProfileIdentity();
-        return true;
+
+        return loginProfile.establishProfileIdentity();
     }
 
 }
