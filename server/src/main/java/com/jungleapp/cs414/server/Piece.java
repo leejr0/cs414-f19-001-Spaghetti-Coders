@@ -85,7 +85,7 @@ public abstract class Piece {
         return move;
     }
 
-    private boolean checkSpace(String position) {
+    public boolean checkSpace(String position) {
         try {
             if (board.getPiece(position) == null){
                 return true;
