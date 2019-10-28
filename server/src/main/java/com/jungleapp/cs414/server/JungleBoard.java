@@ -1,8 +1,20 @@
 package com.jungleapp.cs414.server;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class JungleBoard {
 
     private Piece[][] board;
+    String winner;
+    String player1;
+    String player2;
+    String whoseTurn; //String for player name's turn
+    String fromPosition;
+    String toPosition;
+    String errorMessage;
+    boolean isActive;
+    boolean createNewBoard;
 
     public JungleBoard() { board = new Piece[9][7]; }
 
@@ -20,7 +32,7 @@ public class JungleBoard {
             try {
                 piece.setPosition(position);
             } catch (IllegalPositionException e) {
-                e.printStackTrace();
+
             }
             return true;
         }
@@ -39,10 +51,20 @@ public class JungleBoard {
         return board[rowPos][colPos];
     }
 
-    //TO-DO
-    public void move(String fromPosition, String toPosition) {
 
+    public void makeMove(String fromPosition, String toPosition) {
+        try {
+            placePiece(getPiece(fromPosition), toPosition);
+        } catch(IllegalPositionException e) {
+
+        }
+        if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
+            whoseTurn = player2;
+        }else{
+            whoseTurn = player1;
+        }
     }
+
     private boolean validPositionString(String position) {
         if(position.length() != 2) { return false; }
 
