@@ -1,6 +1,8 @@
 package com.jungleapp.cs414.server;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public abstract class Piece {
 
@@ -9,6 +11,9 @@ public abstract class Piece {
     protected int row;
     protected int column;
     private String pieceColor;
+    protected boolean isTrapped = false;
+    final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
+    final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
 
     public Piece (JungleBoard board, String color) {
         this.board = board;
@@ -35,6 +40,9 @@ public abstract class Piece {
 
         this.row = rowPos;
         this.column = colPos;
+        checkWin();
+        checkTrapped();
+
     }
 
     public String getPosition(){
@@ -88,13 +96,32 @@ public abstract class Piece {
             if (board.getPiece(position) == null){
                 return true;
             }
-            else if(board.getPiece(position).getColor() != this.getColor() && board.getPiece(position).getRank() <= this.getRank()){
+            else if (board.getPiece(position).getColor() != this.getColor() && board.getPiece(position).getRank() <= this.getRank()){
                 return true;
             }
+            //TODO check for trapped pieces as valid moves in Piece and rat/bigcat
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void checkTrapped() {
+        //check if piece moved to a trap location of the opposite color
+        if ((getColor().equals("BLUE") && redTraps.contains(getPosition()))
+                || (getColor().equals("RED") && blueTraps.contains(getPosition()))) {
+            isTrapped = true;
+        }else{
+            isTrapped = false;
+        }
+    }
+
+    public void checkWin() {
+        if ((getColor().equals("BLUE") && getPosition().equals("03"))
+                || (getColor().equals("RED") && getPosition().equals("83"))) {
+            board.winner = board.whoseTurn;
+            board.isActive = false;
+        }
     }
 
 }
