@@ -49,7 +49,7 @@ class Register extends Component {
     validateCredentials(){
         if(this.validatePassword() === false) {
             //TODO: Output an error seen by the user that the passwords aren't the same
-            if(this.state.password.length < 3) {
+            if(this.state.profileInfo.password.length < 3) {
                 this.setState({errorMessage: "Passwords must be over 3 characters."});
             }
             else{

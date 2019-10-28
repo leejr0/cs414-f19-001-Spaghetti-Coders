@@ -23,7 +23,7 @@ class Login extends Component {
     }
 
     login() {
-        if(this.state.validation === true) {
+        if(this.state.validation === true && this.state.loginInfo.nickname !== "") {
              this.props.updateLogin(true, this.state.loginInfo.nickname);
         }
         else {
