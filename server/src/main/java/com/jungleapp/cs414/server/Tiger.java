@@ -9,6 +9,7 @@ public class Tiger extends BigCat{
         rank = 6;
     }
 
+    //The tiger uses the legal moves method in BigCat
     public ArrayList<String> legalMoves() {
         return super.legalMoves();
     }

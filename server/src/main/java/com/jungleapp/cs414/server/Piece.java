@@ -13,7 +13,7 @@ public abstract class Piece {
     protected boolean isTrapped = false;
     final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
     final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
-    final ArrayList<String> waterTiles = new ArrayList<>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
+    final ArrayList<String> waterTiles = new ArrayList<String>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
 
     public Piece (JungleBoard board, String color) {
         this.board = board;
@@ -40,9 +40,8 @@ public abstract class Piece {
 
         this.row = rowPos;
         this.column = colPos;
-        checkWin();
         checkTrapped();
-
+        checkWin();
     }
 
     public String getPosition(){
@@ -53,6 +52,7 @@ public abstract class Piece {
         return result;
     }
 
+    //Pieces except Lion and Tiger can move one spot in each direction as long as the spot is null or contains an enemy piece of equal or lesser rank
     public ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
 
@@ -93,18 +93,19 @@ public abstract class Piece {
 
     public boolean checkSpace(String position) {
         try {
+            if (waterTiles.contains(position)) {
+                return false;
+            }
+
             if (board.getPiece(position) == null){
                 return true;
             }
 
-            if(!board.getPiece(position).getColor().equals(this.getColor()) && board.getPiece(position).getRank() <= this.getRank()){
+            if(!board.getPiece(position).getColor().equals(this.getColor()) &&
+                    (board.getPiece(position).getRank() <= this.getRank() || board.getPiece(position).isTrapped)){
                 return true;
             }
-            //TODO check for trapped pieces as valid moves in Piece and rat/bigcat
 
-            if (waterTiles.contains(position)) {
-                return false;
-            }
         } catch (IllegalPositionException e) {
             return false;
         }
