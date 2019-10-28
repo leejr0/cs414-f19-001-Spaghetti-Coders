@@ -39,7 +39,6 @@ class Login extends Component {
             this.updateValidation(serverResponse);
         });
     }
-
     updateValidation(value) {
         let state = this.state;
         state["validation"] = value;

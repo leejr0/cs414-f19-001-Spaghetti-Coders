@@ -2,7 +2,7 @@ package com.jungleapp.cs414.server;
 
 import java.util.ArrayList;
 
-public class Lion extends Piece {
+public class Lion extends BigCat {
 
     Lion(JungleBoard board, String color){
         super(board, color);

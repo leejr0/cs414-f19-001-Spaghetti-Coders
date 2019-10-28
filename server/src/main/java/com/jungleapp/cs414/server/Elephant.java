@@ -12,6 +12,8 @@ public class Elephant extends Piece {
     //The elephant can move one spot in each direction as long as the spot is null or contains an enemy piece of equal or lesser rank
     public ArrayList<String> legalMoves() {
         return super.legalMoves();
+
+        //TODO Implement Special Set of Moves for elephant
     }
 
 }

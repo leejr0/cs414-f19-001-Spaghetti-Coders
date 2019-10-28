@@ -21,7 +21,6 @@ public class JungleBoard {
     //TO-DO
     public void initialize() {
         this.placePiece(new Elephant(this,"BLUE"), "60");
-
     }
 
     public boolean placePiece(Piece piece, String position) {
@@ -70,10 +69,6 @@ public class JungleBoard {
 
         int rowPos = position.charAt(0)-48;
         int colPos = position.charAt(1)-48;
-        if(rowPos > 8 || rowPos < 0 || colPos < 0 || colPos > 6) {
-            return false;
-        }
-
-        return true;
+        return rowPos <= 8 && rowPos >= 0 && colPos >= 0 && colPos <= 6;
     }
 }
