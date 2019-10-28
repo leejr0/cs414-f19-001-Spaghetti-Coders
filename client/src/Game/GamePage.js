@@ -209,17 +209,17 @@ class GamePage extends Component {
     render() {
         return (
             <Container>
-                <div style={{display: 'inline-block'}} id="GamePage">
-                    <Modal isOpen={this.state.announceWinner}>
-                        <ModalHeader>You are the Winner!</ModalHeader>
-                        <ModalBody>Winning isn't everything. It's just the only thing that matters.</ModalBody>
-                        <ModalFooter>
-                            <Button color="secondary" onClick={this.toggle.bind(this)}>Exit</Button>
-                        </ModalFooter>
-                    </Modal>
-                    {this.renderBoard()}
-                </div>
-                <Rules/>
+            <div style={{display: 'inline-block'}} id="GamePage">
+                <Modal isOpen={this.state.announceWinner}>
+                    <ModalHeader>You are the Winner!</ModalHeader>
+                    <ModalBody>Winning isn't everything. It's just the only thing that matters.</ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={this.toggle.bind(this)}>Exit</Button>
+                    </ModalFooter>
+                </Modal>
+                {this.renderBoard()}
+            </div>
+            <Rules/>
             </Container>);
     }
 }
