@@ -18,8 +18,23 @@ public class JungleBoard {
 
     public JungleBoard() { board = new Piece[9][7]; }
 
-    //TO-DO
     public void initialize() {
+        this.placePiece(new Lion(this, "RED"), "00");
+        this.placePiece(new Tiger(this, "RED"), "06");
+        this.placePiece(new Dog(this, "RED"), "11");
+        this.placePiece(new Cat(this,"RED"),"15");
+        this.placePiece(new Rat(this, "RED"),"20");
+        this.placePiece(new Leopard(this,"RED"),"22");
+        this.placePiece(new Wolf(this, "RED"), "24");
+        this.placePiece(new Elephant(this, "RED"), "26");
+
+        this.placePiece(new Lion(this, "BLUE"), "86");
+        this.placePiece(new Tiger(this, "BLUE"), "80");
+        this.placePiece(new Dog(this, "BLUE"), "75");
+        this.placePiece(new Cat(this,"BLUE"),"71");
+        this.placePiece(new Rat(this, "BLUE"),"66");
+        this.placePiece(new Leopard(this,"BLUE"),"64");
+        this.placePiece(new Wolf(this, "BLUE"), "62");
         this.placePiece(new Elephant(this,"BLUE"), "60");
     }
 

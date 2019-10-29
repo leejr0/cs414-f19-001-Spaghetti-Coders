@@ -11,7 +11,25 @@ public class JungleBoardTest {
         JungleBoard board = new JungleBoard();
         board.initialize();
         try {
-            assertEquals(8,board.getPiece("60").getRank());
+            assertTrue(board.getPiece("00").getRank() == 7 && board.getPiece("00").getColor().equals("RED"));
+            assertTrue(board.getPiece("06").getRank() == 6 && board.getPiece("06").getColor().equals("RED"));
+            assertTrue(board.getPiece("11").getRank() == 4 && board.getPiece("11").getColor().equals("RED"));
+            assertTrue(board.getPiece("15").getRank() == 2 && board.getPiece("15").getColor().equals("RED"));
+            assertTrue(board.getPiece("20").getRank() == 1 && board.getPiece("20").getColor().equals("RED"));
+            assertTrue(board.getPiece("22").getRank() == 5 && board.getPiece("22").getColor().equals("RED"));
+            assertTrue(board.getPiece("24").getRank() == 3 && board.getPiece("24").getColor().equals("RED"));
+            assertTrue(board.getPiece("26").getRank() == 8 && board.getPiece("26").getColor().equals("RED"));
+
+
+            assertTrue(board.getPiece("60").getRank() == 8 && board.getPiece("60").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("62").getRank() == 3 && board.getPiece("62").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("64").getRank() == 5 && board.getPiece("64").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("66").getRank() == 1 && board.getPiece("66").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("71").getRank() == 2 && board.getPiece("71").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("75").getRank() == 4 && board.getPiece("75").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("80").getRank() == 6 && board.getPiece("80").getColor().equals("BLUE"));
+            assertTrue(board.getPiece("86").getRank() == 7 && board.getPiece("86").getColor().equals("BLUE"));
+
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

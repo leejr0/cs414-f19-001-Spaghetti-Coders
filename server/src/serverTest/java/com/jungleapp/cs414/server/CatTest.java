@@ -17,6 +17,19 @@ class CatTest {
     }
 
     @Test
+    public void testInitialMoves() {
+        JungleBoard board = new JungleBoard();
+        board.initialize();
+
+        try {
+            assertTrue(board.getPiece("15").legalMoves().containsAll(Arrays.asList("05","25","14","16")));
+            assertTrue(board.getPiece("71").legalMoves().containsAll(Arrays.asList("81","61","72","70")));
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     void legalMoves() {
         JungleBoard board = new JungleBoard();
 
