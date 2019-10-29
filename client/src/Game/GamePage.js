@@ -25,7 +25,7 @@ class GamePage extends Component {
             player2: null,
             turnAction: null,
             whoseTurn: null,
-            gameOver: true,
+            isActive: true,
             announceWinner: true,
             selectedPiece: {
                 row: null,
@@ -87,7 +87,7 @@ class GamePage extends Component {
                 player2: gameState.player2,
                 turnAction: gameState.turnAction,
                 whoseTurn: gameState.whoseTurn,
-                gameOver: gameState.gameOver});
+                isActive: gameState.isActive});
         });
 
         //reset selections after move attempt

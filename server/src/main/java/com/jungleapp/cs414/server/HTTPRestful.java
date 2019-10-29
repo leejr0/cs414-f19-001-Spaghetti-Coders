@@ -23,11 +23,11 @@ class HTTPRestful {
         // start with HTTP GET
         get("/hello", (req, res) -> "Hello World");
 
-        get("board", this::board);
-
         post("/login", this::login);
 
         post("/register", this::register);
+
+        post("/startGame", this::startGame);
 
         post("/move", this::move);
 
@@ -54,17 +54,19 @@ class HTTPRestful {
         return loginProfile.establishProfileIdentity();
     }
 
-    private String board(Request request, Response response) {
+    private String startGame(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        //Return the initial board
-        return null;
+
+        Match m = new Match(request);
+        return m.createJSON();
     }
 
     private String move(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         //Return the board state with the move completed, and the winner, players etc.
-        return null;
+        Match m = new Match(request);
+        return m.createJSON();
     }
 }
