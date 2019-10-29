@@ -7,26 +7,12 @@ import com.google.gson.JsonParser;
 
 public class Match {
 
-    class tempClass {
-        JungleBoard board = new JungleBoard();
-        Piece piece = new Elephant(board, "BLUE");
-        String winner;
-        String player1 = "huh";
-        String player2 = "stupid";
-        String whoseTurn; //String for player name's turn
-        String fromPosition;
-        String toPosition;
-        String errorMessage;
-        boolean isActive;
-        boolean createNewBoard;
-    }
-
     private JungleBoard board;
     public Match(Request request) {
         JsonParser jsonParser = new JsonParser();
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
-        System.out.println(requestBody);
+
         try {
 
             JungleBoard board = gson.fromJson(requestBody, JungleBoard.class);

@@ -1,4 +1,3 @@
-com/jungleapp/cs414/server/Match$tempClass.class
 com/jungleapp/cs414/server/RetrieveMatches.class
 com/jungleapp/cs414/server/Profile.class
 com/jungleapp/cs414/server/Piece.class
@@ -15,6 +14,7 @@ com/jungleapp/cs414/server/Dog.class
 com/jungleapp/cs414/server/JungleBoard.class
 com/jungleapp/cs414/server/ValidateMove.class
 com/jungleapp/cs414/server/InitServer.class
+com/jungleapp/cs414/server/BigCat.class
 com/jungleapp/cs414/server/Lion.class
 com/jungleapp/cs414/server/Cat.class
 com/jungleapp/cs414/server/Wolf.class

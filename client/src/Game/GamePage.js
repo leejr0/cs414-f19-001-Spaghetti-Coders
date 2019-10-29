@@ -234,9 +234,11 @@ class GamePage extends Component {
         state.newGame = false;
         for (let i = 0; i < state.board.length; i++) {
             for (let j = 0; j < state.board[i].length; j++) {
-                let color = state.board[i][j].pieceColor;
-                let rank = state.board[i][j].rank;
-                state.board[i][j] = new Piece(color, rank);
+                if(state.board[i][j] !== null) {
+                    let color = state.board[i][j].pieceColor;
+                    let rank = state.board[i][j].rank;
+                    state.board[i][j] = new Piece(color, rank);
+                }
             }
         }
         this.setState({state});
@@ -249,7 +251,6 @@ class GamePage extends Component {
     }
 
     render() {
-        let newBoard = <div> </div>
         if(this.props.newGame && this.state.newGame === true) {
             this.newBoard()
         }

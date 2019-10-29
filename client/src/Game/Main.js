@@ -27,11 +27,7 @@ class Main extends Component {
 
     beginGame() {
         request(this.state.startGame, "startGame").then(serverResponse => {
-            let response = {
-                board: "YES"
-            };
             // TODO: Change this so that when we get a real JSON from the back-end, we can use it.
-            console.log(serverResponse);
             this.showBoard(serverResponse)
         });
     }
@@ -57,14 +53,11 @@ class Main extends Component {
         if(!this.state.display) {
             return (<h5> </h5>);
         }
-        let board = <div> </div>;
-        if(this.state.displayBoard === true) {
-            board = <GamePage board={this.state.board} newGame={this.state.newGame}/>;
-        }
 
-        //let startButton = <div> </div>
+        let board = <div> </div>;
         let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
         if(this.state.displayBoard === true) {
+            board = <GamePage board={this.state.board} newGame={this.state.newGame}/>;
             startButton = <div> </div>
         }
         console.log("----");
