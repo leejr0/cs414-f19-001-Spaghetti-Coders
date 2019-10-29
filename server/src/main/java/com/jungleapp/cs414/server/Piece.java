@@ -1,5 +1,6 @@
 package com.jungleapp.cs414.server;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -10,6 +11,9 @@ public abstract class Piece {
     protected int row;
     protected int column;
     private String pieceColor;
+    protected boolean isTrapped = false;
+    final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
+    final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
     final ArrayList<String> waterTiles = new ArrayList<>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
 
     public Piece (JungleBoard board, String color) {
@@ -37,6 +41,9 @@ public abstract class Piece {
 
         this.row = rowPos;
         this.column = colPos;
+        checkWin();
+        checkTrapped();
+
     }
 
     public String getPosition(){
@@ -69,7 +76,7 @@ public abstract class Piece {
         }
 
         //check down
-        if (row < 9) {
+        if (row < 8) {
             String checkDown = moveMaker(row+1,column);
             if (checkSpace(checkDown)){ moves.add(checkDown); }
         }
@@ -102,6 +109,24 @@ public abstract class Piece {
             return false;
         }
         return false;
+    }
+
+    public void checkTrapped() {
+        //check if piece moved to a trap location of the opposite color
+        if ((getColor().equals("BLUE") && redTraps.contains(getPosition()))
+                || (getColor().equals("RED") && blueTraps.contains(getPosition()))) {
+            isTrapped = true;
+        }else{
+            isTrapped = false;
+        }
+    }
+
+    public void checkWin() {
+        if ((getColor().equals("BLUE") && getPosition().equals("03"))
+                || (getColor().equals("RED") && getPosition().equals("83"))) {
+            board.winner = board.whoseTurn;
+            board.isActive = false;
+        }
     }
 
 }

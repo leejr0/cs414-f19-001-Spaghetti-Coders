@@ -1,6 +1,16 @@
 import React, {Component} from 'react';
-import {Container, Table} from 'reactstrap'
+import {Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import {request} from "../api/api";
+import Rules from "./Rules";
 
+
+class Piece {
+    constructor(color, name) {
+        this.color = color;
+        this.name = name;
+        this.isTrapped = false;
+    }
+}
 class GamePage extends Component {
     constructor(props) {
         super(props);
@@ -15,6 +25,8 @@ class GamePage extends Component {
             player2: null,
             turnAction: null,
             whoseTurn: null,
+            gameOver: true,
+            announceWinner: true,
             selectedPiece: {
                 row: null,
                 col: null,
@@ -35,6 +47,27 @@ class GamePage extends Component {
                 retrievedBoard[i][j] = null;
             }
         }
+        return this.setPieces(retrievedBoard);
+    }
+
+    setPieces(retrievedBoard) {
+        retrievedBoard[0][0] = new Piece("red", "lion");
+        retrievedBoard[0][6] = new Piece("red", "tiger");
+        retrievedBoard[1][1] = new Piece("red", "dog");
+        retrievedBoard[1][5] = new Piece("red", "cat");
+        retrievedBoard[2][0] = new Piece("red", "rat");
+        retrievedBoard[2][2] = new Piece("red", "panther");
+        retrievedBoard[2][4] = new Piece("red", "wolf");
+        retrievedBoard[2][6] = new Piece("red", "elephant");
+
+        retrievedBoard[8][0] = new Piece("blue", "tiger");
+        retrievedBoard[8][6] = new Piece("blue", "lion");
+        retrievedBoard[7][1] = new Piece("blue", "cat");
+        retrievedBoard[7][5] = new Piece("blue", "dog");
+        retrievedBoard[6][0] = new Piece("blue", "elephant");
+        retrievedBoard[6][2] = new Piece("blue", "wolf");
+        retrievedBoard[6][4] = new Piece("blue", "panther");
+        retrievedBoard[6][6] = new Piece("blue", "rat");
         return retrievedBoard;
     }
 
@@ -46,7 +79,16 @@ class GamePage extends Component {
         //TODO: Communicate with backend to attempt the move and retrieve new board, server will determine if player gets to redo their move (invalid move), or if the turn is over
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
-
+        request(this.state,"move").then(gameState => {
+            this.setState({
+                board: gameState.board,
+                winner: gameState.winner,
+                player1: gameState.player1,
+                player2: gameState.player2,
+                turnAction: gameState.turnAction,
+                whoseTurn: gameState.whoseTurn,
+                gameOver: gameState.gameOver});
+        });
 
         //reset selections after move attempt
         piece.row = null;
@@ -105,6 +147,24 @@ class GamePage extends Component {
                 return '12a4b6'
             }
         }
+
+        if (i===0 || i===8){
+            if(j===2  || j===4) {
+                return '47100D';
+            }
+        }
+
+        if (i===1 || i===7) {
+            if(j===3) {
+                return '47100D';
+            }
+        }
+
+        if(i===0 || i===8) {
+            if(j===3) {
+                return '000000'
+            }
+        }
         //land (light green)
         return '7ec850'
     }
@@ -113,10 +173,10 @@ class GamePage extends Component {
         let square = this.state.board[i][j];
         //renders the square at the given position, using the board 2d array
         return <div style={{
-                    height: '40px',
-                    width: '40px'}}
-                    onClick={this.handleClick.bind(this, i, j)}>
-                    {(square != null) ? square.name[0].toUpperCase() : null}
+            height: '40px',
+            width: '40px'}}
+            onClick={this.handleClick.bind(this, i, j)}>
+            {(square != null) ? <h4 style={{color: square.color}}>{square.name[0].toUpperCase()}</h4> : null}
         </div>
     }
 
@@ -140,12 +200,26 @@ class GamePage extends Component {
         return <Table borderless style={{width: '280px', height: '360px', backgroundColor: '1e4d2b'}}><tbody>{board}</tbody></Table>
     }
 
+    toggle() {
+        let state = this.state;
+        state.announceWinner = false;
+        this.setState({state});
+    }
+
     render() {
         return (
             <Container>
             <div style={{display: 'inline-block'}} id="GamePage">
+                <Modal isOpen={this.state.announceWinner}>
+                    <ModalHeader>You are the Winner!</ModalHeader>
+                    <ModalBody>Winning isn't everything. It's just the only thing that matters.</ModalBody>
+                    <ModalFooter>
+                        <Button color="secondary" onClick={this.toggle.bind(this)}>Exit</Button>
+                    </ModalFooter>
+                </Modal>
                 {this.renderBoard()}
             </div>
+            <Rules/>
             </Container>);
     }
 }
