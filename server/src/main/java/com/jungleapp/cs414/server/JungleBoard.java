@@ -38,8 +38,6 @@ public class JungleBoard {
         return false;
     }
 
-
-
     public Piece getPiece(String position) throws IllegalPositionException{
         if(!validPositionString(position)) {
             throw new IllegalPositionException("The given position is not valid.");
@@ -49,7 +47,6 @@ public class JungleBoard {
 
         return board[rowPos][colPos];
     }
-
 
     public void makeMove(String fromPosition, String toPosition) {
         try {

@@ -7,12 +7,13 @@ public class BigCat extends Piece{
         super(board, color);
     }
 
+    //Lions and Tiger can jump water spaces so we account for that here
     public ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
 
         //check left
         if (column > 0) {
-            String checkLeft = moveMaker(row, column-1);
+            String checkLeft = moveMaker(row, column - 1);
 
             if (checkSpace(checkLeft)) { moves.add(checkLeft); }
 
@@ -27,7 +28,7 @@ public class BigCat extends Piece{
 
         //check right
         if (column < 8) {
-            String checkRight = moveMaker(row, column+1);
+            String checkRight = moveMaker(row, column + 1);
             if (checkSpace(checkRight)) { moves.add(checkRight); }
 
             if (checkWaterMove(checkRight)) {
@@ -39,7 +40,7 @@ public class BigCat extends Piece{
 
         //check up
         if (row > 0) {
-            String checkUp = moveMaker(row-1,column);
+            String checkUp = moveMaker(row - 1,column);
             if (checkSpace(checkUp)) { moves.add(checkUp); }
 
             //If tile is water, then jump across three water rows.
@@ -52,7 +53,7 @@ public class BigCat extends Piece{
 
         //check down
         if (row < 9) {
-            String checkDown = moveMaker(row+1,column);
+            String checkDown = moveMaker(row + 1,column);
             if (checkSpace(checkDown)){ moves.add(checkDown); }
 
             if (checkWaterMove(checkDown)) {
@@ -69,6 +70,5 @@ public class BigCat extends Piece{
     private boolean checkWaterMove(String position) {
         return super.waterTiles.contains(position);
     }
-
 
 }

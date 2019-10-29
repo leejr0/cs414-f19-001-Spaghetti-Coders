@@ -9,9 +9,8 @@ public class Leopard extends Piece {
         rank = 5;
     }
 
+    //The leopard uses regular legal moves
     public ArrayList<String> legalMoves() {
         return super.legalMoves();
-        //TODO Implement Special Set of Moves for leopard
-
     }
 }

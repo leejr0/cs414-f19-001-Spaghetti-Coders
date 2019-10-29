@@ -9,6 +9,7 @@ public class Rat extends Piece {
         rank = 1;
     }
 
+    //The rat uses the normal legal moves method in piece, but it can also move on water so checkspace is overridden
     public boolean checkSpace(String position) {
         String currentPosition = this.getPosition();
         try {
@@ -30,7 +31,8 @@ public class Rat extends Piece {
 
                 // Both pieces are on land and a rat is attacking a rat or elephant, return legal move.
                 if (!waterTiles.contains(currentPosition) && !waterTiles.contains(position)
-                        && (board.getPiece(position).getRank() == 1 || board.getPiece(position).getRank() == 8)) {
+                        && (board.getPiece(position).getRank() == 1 || board.getPiece(position).getRank() == 8)
+                        || board.getPiece(position).isTrapped) {
                     return true;
                 }
 
