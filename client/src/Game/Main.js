@@ -31,6 +31,7 @@ class Main extends Component {
                 board: "YES"
             };
             // TODO: Change this so that when we get a real JSON from the back-end, we can use it.
+            console.log(serverResponse);
             this.showBoard(serverResponse)
         });
     }
@@ -39,6 +40,7 @@ class Main extends Component {
         let state = this.state;
         state.board = response.board;
         state.displayBoard = true;
+        console.log(response);
         this.setState({state});
     }
 
@@ -53,13 +55,14 @@ class Main extends Component {
     render() {
         this.updatePlayer1();
         if(!this.state.display) {
-            return (<h5></h5>);
+            return (<h5> </h5>);
         }
         let board = <div> </div>;
         if(this.state.displayBoard === true) {
             board = <GamePage board={this.state.board} newGame={this.state.newGame}/>;
         }
 
+        //let startButton = <div> </div>
         let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
         if(this.state.displayBoard === true) {
             startButton = <div> </div>

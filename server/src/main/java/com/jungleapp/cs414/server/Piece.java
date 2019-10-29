@@ -4,9 +4,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class Piece {
+public class Piece {
 
-    protected JungleBoard board;
+    protected transient JungleBoard board;
     protected int rank;
     protected int row;
     protected int column;
