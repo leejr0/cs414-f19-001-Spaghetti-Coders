@@ -17,6 +17,19 @@ public class LionTest {
     }
 
     @Test
+    public void testInitialMoves() {
+        JungleBoard board = new JungleBoard();
+        board.initialize();
+
+        try {
+            assertTrue(board.getPiece("00").legalMoves().containsAll(Arrays.asList("10","01")));
+            assertTrue(board.getPiece("86").legalMoves().containsAll(Arrays.asList("85","76")));
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
     public void legalMoves() {
         JungleBoard board = new JungleBoard();
 
