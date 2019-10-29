@@ -27,7 +27,7 @@ public class BigCat extends Piece{
         }
 
         //check right
-        if (column < 8) {
+        if (column < 6) {
             String checkRight = moveMaker(row, column + 1);
             if (checkSpace(checkRight)) { moves.add(checkRight); }
 
@@ -52,7 +52,7 @@ public class BigCat extends Piece{
         }
 
         //check down
-        if (row < 9) {
+        if (row < 8) {
             String checkDown = moveMaker(row + 1,column);
             if (checkSpace(checkDown)){ moves.add(checkDown); }
 

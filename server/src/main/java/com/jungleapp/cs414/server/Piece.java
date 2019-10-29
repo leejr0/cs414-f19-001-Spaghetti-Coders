@@ -10,6 +10,7 @@ public abstract class Piece {
     protected int row;
     protected int column;
     private String pieceColor;
+
     protected boolean isTrapped = false;
     final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
     final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
