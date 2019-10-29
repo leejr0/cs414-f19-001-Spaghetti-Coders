@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import {request} from "../api/api";
+import Rules from "./Rules";
 
 
 class Piece {
@@ -172,10 +173,10 @@ class GamePage extends Component {
         let square = this.state.board[i][j];
         //renders the square at the given position, using the board 2d array
         return <div style={{
-                    height: '40px',
-                    width: '40px'}}
-                    onClick={this.handleClick.bind(this, i, j)}>
-                    {(square != null) ? <h4 style={{color: square.color}}>{square.name[0].toUpperCase()}</h4> : null}
+            height: '40px',
+            width: '40px'}}
+            onClick={this.handleClick.bind(this, i, j)}>
+            {(square != null) ? <h4 style={{color: square.color}}>{square.name[0].toUpperCase()}</h4> : null}
         </div>
     }
 
@@ -218,6 +219,7 @@ class GamePage extends Component {
                 </Modal>
                 {this.renderBoard()}
             </div>
+            <Rules/>
             </Container>);
     }
 }
