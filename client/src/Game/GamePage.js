@@ -5,9 +5,34 @@ import Rules from "./Rules";
 
 
 class Piece {
-    constructor(color, name) {
+    constructor(color, rank) {
         this.color = color;
-        this.name = name;
+        switch(rank) {
+            case 1:
+                this.name = 'rat';
+                break;
+            case 2:
+                this.name = 'cat';
+                break;
+            case 3:
+                this.name = 'wolf';
+                break;
+            case 4:
+                this.name = 'dog';
+                break;
+            case 5:
+                this.name = 'panther';
+                break;
+            case 6:
+                this.name = 'tiger';
+                break;
+            case 7:
+                this.name = 'lion';
+                break;
+            case 8:
+                this.name = 'elephant';
+                break;
+        }
         this.isTrapped = false;
     }
 }
@@ -18,7 +43,7 @@ class GamePage extends Component {
         this.state = {
             //TODO: upon opening game, set state from server-side gamestate in DB
             //empty until board is retrieved from server
-            board: this.getState(),
+            board: null,//this.getState(),
             //TODO: get values from server for winner, player1, player2, turnAction, whoseTurn and display relevant info
             winner: null,
             player1: null,
@@ -27,6 +52,7 @@ class GamePage extends Component {
             whoseTurn: null,
             isActive: true,
             announceWinner: true,
+            newGame: true,
             selectedPiece: {
                 row: null,
                 col: null,
@@ -36,6 +62,8 @@ class GamePage extends Component {
                 toCol: null
             }
         };
+
+        this.newBoard = this.newBoard.bind(this);
     }
 
     getState() {
@@ -200,6 +228,20 @@ class GamePage extends Component {
         return <Table borderless style={{width: '280px', height: '360px', backgroundColor: '1e4d2b'}}><tbody>{board}</tbody></Table>
     }
 
+    newBoard() {
+        let state = this.state;
+        state.board = this.props.board;
+        state.newGame = false;
+        for (let i = 0; i < state.board.length; i++) {
+            for (let j = 0; j < state.board[i].length; j++) {
+                let color = state.board[i][j].pieceColor;
+                let rank = state.board[i][j].rank;
+                state.board[i][j] = new Piece(color, rank);
+            }
+        }
+        this.setState({state});
+    }
+
     toggle() {
         let state = this.state;
         state.announceWinner = false;
@@ -207,6 +249,10 @@ class GamePage extends Component {
     }
 
     render() {
+        let newBoard = <div> </div>
+        if(this.props.newGame && this.state.newGame === true) {
+            this.newBoard()
+        }
         return (
             <Container>
             <div style={{display: 'inline-block'}} id="GamePage">
@@ -224,4 +270,4 @@ class GamePage extends Component {
     }
 }
 
-export default GamePage
+export default GamePage;

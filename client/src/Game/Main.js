@@ -12,6 +12,7 @@ class Main extends Component {
             display: true,
             displayBoard: false,
             board: null,
+            newGame: true,
             startGame: {
                 player1: "",
                 player2: "robotPlayer",
@@ -26,12 +27,17 @@ class Main extends Component {
 
     beginGame() {
         request(this.state.startGame, "startGame").then(serverResponse => {
+            let response = {
+                board: "YES"
+            };
+            // TODO: Change this so that when we get a real JSON from the back-end, we can use it.
             this.showBoard(serverResponse)
         });
     }
 
-    showBoard() {
+    showBoard(response) {
         let state = this.state;
+        state.board = response.board;
         state.displayBoard = true;
         this.setState({state});
     }
@@ -51,16 +57,17 @@ class Main extends Component {
         }
         let board = <div> </div>;
         if(this.state.displayBoard === true) {
-            board = <GamePage/>;
+            board = <GamePage board={this.state.board} newGame={this.state.newGame}/>;
         }
 
-        let startButton = <Button onClick={this.showBoard}>Start a new game</Button>;
+        let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
         if(this.state.displayBoard === true) {
             startButton = <div> </div>
         }
         console.log("----");
         console.log(this.state.startGame.player1);
         console.log(this.state.startGame.player2);
+        console.log(this.state.board);
         return (
             <div>
                 <h1 style={{color: "white", textAlign: "left"}}>JUNGLE</h1>

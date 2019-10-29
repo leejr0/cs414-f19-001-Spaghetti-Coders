@@ -16,7 +16,13 @@ public class Match {
         board = gson.fromJson(requestBody, JungleBoard.class);
 
         if(board.createNewBoard) {
+            String player1 = board.player1;
+            String player2 = board.player2;
+
             board = new JungleBoard();
+
+            board.player1 = player1;
+            board.player2 = player2;
             //TODO: Send state to database
         }
         else {
