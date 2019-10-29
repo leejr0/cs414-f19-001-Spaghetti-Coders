@@ -21,7 +21,6 @@ public class JungleBoard {
     //TO-DO
     public void initialize() {
         this.placePiece(new Elephant(this,"BLUE"), "60");
-
     }
 
     public boolean placePiece(Piece piece, String position) {
@@ -39,8 +38,6 @@ public class JungleBoard {
         return false;
     }
 
-
-
     public Piece getPiece(String position) throws IllegalPositionException{
         if(!validPositionString(position)) {
             throw new IllegalPositionException("The given position is not valid.");
@@ -50,7 +47,6 @@ public class JungleBoard {
 
         return board[rowPos][colPos];
     }
-
 
     public void makeMove(String fromPosition, String toPosition) {
         try {
@@ -70,10 +66,6 @@ public class JungleBoard {
 
         int rowPos = position.charAt(0)-48;
         int colPos = position.charAt(1)-48;
-        if(rowPos > 8 || rowPos < 0 || colPos < 0 || colPos > 6) {
-            return false;
-        }
-
-        return true;
+        return rowPos <= 8 && rowPos >= 0 && colPos >= 0 && colPos <= 6;
     }
 }

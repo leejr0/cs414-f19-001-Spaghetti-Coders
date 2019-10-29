@@ -9,6 +9,7 @@ public class Cat extends Piece{
         rank = 2;
     }
 
+    //The cat uses regular legal moves
     public ArrayList<String> legalMoves() {
         return super.legalMoves();
     }

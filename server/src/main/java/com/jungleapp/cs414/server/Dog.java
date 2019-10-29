@@ -9,6 +9,7 @@ public class Dog extends Piece{
         rank = 4;
     }
 
+    //The dog uses regular legal moves
     public ArrayList<String> legalMoves() {
         return super.legalMoves();
     }
