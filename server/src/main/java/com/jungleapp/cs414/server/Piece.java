@@ -64,7 +64,7 @@ public abstract class Piece {
         }
 
         //check right
-        if (column < 5) {
+        if (column < 6) {
             String checkRight = moveMaker(row, column+1);
             if (checkSpace(checkRight)) { moves.add(checkRight); }
         }
@@ -76,7 +76,7 @@ public abstract class Piece {
         }
 
         //check down
-        if (row < 7) {
+        if (row < 8) {
             String checkDown = moveMaker(row+1,column);
             if (checkSpace(checkDown)){ moves.add(checkDown); }
         }
