@@ -16,6 +16,20 @@ class WolfTest {
         assertEquals("RED", testWolf.getColor());
     }
 
+
+    @Test
+    public void testInitialMoves() {
+        JungleBoard board = new JungleBoard();
+        board.initialize();
+
+        try {
+            assertTrue(board.getPiece("24").legalMoves().containsAll(Arrays.asList("14","23","25")));
+            assertTrue(board.getPiece("62").legalMoves().containsAll(Arrays.asList("61","63","72")));
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Test
     void legalMoves() {
         JungleBoard board = new JungleBoard();
