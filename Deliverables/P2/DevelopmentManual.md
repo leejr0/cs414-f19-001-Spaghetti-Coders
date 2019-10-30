@@ -48,7 +48,7 @@ MySQL must be installed within a linux environment (operating system or virtual 
   
     `String MySQLConnectionURL = "jdbc:mysql://` **localhost/(database_name)** `?useTimezone=true&serverTimezone=UTC";`
     
-    `String DBUsername = "` **root** `";  or  String DBUsername = "` **(username)** `";`
+    `String DBUsername = "` **root** `";`  *-OR-*  `String DBUsername = "` **(username)** `";`
     
     `String DBPassword = "` **(password)** `";`
 6. To pass the RetreiveProfile tests, an entry needs to be added to the Players table:
