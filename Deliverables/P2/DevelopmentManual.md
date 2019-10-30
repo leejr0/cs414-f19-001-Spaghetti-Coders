@@ -52,4 +52,4 @@ MySQL must be installed within a linux environment (operating system or virtual 
     
     `String DBPassword = "` **(password)** `";`
 6. To pass the RetreiveProfile tests, an entry needs to be added to the Players table:
-    ```INSERT INTO `Players` (`nickname`,`email`,`password`,`wins`,`losses`) VALUES ('zizamzoe','zizamzoe@gmail.com','1234','0','0'); ```
+    ```mysql> INSERT INTO `Players` (`nickname`,`email`,`password`,`wins`,`losses`) VALUES ('zizamzoe','zizamzoe@gmail.com','1234','0','0'); ```
