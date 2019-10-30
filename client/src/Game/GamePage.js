@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
+import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import {request} from "../api/api";
 import Rules from "./Rules";
 
@@ -208,8 +208,7 @@ class GamePage extends Component {
 
     render() {
         return (
-            <Container>
-            <div style={{display: 'inline-block'}} id="GamePage">
+            <Container style={{display: 'inline-block'}}><div style={{display: 'inline-block'}} id="GamePage">
                 <Modal isOpen={this.state.announceWinner}>
                     <ModalHeader>You are the Winner!</ModalHeader>
                     <ModalBody>Winning isn't everything. It's just the only thing that matters.</ModalBody>
@@ -218,8 +217,7 @@ class GamePage extends Component {
                     </ModalFooter>
                 </Modal>
                 {this.renderBoard()}
-            </div>
-            <Rules/>
+            </div><Rules/>
             </Container>);
     }
 }
