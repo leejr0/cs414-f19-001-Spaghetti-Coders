@@ -75,7 +75,6 @@ public class JungleBoard {
     }
 
     public void makeMove(String fromPosition, String toPosition) {
-        System.out.println("makeMove");
         try {
             placePiece(getPiece(fromPosition), toPosition);
         } catch(IllegalPositionException e) {

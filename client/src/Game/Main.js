@@ -63,7 +63,6 @@ class Main extends Component {
         console.log("----");
         console.log(this.state.startGame.player1);
         console.log(this.state.startGame.player2);
-        console.log(this.state.board);
         return (
             <div>
                 <h1 style={{color: "white", textAlign: "left"}}>JUNGLE</h1>

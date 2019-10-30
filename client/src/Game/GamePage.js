@@ -5,8 +5,8 @@ import Rules from "./Rules";
 
 
 class Piece {
-    constructor(color, rank) {
-        this.color = color;
+    constructor(color, rank, isTrapped, row, column) {
+        this.pieceColor = color;
         switch(rank) {
             case 1:
                 this.name = 'rat';
@@ -33,7 +33,10 @@ class Piece {
                 this.name = 'elephant';
                 break;
         }
-        this.isTrapped = false;
+        this.isTrapped = isTrapped;
+        this.rank = rank;
+        this.row = row;
+        this.column = column;
     }
 }
 class GamePage extends Component {
@@ -204,7 +207,7 @@ class GamePage extends Component {
             height: '40px',
             width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <h4 style={{color: square.color}}>{square.name[0].toUpperCase()}</h4> : null}
+            {(square != null) ? <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4> : null}
         </div>
     }
 
@@ -237,7 +240,10 @@ class GamePage extends Component {
                 if(state.board[i][j] !== null) {
                     let color = state.board[i][j].pieceColor;
                     let rank = state.board[i][j].rank;
-                    state.board[i][j] = new Piece(color, rank);
+                    let isTrapped = state.board[i][j].isTrapped;
+                    let row = state.board[i][j].row;
+                    let column = state.board[i][j].column;
+                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column);
                 }
             }
         }
