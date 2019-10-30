@@ -31,5 +31,25 @@ The java files for the server can be found within `/home/IdeaProjects/cs414/serv
 
 ## Running Tests Standalone
 ...
-## [Other important dev tasks]
-...
+## Database
+
+### Running a Local Database *(Outside of CSU Network)*
+MySQL must be installed within a linux environment (operating system or virtual machine).
+1. If you don't already have a MySQL user set up, just set up the root account with a password of your choice.
+2. Once it is installed and the server is set up, login using: `mysql -u root -p`, and enter the password for the root user.
+    - Replace `root` with your username and use your own password if user account exists.
+    - To change the root password, use: `mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '(new_password)';`
+3. Create the database using: `mysql> CREATE DATABASE (database_name);`
+    - Use it with: `mysql> USE (database_name);` (MAKE SURE YOU USE THIS COMMAND. Without it, MySQL doesn't know what database to use.)
+4. From the 'cs414' directory, run the createDB script to create the tables necessaryfor Jungle: `mysql> source ./createDB;`
+    - Check if the tables exist: `mysql> show tables;`
+5. The necessary changes for the code to use the local database are as follows:
+  In RetrieveProfile.java and RetrieveMatches.java, modify the following lines:
+  
+    `String MySQLConnectionURL = "jdbc:mysql://` **localhost/(database_name)** `?useTimezone=true&serverTimezone=UTC";`
+    
+    `String DBUsername = "` **root** `";  or  String DBUsername = "` **(username)** `";`
+    
+    `String DBPassword = "` **(password)** `";`
+6. To pass the RetreiveProfile tests, an entry needs to be added to the Players table:
+    ```INSERT INTO `Players` (`nickname`,`email`,`password`,`wins`,`losses`) VALUES ('zizamzoe','zizamzoe@gmail.com','1234','0','0'); ```
