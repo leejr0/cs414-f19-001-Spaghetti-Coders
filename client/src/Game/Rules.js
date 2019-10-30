@@ -18,7 +18,7 @@ class Rules extends Component {
             <p>Rat=1, Cat=2, Wolf=3, Dog=4, Leopard=5, Tiger=6, Lion=7, Elephant=8</p>
                 <hr/>
             <h5 style={{color: "ecc530"}}>Object of the Game</h5>
-            <p>To win the game, one player must successfully move any animal into the Den of the opponent</p>
+            <p>To win the game, one player must successfully move any animal into the Den of the opponent.</p>
                 <hr/>
             <h5 style={{color: "ecc530"}}>Movement</h5>
             <p>All pieces have the same basic move, although some have special powers (described below). The basic move is just one space either forward, backward, left or right. The pieces never move diagonally.</p>
