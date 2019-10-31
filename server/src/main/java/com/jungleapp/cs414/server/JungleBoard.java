@@ -12,11 +12,22 @@ public class JungleBoard {
     String whoseTurn; //String for player name's turn
     String fromPosition;
     String toPosition;
+    Move chosenMove;
+    Move selectedPiece;
     String errorMessage;
     boolean isActive;
     boolean createNewBoard;
 
-    public JungleBoard() { board = new Piece[9][7]; }
+    public JungleBoard() {
+        board = new Piece[9][7];
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                board[i][j] = null;
+            }
+        }
+
+        initialize();
+    }
 
     public void initialize() {
         this.placePiece(new Lion(this, "RED"), "00");
