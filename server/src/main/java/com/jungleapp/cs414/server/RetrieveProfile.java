@@ -10,9 +10,16 @@ import java.sql.*;
 
 public class RetrieveProfile {
     Profile profile = new Profile();
+    //FAURE DATABASE
     String MySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
     String DBUsername = "vstepa";
     String DBPassword = "830982615";
+
+    //LOCAL DATABASE
+    //String MySQLConnectionURL = "jdbc:mysql://localhost/cs414?useTimezone=true&serverTimezone=UTC";
+    //String DBUsername = "root";
+    //String DBPassword = "pass";
+
     Connection connection;
 
     RetrieveProfile(Request request) {
