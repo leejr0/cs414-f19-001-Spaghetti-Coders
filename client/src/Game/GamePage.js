@@ -5,7 +5,7 @@ import Rules from "./Rules";
 
 
 class Piece {
-    constructor(color, rank, isTrapped, row, column) {
+    constructor(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles) {
         this.pieceColor = color;
         switch(rank) {
             case 1:
@@ -37,6 +37,9 @@ class Piece {
         this.rank = rank;
         this.row = row;
         this.column = column;
+        this.redTraps = redTraps;
+        this.blueTraps = blueTraps;
+        this.waterTiles = waterTiles;
     }
 }
 class GamePage extends Component {
@@ -111,6 +114,7 @@ class GamePage extends Component {
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
         request(this.state,"move").then(gameState => {
+            console.log(gameState);
             this.setState({
                 board: gameState.board,
                 winner: gameState.winner,
@@ -235,6 +239,9 @@ class GamePage extends Component {
         let state = this.state;
         state.board = this.props.board;
         state.newGame = false;
+        state.whoseTurn = this.props.startGame.player1;
+        state.player1 = this.props.startGame.player1;
+        state.player2 = this.props.startGame.player2;
         for (let i = 0; i < state.board.length; i++) {
             for (let j = 0; j < state.board[i].length; j++) {
                 if(state.board[i][j] !== null) {
@@ -243,7 +250,10 @@ class GamePage extends Component {
                     let isTrapped = state.board[i][j].isTrapped;
                     let row = state.board[i][j].row;
                     let column = state.board[i][j].column;
-                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column);
+                    let redTraps = state.board[i][j].redTraps;
+                    let blueTraps = state.board[i][j].blueTraps;
+                    let waterTiles = state.board[i][j].waterTiles;
+                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles);
                 }
             }
         }
