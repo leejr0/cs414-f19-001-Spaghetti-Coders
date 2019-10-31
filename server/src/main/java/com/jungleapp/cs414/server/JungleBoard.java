@@ -63,9 +63,20 @@ public class JungleBoard {
         return board[rowPos][colPos];
     }
 
-    public void makeMove(String fromPosition, String toPosition) {
+    public void makeMove(String fromPosition, String toPosition) throws IllegalMoveException{
+        if(!validPositionString(fromPosition)) {
+            throw new IllegalMoveException("The given fromPosition is not valid.");
+        }
+        try {
+            if(this.getPiece(fromPosition) == null) {
+                throw new IllegalMoveException("The given from Position is null.");
+            }
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
         try {
             placePiece(getPiece(fromPosition), toPosition);
+            this.board[fromPosition.charAt(0)-48][fromPosition.charAt(1)-48] = null;
         } catch(IllegalPositionException e) {
 
         }

@@ -38,7 +38,7 @@ class LeopardTest {
         board.placePiece(new Leopard(board,"RED"),"12");
 
         try {
-            assertTrue(board.getPiece("22").legalMoves().containsAll(Arrays.asList("32","21")));
+            assertTrue(board.getPiece("22").legalMoves().containsAll(Arrays.asList("21")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

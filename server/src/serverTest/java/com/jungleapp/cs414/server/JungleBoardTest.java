@@ -61,6 +61,45 @@ public class JungleBoardTest {
     }
 
     @Test
-    public void move() {
+    public void TestMakeMove() {
+        JungleBoard board = new JungleBoard();
+        board.initialize();
+        board.player1 = "TestPlayer1";
+        board.player2 = "TestPlayer2";
+        board.whoseTurn = board.player1;
+        assertEquals("TestPlayer1", board.whoseTurn);
+        try {
+            board.makeMove("60","50");
+        } catch (IllegalMoveException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            assertTrue(board.getPiece("60") == null);
+            assertTrue(board.getPiece("50").getColor() == "BLUE" && board.getPiece("50").getRank() == 8);
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
+        assertEquals("TestPlayer2", board.whoseTurn);
+
+
+        try {
+            board.makeMove("50","40");
+        } catch (IllegalMoveException e) {
+            e.printStackTrace();
+        }
+        try {
+            assertTrue(board.getPiece("50") == null);
+            assertTrue(board.getPiece("40").getColor() == "BLUE" && board.getPiece("40").getRank() == 8);
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
+        assertEquals("TestPlayer1", board.whoseTurn);
+
+        assertThrows(IllegalMoveException.class, ()->board.makeMove("60","70"));
+        assertThrows(IllegalMoveException.class, ()->board.makeMove("90","70"));
+        assertThrows(IllegalMoveException.class, ()->board.makeMove("69","70"));
+        assertThrows(IllegalMoveException.class, ()->board.makeMove("60","90"));
+        assertThrows(IllegalMoveException.class, ()->board.makeMove("60","09"));
     }
 }
