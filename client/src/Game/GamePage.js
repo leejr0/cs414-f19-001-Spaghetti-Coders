@@ -5,10 +5,38 @@ import Rules from "./Rules";
 
 
 class Piece {
-    constructor(color, name) {
-        this.color = color;
-        this.name = name;
-        this.isTrapped = false;
+    constructor(color, rank, isTrapped, row, column) {
+        this.pieceColor = color;
+        switch(rank) {
+            case 1:
+                this.name = 'rat';
+                break;
+            case 2:
+                this.name = 'cat';
+                break;
+            case 3:
+                this.name = 'wolf';
+                break;
+            case 4:
+                this.name = 'dog';
+                break;
+            case 5:
+                this.name = 'panther';
+                break;
+            case 6:
+                this.name = 'tiger';
+                break;
+            case 7:
+                this.name = 'lion';
+                break;
+            case 8:
+                this.name = 'elephant';
+                break;
+        }
+        this.isTrapped = isTrapped;
+        this.rank = rank;
+        this.row = row;
+        this.column = column;
     }
 }
 class GamePage extends Component {
@@ -18,15 +46,16 @@ class GamePage extends Component {
         this.state = {
             //TODO: upon opening game, set state from server-side gamestate in DB
             //empty until board is retrieved from server
-            board: this.getState(),
+            board: null,//this.getState(),
             //TODO: get values from server for winner, player1, player2, turnAction, whoseTurn and display relevant info
             winner: null,
             player1: null,
             player2: null,
             turnAction: null,
             whoseTurn: null,
-            gameOver: true,
+            isActive: true,
             announceWinner: true,
+            newGame: true,
             selectedPiece: {
                 row: null,
                 col: null,
@@ -36,6 +65,8 @@ class GamePage extends Component {
                 toCol: null
             }
         };
+
+        this.newBoard = this.newBoard.bind(this);
     }
 
     getState() {
@@ -87,7 +118,7 @@ class GamePage extends Component {
                 player2: gameState.player2,
                 turnAction: gameState.turnAction,
                 whoseTurn: gameState.whoseTurn,
-                gameOver: gameState.gameOver});
+                isActive: gameState.isActive});
         });
 
         //reset selections after move attempt
@@ -176,7 +207,7 @@ class GamePage extends Component {
             height: '40px',
             width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <h4 style={{color: square.color}}>{square.name[0].toUpperCase()}</h4> : null}
+            {(square != null) ? <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4> : null}
         </div>
     }
 
@@ -200,6 +231,25 @@ class GamePage extends Component {
         return <Table borderless style={{width: '280px', height: '360px', backgroundColor: '1e4d2b'}}><tbody>{board}</tbody></Table>
     }
 
+    newBoard() {
+        let state = this.state;
+        state.board = this.props.board;
+        state.newGame = false;
+        for (let i = 0; i < state.board.length; i++) {
+            for (let j = 0; j < state.board[i].length; j++) {
+                if(state.board[i][j] !== null) {
+                    let color = state.board[i][j].pieceColor;
+                    let rank = state.board[i][j].rank;
+                    let isTrapped = state.board[i][j].isTrapped;
+                    let row = state.board[i][j].row;
+                    let column = state.board[i][j].column;
+                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column);
+                }
+            }
+        }
+        this.setState({state});
+    }
+
     toggle() {
         let state = this.state;
         state.announceWinner = false;
@@ -207,6 +257,9 @@ class GamePage extends Component {
     }
 
     render() {
+        if(this.props.newGame && this.state.newGame === true) {
+            this.newBoard()
+        }
         return (
             <Container style={{display: 'inline-block'}}><div style={{display: 'inline-block'}} id="GamePage">
                 <Modal isOpen={this.state.announceWinner}>
@@ -222,4 +275,4 @@ class GamePage extends Component {
     }
 }
 
-export default GamePage
+export default GamePage;
