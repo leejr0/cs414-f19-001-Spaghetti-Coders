@@ -14,12 +14,11 @@ public class BigCat extends Piece{
         //check left
         if (column > 0) {
             String checkLeft = moveMaker(row, column - 1);
-
-            if (checkSpace(checkLeft)) { moves.add(checkLeft); }
+            if (checkSpace(row, column - 1)) { moves.add(checkLeft); }
 
             // If tile is water, then jump across two water columns.
             if (checkWaterMove(checkLeft)) {
-                if (checkSpace(moveMaker(row, column - 3))){
+                if (checkJump("LEFT")){
                     moves.add(moveMaker(row, column - 3));
                 }
             }
@@ -29,10 +28,10 @@ public class BigCat extends Piece{
         //check right
         if (column < 6) {
             String checkRight = moveMaker(row, column + 1);
-            if (checkSpace(checkRight)) { moves.add(checkRight); }
+            if (checkSpace(row, column + 1)) { moves.add(checkRight); }
 
             if (checkWaterMove(checkRight)) {
-                if (checkSpace(moveMaker(row, column + 3))) {
+                if (checkJump("RIGHT")) {
                     moves.add(moveMaker(row, column + 3));
                 }
             }
@@ -41,11 +40,11 @@ public class BigCat extends Piece{
         //check up
         if (row > 0) {
             String checkUp = moveMaker(row - 1,column);
-            if (checkSpace(checkUp)) { moves.add(checkUp); }
+            if (checkSpace(row - 1, column)) { moves.add(checkUp); }
 
             //If tile is water, then jump across three water rows.
             if (checkWaterMove(checkUp)) {
-                if (checkSpace(moveMaker(row - 4, column))){
+                if (checkJump("UP")){
                     moves.add(moveMaker(row - 4, column));
                 }
             }
@@ -54,10 +53,10 @@ public class BigCat extends Piece{
         //check down
         if (row < 8) {
             String checkDown = moveMaker(row + 1,column);
-            if (checkSpace(checkDown)){ moves.add(checkDown); }
+            if (checkSpace(row + 1, column)){ moves.add(checkDown); }
 
             if (checkWaterMove(checkDown)) {
-                if (checkSpace(moveMaker(row + 4, column))){
+                if (checkJump("DOWN")){
                     moves.add(moveMaker(row + 4, column));
                 }
             }
@@ -66,6 +65,52 @@ public class BigCat extends Piece{
 
         return moves;
     }
+
+    private boolean checkJump(String direction) {
+        if(direction.equals("UP") || direction.equals("DOWN")) {
+            try {
+                for(int i = 1; i < 4; i++){
+                    if (direction.equals("UP")) {
+                        if (board.getPiece(row + i, column) != null) { return false; }
+                    }
+                    else
+                        if(board.getPiece(row - i, column) != null) {return false;}
+                }
+                switch (direction) {
+                    case "UP" :
+                        return checkSpace(row + 4, column);
+                    case "DOWN" :
+                        return checkSpace(row - 4, column);
+                }
+
+            } catch (IllegalPositionException e) { return false; }
+        }
+
+
+        if(direction.equals("RIGHT") || direction.equals("LEFT")) {
+            try {
+                for(int i = 1; i < 3; i++){
+                    if(direction.equals("RIGHT")) {
+                        if (board.getPiece(row, column + i) != null) {
+                            return false;
+                        }
+                    } else
+                        if(board.getPiece(row, column - i ) != null) {return false;}
+                }
+
+                switch (direction) {
+                    case "RIGHT" :
+                        return checkSpace(row , column + 3);
+                    case "LEFT" :
+                        return checkSpace(row, column - 3);
+                }
+                return checkSpace(row, column - 4);
+            } catch (IllegalPositionException e) { return false; }
+        }
+
+        return true;
+    }
+
 
     private boolean checkWaterMove(String position) {
         return super.waterTiles.contains(position);
