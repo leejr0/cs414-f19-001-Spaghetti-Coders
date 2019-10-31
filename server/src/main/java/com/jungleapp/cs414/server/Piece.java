@@ -12,8 +12,8 @@ public abstract class Piece {
     private String pieceColor;
 
     protected boolean isTrapped = false;
-    final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
-    final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
+    private final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
+    private final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
     final ArrayList<String> waterTiles = new ArrayList<String>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
 
     public Piece (JungleBoard board, String color) {
@@ -39,12 +39,17 @@ public abstract class Piece {
         checkWin();
     }
 
-    public String getPosition(int row, int column) {
+    String getPosition() {
         String result = "";
         result += Integer.toString(this.row);
         result += Integer.toString(this.column);
         return result;
     }
+
+    String getPosition(int row, int column) {
+        return Integer.toString(row) + Integer.toString(column);
+    }
+
     //Pieces except Lion and Tiger can move one spot in each direction as long as the spot is null or contains an enemy piece of equal or lesser rank
     public ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
@@ -82,7 +87,7 @@ public abstract class Piece {
 
     public boolean checkSpace(int row, int column) {
         try {
-            if (waterTiles.contains(getPosition(row, column))) {
+            if (waterTiles.contains(getPosition())) {
                 return false;
             }
 
@@ -103,8 +108,8 @@ public abstract class Piece {
 
     public void checkTrapped() {
         //check if piece moved to a trap location of the opposite color
-        if ((getColor().equals("BLUE") && redTraps.contains(getPosition(row,column)))
-                || (getColor().equals("RED") && blueTraps.contains(getPosition(row,column)))) {
+        if ((getColor().equals("BLUE") && redTraps.contains(getPosition()))
+                || (getColor().equals("RED") && blueTraps.contains(getPosition()))) {
             isTrapped = true;
         }else{
             isTrapped = false;
@@ -112,8 +117,8 @@ public abstract class Piece {
     }
 
     public void checkWin() {
-        if ((getColor().equals("BLUE") && getPosition(row, column).equals("03"))
-                || (getColor().equals("RED") && getPosition(row, column).equals("83"))) {
+        if ((getColor().equals("BLUE") && getPosition().equals("03"))
+                || (getColor().equals("RED") && getPosition().equals("83"))) {
             board.winner = board.whoseTurn;
             board.isActive = false;
         }

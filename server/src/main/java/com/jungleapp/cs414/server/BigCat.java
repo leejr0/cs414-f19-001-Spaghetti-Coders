@@ -67,6 +67,7 @@ public class BigCat extends Piece{
     }
 
     private boolean checkJump(String direction) {
+        // Check for vertical water tiles, either UP or DOWN by checking if a tiles contain a piece or not.
         if(direction.equals("UP") || direction.equals("DOWN")) {
             try {
                 for(int i = 1; i < 4; i++){
@@ -86,7 +87,7 @@ public class BigCat extends Piece{
             } catch (IllegalPositionException e) { return false; }
         }
 
-
+        // Check for horizontal tiles, either LEFT or RIGHT by checking if the following tiles contain a piece or not.
         if(direction.equals("RIGHT") || direction.equals("LEFT")) {
             try {
                 for(int i = 1; i < 3; i++){
@@ -104,7 +105,6 @@ public class BigCat extends Piece{
                     case "LEFT" :
                         return checkSpace(row, column - 3);
                 }
-                return checkSpace(row, column - 4);
             } catch (IllegalPositionException e) { return false; }
         }
 

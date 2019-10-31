@@ -11,24 +11,24 @@ public class JungleBoardTest {
         JungleBoard board = new JungleBoard();
         board.initialize();
         try {
-            assertTrue(board.getPiece("00").getRank() == 7 && board.getPiece("00").getColor().equals("RED"));
-            assertTrue(board.getPiece("06").getRank() == 6 && board.getPiece("06").getColor().equals("RED"));
-            assertTrue(board.getPiece("11").getRank() == 4 && board.getPiece("11").getColor().equals("RED"));
-            assertTrue(board.getPiece("15").getRank() == 2 && board.getPiece("15").getColor().equals("RED"));
-            assertTrue(board.getPiece("20").getRank() == 1 && board.getPiece("20").getColor().equals("RED"));
-            assertTrue(board.getPiece("22").getRank() == 5 && board.getPiece("22").getColor().equals("RED"));
-            assertTrue(board.getPiece("24").getRank() == 3 && board.getPiece("24").getColor().equals("RED"));
-            assertTrue(board.getPiece("26").getRank() == 8 && board.getPiece("26").getColor().equals("RED"));
+            assertTrue(board.getPiece(0, 0 ).getRank() == 7 && board.getPiece(0, 0).getColor().equals("RED"));
+            assertTrue(board.getPiece(0, 6).getRank() == 6 && board.getPiece(0, 6).getColor().equals("RED"));
+            assertTrue(board.getPiece(1, 1).getRank() == 4 && board.getPiece(1, 1).getColor().equals("RED"));
+            assertTrue(board.getPiece(1, 5).getRank() == 2 && board.getPiece(1, 5).getColor().equals("RED"));
+            assertTrue(board.getPiece(2, 0).getRank() == 1 && board.getPiece(2, 0).getColor().equals("RED"));
+            assertTrue(board.getPiece(2, 2).getRank() == 5 && board.getPiece(2, 2).getColor().equals("RED"));
+            assertTrue(board.getPiece(2, 4).getRank() == 3 && board.getPiece(2, 4).getColor().equals("RED"));
+            assertTrue(board.getPiece(2, 6).getRank() == 8 && board.getPiece(2, 6).getColor().equals("RED"));
 
 
-            assertTrue(board.getPiece("60").getRank() == 8 && board.getPiece("60").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("62").getRank() == 3 && board.getPiece("62").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("64").getRank() == 5 && board.getPiece("64").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("66").getRank() == 1 && board.getPiece("66").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("71").getRank() == 2 && board.getPiece("71").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("75").getRank() == 4 && board.getPiece("75").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("80").getRank() == 6 && board.getPiece("80").getColor().equals("BLUE"));
-            assertTrue(board.getPiece("86").getRank() == 7 && board.getPiece("86").getColor().equals("BLUE"));
+            assertTrue(board.getPiece(6, 0).getRank() == 8 && board.getPiece(6, 0).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(6, 2).getRank() == 3 && board.getPiece(6, 2).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(6, 4).getRank() == 5 && board.getPiece(6, 4).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(6, 6).getRank() == 1 && board.getPiece(6, 6).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(7, 1).getRank() == 2 && board.getPiece(7, 1).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(7, 5).getRank() == 4 && board.getPiece(7, 5).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(8, 0).getRank() == 6 && board.getPiece(8, 0).getColor().equals("BLUE"));
+            assertTrue(board.getPiece(8, 6).getRank() == 7 && board.getPiece(8, 6).getColor().equals("BLUE"));
 
         } catch (IllegalPositionException e) {
             e.printStackTrace();
@@ -38,12 +38,11 @@ public class JungleBoardTest {
     @Test
     public void placePiece() {
         JungleBoard board = new JungleBoard();
-        assertFalse(board.placePiece(new Elephant(board, "RED"),"Position"));
-        assertFalse(board.placePiece(new Elephant(board, "RED"),"97"));
-        assertFalse(board.placePiece(new Elephant(board, "RED"),":0"));
-        assertFalse(board.placePiece(new Elephant(board, "RED"),"/2"));
-        assertFalse(board.placePiece(new Elephant(board, "RED"),"2/"));
-        assertTrue(board.placePiece(new Elephant(board,"RED"),"22"));
+        assertFalse(board.placePiece(new Elephant(board, "RED"),9, 7));
+        assertFalse(board.placePiece(new Elephant(board, "RED"),-3, 5));
+        assertFalse(board.placePiece(new Elephant(board, "RED"),200415, 2));
+        assertFalse(board.placePiece(new Elephant(board, "RED"),2, -312));
+        assertTrue(board.placePiece(new Elephant(board,"RED"),2, 2));
 
     }
 
@@ -51,10 +50,10 @@ public class JungleBoardTest {
     public void getPiece() {
         JungleBoard board = new JungleBoard();
         Elephant redElephant1 = new Elephant(board,"RED");
-        board.placePiece(redElephant1,"22");
+        board.placePiece(redElephant1,2, 2);
 
         try {
-            assertEquals(redElephant1,board.getPiece("22"));
+            assertEquals(redElephant1,board.getPiece(2, 2));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

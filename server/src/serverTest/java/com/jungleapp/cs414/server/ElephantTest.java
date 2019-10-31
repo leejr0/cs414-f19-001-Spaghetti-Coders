@@ -21,8 +21,8 @@ class ElephantTest {
         board.initialize();
 
         try {
-            assertTrue(board.getPiece("26").legalMoves().containsAll(Arrays.asList("16","25","36")));
-            assertTrue(board.getPiece("60").legalMoves().containsAll(Arrays.asList("50","61","70")));
+            assertTrue(board.getPiece(2, 6).legalMoves().containsAll(Arrays.asList("16","25","36")));
+            assertTrue(board.getPiece(6, 0).legalMoves().containsAll(Arrays.asList("50","61","70")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
@@ -31,12 +31,12 @@ class ElephantTest {
     public void testMoves() {
         JungleBoard board = new JungleBoard();
 
-        board.placePiece(new Elephant(board,"RED"),"22");
-        board.placePiece(new Elephant(board,"RED"),"23");
-        board.placePiece(new Elephant(board,"RED"),"12");
+        board.placePiece(new Elephant(board,"RED"),2, 2);
+        board.placePiece(new Elephant(board,"RED"),2, 3);
+        board.placePiece(new Elephant(board,"RED"),1, 2);
 
         try {
-            assertTrue(board.getPiece("22").legalMoves().containsAll(Arrays.asList("32","21")));
+            assertTrue(board.getPiece(2, 2).legalMoves().containsAll(Arrays.asList("32","21")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
