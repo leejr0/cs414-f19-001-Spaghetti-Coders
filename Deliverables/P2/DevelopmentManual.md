@@ -30,8 +30,28 @@ In order to add or remove functionality to or from the client, the developer mus
 The java files for the server can be found within `/home/IdeaProjects/cs414/server/src/`. Testing files can be found inside of `serverTest/java/com.jungleapp/cs414.server` and functional java files are inside `/main/java/com.jungleapp.cs414.server`. Adding a file to the server should add it to the package `com.jungleapp.cs414.server`.
 
 ## Running Tests Standalone
-...
-## Database
+To run *server* tests without running the entire application:
+- Clone the repo in IntelliJ IDEA
+- Navigate to the test directory: `/server/src/serverTest/java/com.jungleapp.cs414.server/`
+- *right-click* on the innermost folder-- `com.jungleapp.cs414.server` (it should contain a bunch of `*Test.java` files)
+    - click the `run 'Tests in 'com.jungleapp.cs.server''` option in the context menu
+- The test results should appear in the `Run` panel (where the Terminal usually is)
+
+Client testing is not yet implemented. We will implement testing for client-side in a future sprint using `jest`.
+
+## Database Information
+Jungle uses the `java.sql.*` package to store and access data in a database. One of two databases will be used. The default, `faure`, is available for use if Jungle is run on any Linux CS department state-capital machine. Otherwise, a local database may be created for testing purposes if the CSU network is unavailable.
+
+The local database is also necessary in the case of a product demo. Due to the unavailability of a department machine during our demonstration of Jungle, the database must reside locally in the same Linux (virtual) machine as the application to ensure the database is accessible.
+
+### The Default Database *(Within CSU Network)*
+The credentials used to access the `faure` database will be used by default. It is hosted on the CSU dedicated MySQL machine called "faure" under the MySQL account `vstepa`. The password for this account is omitted for privacy reasons, but `MySQLConnection.java` is able to login if the application is executed from any Linux CS department state-capital machine.
+
+This database cannot be modified by anyone other than the MySQL account owner or the application, so the tables are assumed to be always up to date and ready to go (i.e. no additional setup required).
+
+**TODO: implement the below database connection attempt structure**
+
+If a connection cannot be opened to `faure`, the application will attempt to connect to a `localhost` database. This must be set up separately for each new non-CSU machine the application is run on *(see next section)*.
 
 ### Running a Local Database *(Outside of CSU Network)*
 MySQL must be installed within a linux environment (operating system or virtual machine).
@@ -53,3 +73,17 @@ MySQL must be installed within a linux environment (operating system or virtual 
     `String DBPassword = "` **(password)** `";`
 6. To pass the RetreiveProfile tests, an entry needs to be added to the Players table:
     ```mysql> INSERT INTO `Players` (`nickname`,`email`,`password`,`wins`,`losses`) VALUES ('zizamzoe','zizamzoe@gmail.com','1234','0','0'); ```
+
+## Data Flow
+The client and server communicate by exchanging JSON objects when something needs to be updated. `HTTPRestful.java` is responsible for routing each client-side request and server-side response to their respective destinations.
+
+Every request is listed below along with its purpose and the corresponding response. These requests are closely tied to our User Stories, so the appropriate story for each request is included as well.
+
+| Request       | Information in Response          | Purpose                                    | User Story      |
+|---------------|----------------------------------|--------------------------------------------|-----------------|
+| `register`    | Validity of registration attempt | Allow user to create a new account         | **Register**    |
+| `login`       | Validity of login attempt        | Allow user to login to an existing account | **Login**       |
+| `newMatch`    | Newly initialized gameState      | Allow user to start a new game             | **Play Jungle** |
+| `updateMatch` | gameState after move is made     | Allow user take their turn                 | **Play Jungle** |
+
+*The exact format for all JSON objects can be viewed* [**here**](../../json-format.md)*.*
