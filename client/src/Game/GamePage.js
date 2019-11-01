@@ -115,8 +115,10 @@ class GamePage extends Component {
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
         request(this.state,"move").then(gameState => {
             console.log("GameState:   " + gameState);
+            console.log(gameState.board);
+            let newBoard = this.resetPieces(gameState.board);
             this.setState({
-                board: gameState.board,
+                board: newBoard,
                 winner: gameState.winner,
                 player1: gameState.player1,
                 player2: gameState.player2,
@@ -133,7 +135,24 @@ class GamePage extends Component {
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
     }
 
-
+    resetPieces(board) {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                if(board[i][j] !== null) {
+                    let color = board[i][j].pieceColor;
+                    let rank = board[i][j].rank;
+                    let isTrapped = board[i][j].isTrapped;
+                    let row = board[i][j].row;
+                    let column = board[i][j].column;
+                    let redTraps = board[i][j].redTraps;
+                    let blueTraps = board[i][j].blueTraps;
+                    let waterTiles = board[i][j].waterTiles;
+                    board[i][j] = new Piece(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles);
+                }
+            }
+        }
+        return board;
+    }
 
     saveGame() {
         //TODO: save the game when the user leaves the session
