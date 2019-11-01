@@ -16,9 +16,9 @@ public class RetrieveProfile {
     String DBPassword = "830982615";
 
     //LOCAL DATABASE
-    //String MySQLConnectionURL = "jdbc:mysql://localhost/cs414?useTimezone=true&serverTimezone=UTC";
-    //String DBUsername = "root";
-    //String DBPassword = "pass";
+    String MySQLConnectionURL_local = "jdbc:mysql://localhost/cs414?useTimezone=true&serverTimezone=UTC";
+    String DBUsername_local = "root";
+    String DBPassword_local = "pass";
 
     Connection connection;
 
@@ -101,7 +101,17 @@ public class RetrieveProfile {
 
     private void openMySQLConnection() {
         try {
-            connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
+            try {
+                System.out.println("Attempting to connect to faure...");
+                connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
+                System.out.println("Connected to faure.");
+            } catch (SQLException e) {
+                //try local database if faure is unreachable
+                e.printStackTrace();
+                System.out.println("Unable to reach faure. Attempting to connect to localhost...");
+                connection = DriverManager.getConnection(MySQLConnectionURL_local, DBUsername_local, DBPassword_local);
+                System.out.println("Connected to localhost.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
