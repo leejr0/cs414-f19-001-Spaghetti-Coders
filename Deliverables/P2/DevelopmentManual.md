@@ -54,8 +54,9 @@ This database cannot be modified by anyone other than the MySQL account owner or
 If a connection cannot be opened to `faure`, the application will attempt to connect to a `localhost` database. This must be set up separately for each new non-CSU machine the application is run on *(see next section)*.
 
 ### Running a Local Database *(Outside of CSU Network)*
-MySQL must be installed within a linux environment (operating system or virtual machine).
+MySQL must be installed within a linux environment (operating system or virtual machine). MySQL version 14.14 was used to make this guide.
 1. If you don't already have a MySQL user set up, just set up the root account with a password of your choice.
+    - Start MySql if it is not already started: `service mysql start`
 2. Once it is installed and the server is set up, login using: `mysql -u root -p`, and enter the password for the root user.
     - Replace `root` with your username and use your own password if user account exists.
     - To change the root password, use: `mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '(new_password)';`
