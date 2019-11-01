@@ -57,7 +57,7 @@ class Main extends Component {
         let board = <div> </div>;
         let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
         if(this.state.displayBoard === true) {
-            board = <GamePage board={this.state.board} newGame={this.state.newGame}/>;
+            board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
             startButton = <div> </div>
         }
         console.log("----");
