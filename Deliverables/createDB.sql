@@ -13,6 +13,7 @@ CREATE TABLE Game(
 	gameID			INT					NOT NULL			AUTO_INCREMENT,
 	board			JSON					NOT NULL,
 	status			VARCHAR(10)				NOT NULL,
+	playerTurn      VARCHAR(20)              NOT NULL,
 	winner			VARCHAR(20),
 	startTime		datetime				NOT NULL,
 	endTime			datetime,

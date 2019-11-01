@@ -9,18 +9,9 @@ import spark.Request;
 import java.sql.*;
 
 public class RetrieveProfile {
-    Profile profile = new Profile();
-    //FAURE DATABASE
-    String MySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
-    String DBUsername = "vstepa";
-    String DBPassword = "830982615";
+    private Profile profile = new Profile();
 
-    //LOCAL DATABASE
-    //String MySQLConnectionURL = "jdbc:mysql://localhost/cs414?useTimezone=true&serverTimezone=UTC";
-    //String DBUsername = "root";
-    //String DBPassword = "pass";
-
-    Connection connection;
+    private Connection connection;
 
     RetrieveProfile(Request request) {
         JsonParser jsonParser = new JsonParser();
@@ -29,7 +20,7 @@ public class RetrieveProfile {
         Gson gson = new Gson();
         profile = gson.fromJson(requestBody, Profile.class);
 
-        establishMySQLConnection();
+        connection = MySQLConnection.establishMySQLConnection();
     }
 
     // Default for testing purposes.
@@ -38,18 +29,10 @@ public class RetrieveProfile {
         profile.password = password;
         profile.email = email;
 
-        establishMySQLConnection();
+        connection = MySQLConnection.establishMySQLConnection();
     }
 
 
-    private void establishMySQLConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            openMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 
     boolean establishProfileIdentity() {
         boolean result = false;
@@ -74,7 +57,7 @@ public class RetrieveProfile {
 
     public boolean createNewProfile() {
         if (!establishProfileIdentity()) {
-            openMySQLConnection();
+            MySQLConnection.openMySQLConnection();
             try {
                 Statement statement = connection.createStatement();
 
@@ -99,11 +82,4 @@ public class RetrieveProfile {
         return false;
     }
 
-    private void openMySQLConnection() {
-        try {
-            connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 }

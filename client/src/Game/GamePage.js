@@ -47,10 +47,10 @@ class GamePage extends Component {
             //TODO: upon opening game, set state from server-side gamestate in DB
             //empty until board is retrieved from server
             board: null,//this.getState(),
-            //TODO: get values from server for winner, player1, player2, turnAction, whoseTurn and display relevant info
+            //TODO: get values from server for winner, playerBlue, playerRed, turnAction, whoseTurn and display relevant info
             winner: null,
-            player1: null,
-            player2: null,
+            playerBlue: null,
+            playerRed: null,
             turnAction: null,
             whoseTurn: null,
             isActive: true,
@@ -110,13 +110,12 @@ class GamePage extends Component {
         //TODO: Communicate with backend to attempt the move and retrieve new board, server will determine if player gets to redo their move (invalid move), or if the turn is over
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
-        request(this.state,"move").then(gameState => {
+        request(this.state,"updateMatch").then(gameState => {
             this.setState({
                 board: gameState.board,
                 winner: gameState.winner,
-                player1: gameState.player1,
-                player2: gameState.player2,
-                turnAction: gameState.turnAction,
+                playerBlue: gameState.playerBlue,
+                playerRed: gameState.playerRed,
                 whoseTurn: gameState.whoseTurn,
                 isActive: gameState.isActive});
         });

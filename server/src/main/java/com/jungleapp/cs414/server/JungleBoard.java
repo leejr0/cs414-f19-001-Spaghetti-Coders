@@ -6,17 +6,6 @@ import java.util.Arrays;
 public class JungleBoard {
 
     private Piece[][] board;
-    String winner;
-    String player1;
-    String player2;
-    String whoseTurn; //String for player name's turn
-    String fromPosition;
-    String toPosition;
-    Move chosenMove;
-    Move selectedPiece;
-    String errorMessage;
-    boolean isActive;
-    boolean createNewBoard;
 
     public JungleBoard() {
         board = new Piece[9][7];
@@ -70,17 +59,10 @@ public class JungleBoard {
         return board[row][column];
     }
 
-    public void makeMove(int row, int column, int toRow, int toColumn) {
+    void makeMove(int row, int column, int toRow, int toColumn) {
         try {
             placePiece(getPiece(row, column), toRow, toColumn);
-        } catch(IllegalPositionException e) {
-
-        }
-        if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
-            whoseTurn = player2;
-        }else{
-            whoseTurn = player1;
-        }
+        } catch(IllegalPositionException ignored) {}
     }
 
     private boolean validPosition(int row, int column) {

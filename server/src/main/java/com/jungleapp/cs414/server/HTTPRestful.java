@@ -27,9 +27,9 @@ class HTTPRestful {
 
         post("/register", this::register);
 
-        post("/startGame", this::startGame);
+        post("/newMatch", this::createNewMatch);
 
-        post("/move", this::move);
+        post("/updateMatch", this::updateMatch);
 
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
@@ -54,19 +54,20 @@ class HTTPRestful {
         return loginProfile.establishProfileIdentity();
     }
 
-    private String startGame(Request request, Response response) {
+    private String createNewMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
         Match m = new Match(request);
+        m.createNewMatch();
         return m.createJSON();
     }
 
-    private String move(Request request, Response response) {
+    private String updateMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        //Return the board state with the move completed, and the winner, players etc.
-        Match m = new Match(request);
-        return m.createJSON();
+
+        // TODO: Return the board state with the move completed, and the winner, players etc.
+        return "placeholder";
     }
 }

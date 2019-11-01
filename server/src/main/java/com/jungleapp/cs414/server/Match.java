@@ -5,47 +5,76 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 
-public class Match {
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
+class Match {
+    private Gson gson = new Gson();
 
     private JungleBoard board;
-    public Match(Request request) {
+    private String winner;
+    private boolean isActive;
+    private String whoseTurn;
+    private String playerBlue;
+    private String playerRed;
+    private Move move;
+
+    Connection connection;
+
+    Match(Request request) {
         JsonParser jsonParser = new JsonParser();
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
         System.out.println(requestBody);
+
+        Match currentMatch = gson.fromJson(requestBody, Match.class);
+
+        this.board = currentMatch.board;
+        this.isActive = currentMatch.isActive;
+        this.whoseTurn = currentMatch.whoseTurn;
+        this.winner = currentMatch.winner;
+        this.move = currentMatch.move;
+
+        connection = MySQLConnection.establishMySQLConnection();
+    }
+
+    void createNewMatch() {
+        this.board.initialize();
+        this.isActive = true;
+        this.whoseTurn = this.playerBlue;
+
+        saveNewMatch();
+    }
+
+    void updateMatch() {
+        /* TODO: Call board.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol)
+            Calculate potential win, calculate whoseTurn, and update database with the former information.
+        */
+    }
+
+    private void saveNewMatch() {
         try {
+            Statement statement = connection.createStatement();
 
-            JungleBoard board = gson.fromJson(requestBody, JungleBoard.class);
-            if(board.createNewBoard) {
-                String player1 = board.player1;
-                String player2 = board.player2;
+            LocalDateTime currentTime = LocalDateTime.now();
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-                this.board = new JungleBoard();
+            String formattedTime = currentTime.format(timeFormatter);
 
-                this.board.player1 = player1;
-                this.board.player2 = player2;
-                //TODO: Send state to database
-            }
-            else {
-                //System.out.println("here");
-                String fromPosition = board.selectedPiece.row + board.selectedPiece.col;
-                String toPosition = board.chosenMove.toRow + board.chosenMove.toCol;
-                //System.out.println("stuffity");
-                //System.out.println(fromPosition);
-                //System.out.println(toPosition);
-                board.makeMove(fromPosition, toPosition);
-                //TODO: Send state to database
-            }
-        } catch(Exception e){
+            // Register new match into the database
+            statement.execute("insert into Game values (" + gson.toJson(this.board) + ", " +
+                    "'" + this.isActive + "','" + this.whoseTurn + "','" + this.winner + "'," +
+                    "'" + formattedTime + "', NULL");
+
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    public String createJSON() {
-        Gson gson = new Gson();
-
-        return gson.toJson(board);
-    }
+    String createJSON() { return gson.toJson(this); }
 }
