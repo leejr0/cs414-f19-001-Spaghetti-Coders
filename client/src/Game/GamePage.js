@@ -114,7 +114,7 @@ class GamePage extends Component {
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
         request(this.state,"move").then(gameState => {
-            console.log(gameState);
+            console.log("GameState:   " + gameState);
             this.setState({
                 board: gameState.board,
                 winner: gameState.winner,
@@ -132,6 +132,8 @@ class GamePage extends Component {
         move.toCol = null;
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
     }
+
+
 
     saveGame() {
         //TODO: save the game when the user leaves the session

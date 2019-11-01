@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class JungleBoard {
 
-    private Piece[][] board;
+    public Piece[][] board;
     String winner;
     String player1;
     String player2;
