@@ -13,8 +13,8 @@ public class PieceTest {
         Elephant redElephant1 = new Elephant(board, "RED");
         Elephant blueElephant1 = new Elephant(board, "BLUE");
 
-        assertTrue(redElephant1.getColor() == "RED");
-        assertTrue(blueElephant1.getColor() == "BLUE");
+        assertEquals("RED", redElephant1.getColor());
+        assertEquals("BLUE", blueElephant1.getColor());
 
     }
 
@@ -23,7 +23,7 @@ public class PieceTest {
         JungleBoard board = new JungleBoard();
         Elephant redElephant1 = new Elephant(board, "RED");
         try {
-            redElephant1.setPosition("22");
+            redElephant1.setPosition(2, 2);
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
@@ -36,9 +36,10 @@ public class PieceTest {
         JungleBoard board = new JungleBoard();
         Elephant redElephant1 = new Elephant(board, "RED");
 
-        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition("position"));
-        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition("19"));
-        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition("/2"));
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition(1, 9));
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition(-10, 2));
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition(-1, 2));
+        assertThrows(IllegalPositionException.class, ()->redElephant1.setPosition(-1, -1));
 
     }
 
@@ -46,7 +47,7 @@ public class PieceTest {
     public void testGetPosition() {
         JungleBoard board = new JungleBoard();
         Elephant redElephant1 = new Elephant(board, "RED");
-        board.placePiece(redElephant1, "11");
+        board.placePiece(redElephant1, 1, 1);
 
         assertEquals("11", redElephant1.getPosition());
     }

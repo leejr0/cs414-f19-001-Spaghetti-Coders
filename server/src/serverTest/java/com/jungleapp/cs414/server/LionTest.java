@@ -22,8 +22,8 @@ public class LionTest {
         board.initialize();
 
         try {
-            assertTrue(board.getPiece("00").legalMoves().containsAll(Arrays.asList("10","01")));
-            assertTrue(board.getPiece("86").legalMoves().containsAll(Arrays.asList("85","76")));
+            assertTrue(board.getPiece(0, 0).legalMoves().containsAll(Arrays.asList("10","01")));
+            assertTrue(board.getPiece(8, 6).legalMoves().containsAll(Arrays.asList("85","76")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
@@ -33,12 +33,12 @@ public class LionTest {
     public void legalMoves() {
         JungleBoard board = new JungleBoard();
 
-        board.placePiece(new Lion(board,"RED"),"22");
-        board.placePiece(new Lion(board,"RED"),"23");
-        board.placePiece(new Lion(board,"RED"),"12");
+        board.placePiece(new Lion(board,"RED"),2, 2);
+        board.placePiece(new Lion(board,"RED"),2, 3);
+        board.placePiece(new Lion(board,"RED"),1, 2);
 
         try {
-            assertTrue(board.getPiece("22").legalMoves().containsAll(Arrays.asList("32","21")));
+            assertTrue(board.getPiece(2, 2).legalMoves().containsAll(Arrays.asList("32","21")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

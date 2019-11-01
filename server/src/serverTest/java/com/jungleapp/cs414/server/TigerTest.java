@@ -20,12 +20,12 @@ public class TigerTest {
     public void legalMoves() {
         JungleBoard board = new JungleBoard();
 
-        board.placePiece(new Tiger(board,"RED"),"22");
-        board.placePiece(new Tiger(board,"RED"),"23");
-        board.placePiece(new Tiger(board,"RED"),"12");
+        board.placePiece(new Tiger(board,"RED"),2, 2);
+        board.placePiece(new Tiger(board,"RED"),2, 3);
+        board.placePiece(new Tiger(board,"RED"),1, 2);
 
         try {
-            assertTrue(board.getPiece("22").legalMoves().containsAll(Arrays.asList("32","21")));
+            assertTrue(board.getPiece(2, 2).legalMoves().containsAll(Arrays.asList("32","21")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

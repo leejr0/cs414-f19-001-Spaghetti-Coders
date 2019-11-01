@@ -30,32 +30,30 @@ public class JungleBoard {
     }
 
     public void initialize() {
-        this.placePiece(new Lion(this, "RED"), "00");
-        this.placePiece(new Tiger(this, "RED"), "06");
-        this.placePiece(new Dog(this, "RED"), "11");
-        this.placePiece(new Cat(this,"RED"),"15");
-        this.placePiece(new Rat(this, "RED"),"20");
-        this.placePiece(new Leopard(this,"RED"),"22");
-        this.placePiece(new Wolf(this, "RED"), "24");
-        this.placePiece(new Elephant(this, "RED"), "26");
+        this.placePiece(new Lion(this, "RED"), 0, 0);
+        this.placePiece(new Tiger(this, "RED"), 0,6);
+        this.placePiece(new Dog(this, "RED"), 1,1);
+        this.placePiece(new Cat(this,"RED"),1,5);
+        this.placePiece(new Rat(this, "RED"),2,0);
+        this.placePiece(new Leopard(this,"RED"),2,2);
+        this.placePiece(new Wolf(this, "RED"), 2,4);
+        this.placePiece(new Elephant(this, "RED"), 2,6);
 
-        this.placePiece(new Lion(this, "BLUE"), "86");
-        this.placePiece(new Tiger(this, "BLUE"), "80");
-        this.placePiece(new Dog(this, "BLUE"), "75");
-        this.placePiece(new Cat(this,"BLUE"),"71");
-        this.placePiece(new Rat(this, "BLUE"),"66");
-        this.placePiece(new Leopard(this,"BLUE"),"64");
-        this.placePiece(new Wolf(this, "BLUE"), "62");
-        this.placePiece(new Elephant(this,"BLUE"), "60");
+        this.placePiece(new Lion(this, "BLUE"), 8,6);
+        this.placePiece(new Tiger(this, "BLUE"), 8,0);
+        this.placePiece(new Dog(this, "BLUE"), 7,5);
+        this.placePiece(new Cat(this,"BLUE"),7,1);
+        this.placePiece(new Rat(this, "BLUE"),6,6);
+        this.placePiece(new Leopard(this,"BLUE"),6,4);
+        this.placePiece(new Wolf(this, "BLUE"), 6,2);
+        this.placePiece(new Elephant(this,"BLUE"), 6,0);
     }
 
-    public boolean placePiece(Piece piece, String position) {
-        if(validPositionString(position)) {
-            int rowPos = position.charAt(0)-48;
-            int colPos = position.charAt(1)-48;
-            board[rowPos][colPos] = piece;
+    public boolean placePiece(Piece piece, int row, int column) {
+        if(validPosition(row, column)) {
+            board[row][column] = piece;
             try {
-                piece.setPosition(position);
+                piece.setPosition(row, column);
             } catch (IllegalPositionException e) {
 
             }
@@ -64,19 +62,17 @@ public class JungleBoard {
         return false;
     }
 
-    public Piece getPiece(String position) throws IllegalPositionException{
-        if(!validPositionString(position)) {
+    public Piece getPiece(int row, int column) throws IllegalPositionException{
+        if(!validPosition(row, column)) {
             throw new IllegalPositionException("The given position is not valid.");
         }
-        int rowPos = position.charAt(0) - 48;
-        int colPos = position.charAt(1) - 48;
 
-        return board[rowPos][colPos];
+        return board[row][column];
     }
 
-    public void makeMove(String fromPosition, String toPosition) {
+    public void makeMove(int row, int column, int toRow, int toColumn) {
         try {
-            placePiece(getPiece(fromPosition), toPosition);
+            placePiece(getPiece(row, column), toRow, toColumn);
         } catch(IllegalPositionException e) {
 
         }
@@ -87,11 +83,7 @@ public class JungleBoard {
         }
     }
 
-    private boolean validPositionString(String position) {
-        if(position.length() != 2) { return false; }
-
-        int rowPos = position.charAt(0)-48;
-        int colPos = position.charAt(1)-48;
-        return rowPos <= 8 && rowPos >= 0 && colPos >= 0 && colPos <= 6;
+    private boolean validPosition(int row, int column) {
+        return row <= 8 && row >= 0 && column >= 0 && column <= 6;
     }
 }
