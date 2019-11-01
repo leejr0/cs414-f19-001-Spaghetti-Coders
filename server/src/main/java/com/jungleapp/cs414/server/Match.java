@@ -28,12 +28,9 @@ public class Match {
                 //TODO: Send state to database
             }
             else {
-                //System.out.println("here");
+                this.board = board;
                 String fromPosition = board.selectedPiece.row + board.selectedPiece.col;
                 String toPosition = board.chosenMove.toRow + board.chosenMove.toCol;
-                //System.out.println("stuffity");
-                //System.out.println(fromPosition);
-                //System.out.println(toPosition);
                 board.makeMove(fromPosition, toPosition);
                 //TODO: Send state to database
             }
