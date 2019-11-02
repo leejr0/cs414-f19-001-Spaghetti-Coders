@@ -7,6 +7,11 @@ public class Wolf extends Piece {
     Wolf(JungleBoard board, String color){
         super(board, color);
         rank = 3;
+        name = "wolf";
+    }
+
+    Wolf(Piece piece) {
+        super(piece);
     }
 
     //The wolf uses regular legal moves

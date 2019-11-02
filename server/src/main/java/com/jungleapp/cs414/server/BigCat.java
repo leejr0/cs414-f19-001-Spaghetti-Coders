@@ -7,6 +7,10 @@ public class BigCat extends Piece{
         super(board, color);
     }
 
+    BigCat(Piece piece) {
+        super(piece);
+    }
+
     //Lions and Tiger can jump water spaces so we account for that here
     public ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
@@ -71,16 +75,17 @@ public class BigCat extends Piece{
         if(direction.equals("UP") || direction.equals("DOWN")) {
             try {
                 for(int i = 1; i < 4; i++){
-                    if (direction.equals("UP")) {
+                    if (direction.equals("DOWN")) {
                         if (board.getPiece(row + i, column) != null) { return false; }
                     }
-                    else
+                    else {
                         if(board.getPiece(row - i, column) != null) {return false;}
+                    }
                 }
                 switch (direction) {
-                    case "UP" :
-                        return checkSpace(row + 4, column);
                     case "DOWN" :
+                        return checkSpace(row + 4, column);
+                    case "UP" :
                         return checkSpace(row - 4, column);
                 }
 
