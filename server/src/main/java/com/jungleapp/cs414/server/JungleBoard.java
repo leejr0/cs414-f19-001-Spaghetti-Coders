@@ -6,12 +6,10 @@ import java.util.Arrays;
 public class JungleBoard {
 
     public Piece[][] board;
-    String winner;
-    String player1;
+    public String winner;
+    public String player1;
     String player2;
     String whoseTurn; //String for player name's turn
-    String fromPosition;
-    String toPosition;
     Move chosenMove;
     Move selectedPiece;
     String errorMessage;
@@ -49,6 +47,16 @@ public class JungleBoard {
         this.placePiece(new Elephant(this,"BLUE"), 6,0);
     }
 
+    public void resetBoard() {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j] != null) {
+                    board[i][j].setBoard(this);
+                }
+            }
+        }
+    }
+
     public boolean placePiece(Piece piece, int row, int column) {
         if(validPosition(row, column)) {
             board[row][column] = piece;
@@ -73,6 +81,7 @@ public class JungleBoard {
     public void makeMove(int row, int column, int toRow, int toColumn) {
         try {
             placePiece(getPiece(row, column), toRow, toColumn);
+            nullOldPiece(row, column);
         } catch(IllegalPositionException e) {
 
         }
@@ -83,7 +92,16 @@ public class JungleBoard {
         }
     }
 
+    private void nullOldPiece(int row, int column) {
+        board[row][column] = null;
+    }
+
     private boolean validPosition(int row, int column) {
         return row <= 8 && row >= 0 && column >= 0 && column <= 6;
+    }
+
+    public void declareWinner() {
+        winner = whoseTurn;
+        isActive = false;
     }
 }

@@ -119,9 +119,13 @@ public class Piece {
     public void checkWin() {
         if ((getColor().equals("BLUE") && getPosition().equals("03"))
                 || (getColor().equals("RED") && getPosition().equals("83"))) {
-            board.winner = board.whoseTurn;
-            board.isActive = false;
+
+            board.declareWinner();
         }
+    }
+
+    public void setBoard(JungleBoard board) {
+        this.board = board;
     }
 
 }
