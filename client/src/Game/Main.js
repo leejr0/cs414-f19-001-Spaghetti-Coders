@@ -26,8 +26,9 @@ class Main extends Component {
     }
 
     beginGame() {
-        request(this.state.startGame, "startGame").then(serverResponse => {
+        request(this.state.startGame, "newMatch").then(serverResponse => {
             // TODO: Change this so that when we get a real JSON from the back-end, we can use it.
+            console.log(serverResponse);
             this.showBoard(serverResponse)
         });
     }

@@ -15,9 +15,9 @@ import java.time.format.DateTimeFormatter;
 class Match {
     private Gson gson = new Gson();
 
-    private JungleBoard board;
+    private transient JungleBoard board;
     private String winner;
-    private boolean isActive;
+    private Boolean isActive = true;
     private String whoseTurn;
     private String playerBlue;
     private String playerRed;
@@ -43,18 +43,62 @@ class Match {
         connection = MySQLConnection.establishMySQLConnection();
     }
 
-    void createNewMatch() {
+    String createNewMatch() {
+        this.board = new JungleBoard();
         this.board.initialize();
         this.isActive = true;
         this.whoseTurn = this.playerBlue;
 
         saveNewMatch();
+
+        return gson.toJson(this.board);
     }
 
-    void updateMatch() {
+    String updateMatch() {
         /* TODO: Call board.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol)
             Calculate potential win, calculate whoseTurn, and update database with the former information.
         */
+        this.board.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
+        checkWin();
+
+        return createJSON();
+    }
+
+    private void saveUpdatedMatch() {
+        // TODO: Finish updating match with some sort of match identifier(gameID).
+//        try {
+//            Statement statement = connection.createStatement();
+//            String formattedTime = null;
+//            if (!isActive) {
+//                LocalDateTime matchEndTime = LocalDateTime.now();
+//                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+//
+//                formattedTime = matchEndTime.format(timeFormatter);
+//            }
+//
+//            //Update database entry with current details.
+//            statement.execute("UPDATE Game SET board='" + gson.toJson(this.board) + "'," +
+//                    "status='" + this.isActive + "'," +
+//                    "playerTurn='" + this.whoseTurn + "'," +
+//                    "winner='" + this.winner + "'," +
+//                    "endTime='" + formattedTime + "' WHERE TODO: Insert applicable match identifier here.");
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+    }
+
+    //As long as a piece is inside the den, we know its a win for player. Same color pieces may not move into their own den.
+    private void checkWin() {
+        try {
+            if (this.board.getPiece(0, 3) != null) {
+                this.winner = this.playerBlue;
+                this.isActive = false;
+            } else if (this.board.getPiece(8, 3) != null) {
+                this.winner = this.playerRed;
+                this.isActive = false;
+            }
+        } catch (IllegalPositionException ignored) {}
     }
 
     private void saveNewMatch() {
@@ -62,19 +106,19 @@ class Match {
             Statement statement = connection.createStatement();
 
             LocalDateTime currentTime = LocalDateTime.now();
-            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
 
             String formattedTime = currentTime.format(timeFormatter);
 
             // Register new match into the database
-            statement.execute("insert into Game values (" + gson.toJson(this.board) + ", " +
-                    "'" + this.isActive + "','" + this.whoseTurn + "','" + this.winner + "'," +
-                    "'" + formattedTime + "', NULL");
+            statement.execute("INSERT INTO Game VALUES (NULL, '" + gson.toJson(this.board) + "', " +
+                    "'" + this.isActive + "','" + this.whoseTurn + "', NULL ," +
+                    "'" + formattedTime + "', NULL);");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    String createJSON() { return gson.toJson(this); }
+    private String createJSON() { return gson.toJson(this); }
 }

@@ -65,6 +65,7 @@ public class JungleBoard {
         } catch(IllegalPositionException ignored) {}
     }
 
+
     private boolean validPosition(int row, int column) {
         return row <= 8 && row >= 0 && column >= 0 && column <= 6;
     }

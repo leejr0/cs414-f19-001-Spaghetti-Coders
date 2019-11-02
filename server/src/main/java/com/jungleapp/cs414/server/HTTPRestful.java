@@ -58,16 +58,14 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
-        Match m = new Match(request);
-        m.createNewMatch();
-        return m.createJSON();
+        Match match = new Match(request);
+        return match.createNewMatch();
     }
 
     private String updateMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
-        // TODO: Return the board state with the move completed, and the winner, players etc.
-        return "placeholder";
+        return new Match(request).updateMatch();
     }
 }

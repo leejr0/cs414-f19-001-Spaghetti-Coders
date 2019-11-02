@@ -57,7 +57,7 @@ public class RetrieveProfile {
 
     public boolean createNewProfile() {
         if (!establishProfileIdentity()) {
-            MySQLConnection.openMySQLConnection();
+            connection = MySQLConnection.establishMySQLConnection();
             try {
                 Statement statement = connection.createStatement();
 
