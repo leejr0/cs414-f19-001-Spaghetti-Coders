@@ -8,8 +8,12 @@ public class Leopard extends Piece {
         super(board, color);
         rank = 5;
         super.legalMoves = legalMoves();
+        name = "panther";
     }
 
+    Leopard(Piece piece) {
+        super(piece);
+    }
     //The leopard uses regular legal moves
     public ArrayList<String> legalMoves() {
         return super.legalMoves();

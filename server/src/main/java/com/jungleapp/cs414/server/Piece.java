@@ -9,17 +9,31 @@ public class Piece {
     protected int rank;
     protected int row;
     protected int column;
+    String name;
     private String pieceColor;
     protected boolean isTrapped = false;
     protected ArrayList<String> legalMoves;
 
     private final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
     private final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
-    final ArrayList<String> waterTiles = new ArrayList<String>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
+    private final ArrayList<String> waterTiles = new ArrayList<String>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
 
     public Piece (JungleBoard board, String color) {
         this.board = board;
         this.pieceColor = color;
+    }
+
+    public Piece(Piece piece) {
+        this.rank = piece.rank;
+        this.row = piece.row;
+        this.column = piece.column;
+        this.name = piece.name;
+        this.pieceColor = piece.pieceColor;
+        this.isTrapped = piece.isTrapped;
+        this.legalMoves = piece.legalMoves;
+//        this.redTraps = piece.redTraps;
+//        this.blueTraps = piece.blueTraps;
+//        this.waterTiles = piece.waterTiles;
     }
 
     public String getColor(){

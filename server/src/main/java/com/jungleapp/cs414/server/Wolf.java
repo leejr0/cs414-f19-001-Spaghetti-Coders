@@ -8,6 +8,11 @@ public class Wolf extends Piece {
         super(board, color);
         rank = 3;
         super.legalMoves = legalMoves();
+        name = "wolf";
+    }
+
+    Wolf(Piece piece) {
+        super(piece);
     }
 
     //The wolf uses regular legal moves

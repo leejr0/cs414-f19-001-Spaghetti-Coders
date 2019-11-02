@@ -8,8 +8,12 @@ public class Lion extends BigCat {
         super(board, color);
         rank = 7;
         super.legalMoves = legalMoves();
+        name = "lion";
     }
 
+    Lion(Piece piece) {
+        super(piece);
+    }
     //The lion uses the legal moves method in BigCat
     public ArrayList<String> legalMoves() {
         return super.legalMoves();

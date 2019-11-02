@@ -8,6 +8,11 @@ public class Tiger extends BigCat{
         super(board, color);
         rank = 6;
         super.legalMoves = legalMoves();
+        name = "tiger";
+    }
+
+    Tiger(Piece piece) {
+        super(piece);
     }
 
     //The tiger uses the legal moves method in BigCat

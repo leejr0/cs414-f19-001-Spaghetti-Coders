@@ -8,6 +8,11 @@ public class Elephant extends Piece {
         super(board, color);
         rank = 8;
         super.legalMoves = legalMoves();
+        name = "elephant";
+    }
+
+    Elephant(Piece piece) {
+        super(piece);
     }
 
     //The elephant uses regular legal moves

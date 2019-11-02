@@ -8,6 +8,11 @@ public class Dog extends Piece{
         super(board, color);
         rank = 4;
         super.legalMoves = legalMoves();
+        name = "dog";
+    }
+
+    Dog(Piece piece) {
+        super(piece);
     }
 
     //The dog uses regular legal moves

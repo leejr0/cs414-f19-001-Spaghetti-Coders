@@ -3,7 +3,6 @@ import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } 
 import {request} from "../api/api";
 import Rules from "./Rules";
 
-
 class Piece {
     constructor(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles) {
         this.pieceColor = color;
@@ -114,8 +113,9 @@ class GamePage extends Component {
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
         request(this.state,"updateMatch").then(gameState => {
+            let newBoard = this.resetPieces(gameState.board);
             this.setState({
-                board: gameState.board,
+                board: newBoard,
                 winner: gameState.winner,
                 playerBlue: gameState.playerBlue,
                 playerRed: gameState.playerRed,

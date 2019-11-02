@@ -38,6 +38,41 @@ public class JungleBoard {
         this.placePiece(new Elephant(this,"BLUE"), 6,0);
     }
 
+    public void resetBoard() {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j] != null) {
+                    board[i][j] = setPiece(board[i][j]);
+                    if(board[i][j] != null) {
+                        board[i][j].setBoard(this);
+                    }
+                }
+            }
+        }
+    }
+
+    private Piece setPiece(Piece piece) {
+        switch(piece.name) {
+            case "rat":
+                return new Rat(piece);
+            case "cat":
+                return new Cat(piece);
+            case "dog":
+                return new Dog(piece);
+            case "lion":
+                return new Lion(piece);
+            case "tiger":
+                return new Tiger(piece);
+            case "elephant":
+                return new Elephant(piece);
+            case "panther":
+                return new Leopard(piece);
+            case "wolf":
+                return new Wolf(piece);
+        }
+        return null;
+    }
+
     public boolean placePiece(Piece piece, int row, int column) {
         if(validPosition(row, column)) {
             board[row][column] = piece;
@@ -62,6 +97,7 @@ public class JungleBoard {
     void makeMove(int row, int column, int toRow, int toColumn) {
         try {
             placePiece(getPiece(row, column), toRow, toColumn);
+            board[row][column] = null;
         } catch(IllegalPositionException ignored) {}
     }
 
