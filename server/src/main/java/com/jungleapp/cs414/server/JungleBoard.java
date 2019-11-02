@@ -62,14 +62,7 @@ public class JungleBoard {
     void makeMove(int row, int column, int toRow, int toColumn) {
         try {
             placePiece(getPiece(row, column), toRow, toColumn);
-        } catch(IllegalPositionException e) {
-
-        }
-        if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
-            whoseTurn = player2;
-        }else{
-            whoseTurn = player1;
-        }
+        } catch(IllegalPositionException ignored) {}
     }
 
 

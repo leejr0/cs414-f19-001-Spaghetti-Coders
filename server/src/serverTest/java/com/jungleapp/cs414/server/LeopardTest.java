@@ -23,8 +23,8 @@ class LeopardTest {
         board.initialize();
 
         try {
-            assertTrue(board.getPiece(2, 2).legalMoves().containsAll(Arrays.asList("12","21","23")));
-            assertTrue(board.getPiece(6, 4).legalMoves().containsAll(Arrays.asList("63","65","74")));
+            assertTrue(board.getPiece(2, 2).legalMoves.containsAll(Arrays.asList("12","21","23")));
+            assertTrue(board.getPiece(6, 4).legalMoves.containsAll(Arrays.asList("63","65","74")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

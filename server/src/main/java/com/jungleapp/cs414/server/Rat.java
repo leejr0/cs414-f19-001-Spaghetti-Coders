@@ -7,6 +7,7 @@ public class Rat extends Piece {
     Rat(JungleBoard board, String color) {
         super(board, color);
         rank = 1;
+        super.legalMoves = legalMoves();
     }
 
     //The rat uses the normal legal moves method in piece, but it can also move on water so checkspace is overridden

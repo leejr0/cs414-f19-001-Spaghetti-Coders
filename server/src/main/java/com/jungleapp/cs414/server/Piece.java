@@ -11,6 +11,7 @@ public class Piece {
     protected int column;
     private String pieceColor;
     protected boolean isTrapped = false;
+    protected ArrayList<String> legalMoves;
 
     private final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
     private final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
@@ -27,7 +28,7 @@ public class Piece {
 
     public int getRank() { return rank; }
 
-    public void setPosition(int row, int column) throws IllegalPositionException{
+    void setPosition(int row, int column) throws IllegalPositionException{
 
         if(row > 8 || row < 0 || column < 0 || column > 6) {
             throw new IllegalPositionException("The given position is not on the board.");
@@ -36,6 +37,10 @@ public class Piece {
         this.row = row;
         this.column = column;
 
+        //Update set of legal moves based on new position
+        this.legalMoves = this.legalMoves();
+
+        //Check if the current piece is trapped
         checkTrapped();
     }
 
@@ -51,7 +56,7 @@ public class Piece {
     }
 
     //Pieces except Lion and Tiger can move one spot in each direction as long as the spot is null or contains an enemy piece of equal or lesser rank
-    public ArrayList<String> legalMoves() {
+    protected ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
 
         //check left
@@ -75,7 +80,6 @@ public class Piece {
         }
 
         return moves;
-
     }
 
     String moveMaker(int row, int column) {

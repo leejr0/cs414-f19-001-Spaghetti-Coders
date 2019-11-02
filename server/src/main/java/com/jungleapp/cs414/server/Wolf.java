@@ -7,6 +7,7 @@ public class Wolf extends Piece {
     Wolf(JungleBoard board, String color){
         super(board, color);
         rank = 3;
+        super.legalMoves = legalMoves();
     }
 
     //The wolf uses regular legal moves

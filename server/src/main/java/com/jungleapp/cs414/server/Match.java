@@ -23,7 +23,7 @@ class Match {
     private String playerRed;
     private Move move;
 
-    Connection connection;
+    private Connection connection;
 
     Match(Request request) {
         JsonParser jsonParser = new JsonParser();
@@ -55,12 +55,13 @@ class Match {
     }
 
     String updateMatch() {
-        /* TODO: Call board.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol)
-            Calculate potential win, calculate whoseTurn, and update database with the former information.
-        */
         this.board.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
+        if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
+            this.whoseTurn = this.playerRed;
+        }else{
+            this.whoseTurn = this.playerBlue;
+        }
         checkWin();
-
         return createJSON();
     }
 

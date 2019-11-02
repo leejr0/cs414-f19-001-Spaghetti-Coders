@@ -7,6 +7,7 @@ public class Cat extends Piece{
     Cat(JungleBoard board, String color) {
         super(board, color);
         rank = 2;
+        super.legalMoves = legalMoves();
     }
 
     //The cat uses regular legal moves
