@@ -23,6 +23,11 @@ public class Rat extends Piece {
                 return true;
             }
 
+            if((this.getColor().equals("RED") && redDen.equals(moveMaker(row, column))) ||
+                    (this.getColor().equals("BLUE") && blueDen.equals(moveMaker(row, column)))) {
+                return false;
+            }
+
             if(!board.getPiece(row, column).getColor().equals(this.getColor())){
                 //If both rats are in the water, return legal move
                 if (waterTiles.contains(currentPosition) && waterTiles.contains(getPosition(row,column))) {
