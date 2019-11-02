@@ -5,13 +5,11 @@ import java.util.Arrays;
 
 public class JungleBoard {
 
-    public Piece[][] board;
+    private Piece[][] board;
     String winner;
     String player1;
     String player2;
     String whoseTurn; //String for player name's turn
-    String fromPosition;
-    String toPosition;
     Move chosenMove;
     Move selectedPiece;
     String errorMessage;
@@ -49,6 +47,41 @@ public class JungleBoard {
         this.placePiece(new Elephant(this,"BLUE"), 6,0);
     }
 
+    public void resetBoard() {
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j] != null) {
+                    board[i][j] = setPiece(board[i][j]);
+                    if(board[i][j] != null) {
+                        board[i][j].setBoard(this);
+                    }
+                }
+            }
+        }
+    }
+
+    private Piece setPiece(Piece piece) {
+        switch(piece.name) {
+            case "rat":
+                return new Rat(piece);
+            case "cat":
+                return new Cat(piece);
+            case "dog":
+                return new Dog(piece);
+            case "lion":
+                return new Lion(piece);
+            case "tiger":
+                return new Tiger(piece);
+            case "elephant":
+                return new Elephant(piece);
+            case "panther":
+                return new Leopard(piece);
+            case "wolf":
+                return new Wolf(piece);
+        }
+        return null;
+    }
+
     public boolean placePiece(Piece piece, int row, int column) {
         if(validPosition(row, column)) {
             board[row][column] = piece;
@@ -72,18 +105,43 @@ public class JungleBoard {
 
     public void makeMove(int row, int column, int toRow, int toColumn) {
         try {
-            placePiece(getPiece(row, column), toRow, toColumn);
+            ArrayList<String> legalMoves = board[row][column].legalMoves();
+            String move = Integer.toString(toRow) + Integer.toString(toColumn);
+            if(legalMoves.contains(move)) {
+                placePiece(getPiece(row, column), toRow, toColumn);
+                nullOldPiece(row, column);
+                if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
+                    whoseTurn = player2;
+                }else{
+                    whoseTurn = player1;
+                }
+            }
+            else {
+                errorMessage = "Illegal Move!";
+            }
         } catch(IllegalPositionException e) {
 
         }
-        if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
-            whoseTurn = player2;
-        }else{
-            whoseTurn = player1;
-        }
+    }
+
+//    private boolean checkLegality(Piece movingPiece, int toRow, int toColumn) {
+//        String move = Integer.toString(toRow) + Integer.toString(toColumn);
+//        System.out.println(movingPiece.rank);
+//        ArrayList<String> legalMoves = movingPiece.legalMoves();
+//
+//        return legalMoves.contains(move);
+//    }
+
+    private void nullOldPiece(int row, int column) {
+        board[row][column] = null;
     }
 
     private boolean validPosition(int row, int column) {
         return row <= 8 && row >= 0 && column >= 0 && column <= 6;
+    }
+
+    public void declareWinner() {
+        winner = whoseTurn;
+        isActive = false;
     }
 }

@@ -13,7 +13,7 @@ public class Match {
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
-        System.out.println(requestBody);
+        //System.out.println(requestBody);
         try {
 
             JungleBoard board = gson.fromJson(requestBody, JungleBoard.class);
@@ -29,9 +29,8 @@ public class Match {
             }
             else {
                 this.board = board;
-                String fromPosition = board.selectedPiece.row + board.selectedPiece.col;
-                String toPosition = board.chosenMove.toRow + board.chosenMove.toCol;
-                board.makeMove(fromPosition, toPosition);
+                board.resetBoard();
+                board.makeMove(board.selectedPiece.row, board.selectedPiece.col, board.chosenMove.toRow, board.chosenMove.toCol);
                 //TODO: Send state to database
             }
         } catch(Exception e){
