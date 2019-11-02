@@ -7,8 +7,8 @@ public class JungleBoard {
 
     private Piece[][] board;
     String winner;
-    String player1;
-    String player2;
+    String player1;//playerblue
+    String player2;//playerred
     String whoseTurn; //String for player name's turn
     Move chosenMove;
     Move selectedPiece;
