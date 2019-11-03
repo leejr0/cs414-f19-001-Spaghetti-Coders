@@ -73,7 +73,7 @@ MySQL must be installed within a linux environment (operating system or virtual 
     
     `String DBPassword = "` **(password)** `";`
 6. To pass the RetreiveProfile tests, an entry needs to be added to the Players table:
-    ```mysql> INSERT INTO `Players` (`nickname`,`email`,`password`,`wins`,`losses`) VALUES ('zizamzoe','zizamzoe@gmail.com','1234','0','0'); ```
+    ```mysql> INSERT INTO `Player` (`nickname`,`email`,`password`,`wins`,`losses`) VALUES ('zizamzoe','zizamzoe@gmail.com','1234',0,0); ```
 
 ## Data Flow
 The client and server communicate by exchanging JSON objects when something needs to be updated. `HTTPRestful.java` is responsible for routing each client-side request and server-side response to their respective destinations.
