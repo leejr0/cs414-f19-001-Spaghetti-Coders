@@ -35,7 +35,6 @@ class Register extends Component {
             this.props.updateLogin(true, this.state.profileInfo.nickname);
         }
         else {
-            //TODO: Display an error message that the credentials are incorrect
             this.setState({errorMessage: "Nickname is already taken."});
         }
     }
@@ -48,7 +47,6 @@ class Register extends Component {
 
     validateCredentials(){
         if(this.validatePassword() === false) {
-            //TODO: Output an error seen by the user that the passwords aren't the same
             if(this.state.profileInfo.password.length < 3) {
                 this.setState({errorMessage: "Passwords must be over 3 characters."});
             }
@@ -59,7 +57,6 @@ class Register extends Component {
             return;
         }
         if(this.validateEmail() === false) {
-            //TODO: Output an error seen by the user that the email isn't correctly formatted
             this.setState({errorMessage: "Please enter a valid email."});
             console.log("email error");
             return;
@@ -71,7 +68,6 @@ class Register extends Component {
             return;
         }
 
-        //TODO: Communicate with back-end to check if nickname is unique
         request(this.state.profileInfo,"register").then(serverResponse => {
             this.createProfile(serverResponse);
         });
@@ -79,14 +75,8 @@ class Register extends Component {
 
     validateNickName() {
         if(this.state.profileInfo.nickname.length < 3 || this.state.profileInfo.nickname.length > 15){
-            //TODO: Output an error seen by the user that the nickname is invalid
+            return false;
         }
-    }
-
-    updateValidation(value) {
-        let state = this.state;
-        state["validation"] = value;
-        this.setState({state}, () => this.createProfile());
     }
 
     validateEmail() {
@@ -105,6 +95,12 @@ class Register extends Component {
             return false;
         }
         return true;
+    }
+
+    updateValidation(value) {
+        let state = this.state;
+        state["validation"] = value;
+        this.setState({state}, () => this.createProfile());
     }
 
     updateValue(id, value) {

@@ -104,7 +104,6 @@ public class RetrieveProfile {
             try {
                 connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
             } catch (SQLException e) {
-                e.printStackTrace();
                 connection = DriverManager.getConnection(MySQLConnectionURL1, DBUsername1, DBPassword1);
             }
         } catch (SQLException e) {
