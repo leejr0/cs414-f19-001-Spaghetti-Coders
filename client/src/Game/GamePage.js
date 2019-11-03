@@ -160,6 +160,32 @@ class GamePage extends Component {
         //TODO: save the game when the user leaves the session
     }
 
+    playerOwnsPiece(pieceIndices) {
+        let piece = this.state.board[pieceIndices.row][pieceIndices.col];
+        if (piece !== null) {
+            if (this.state.whoseTurn === this.state.player1) {
+                if (piece.pieceColor === "BLUE") {
+                    return true;
+                } else {
+                    console.log("Player 1 selected something that isn't a blue piece");
+                    return false;
+                }
+            } else if (this.state.whoseTurn === this.state.player2) {
+                if (piece.pieceColor === "RED") {
+                    return true;
+                } else {
+                    console.log("Player 2 selected something that isn't a red piece");
+                    return false;
+                }
+            } else {
+                console.log("Invalid value for 'whoseTurn'");
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
     handleClick(i, j) {
         let piece = this.state.selectedPiece;
         let move = this.state.chosenMove;
@@ -171,6 +197,11 @@ class GamePage extends Component {
             //ensure no move is set, since new piece was selected
             move.toRow = null;
             move.toCol = null;
+            if (!this.playerOwnsPiece(piece)) {
+                //player is moving the wrong piece or no piece
+                piece.row = null;
+                piece.col = null;
+            }
             //update selected piece
             this.setState({selectedPiece: piece, chosenMove: move});
         } else {
@@ -283,10 +314,45 @@ class GamePage extends Component {
         this.setState({state});
     }
 
-    toggle() {
+    dismissWinMessage() {
         let state = this.state;
         state.announceWinner = false;
         this.setState({state});
+    }
+
+    winMessage() {
+        return <Modal isOpen={this.state.announceWinner}>
+            <ModalHeader>{this.state.winner} wins!</ModalHeader>
+            <ModalBody>But winning isn't everything. It's just the only thing that matters.</ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={this.dismissWinMessage.bind(this)}>Exit</Button>
+            </ModalFooter>
+        </Modal>
+    }
+
+    turnMonitor() {
+        let row = this.state.selectedPiece.row;
+        let col = this.state.selectedPiece.col;
+
+        //determine name of selected piece, if any
+        let pieceName = "nothing";
+        if (row !== null || col !== null) {
+            if (this.state.board[row][col] !== null) {
+                pieceName = this.state.board[row][col].name;
+            }
+        }
+        //change status if piece is selected
+        let status = (row === null && col === null) ?
+            "'s turn." :
+            " selected their " + pieceName + "...";
+
+        //change color and position by player
+        return (<div style={{backgroundColor: 'ecc530', border: '1px solid #1e4d2b'}} id="TurnMonitor">
+            <h4 style={(this.state.whoseTurn === this.state.player1 ?
+                {color: 'blue', textAlign: 'left'} :
+                {color: 'red', textAlign: 'right'})}>
+                {this.state.whoseTurn}{status}
+            </h4></div>);
     }
 
     render() {
@@ -294,16 +360,13 @@ class GamePage extends Component {
             this.newBoard()
         }
         return (
-            <Container style={{display: 'inline-block'}}><div style={{display: 'inline-block'}} id="GamePage">
-                <Modal isOpen={this.state.announceWinner}>
-                    <ModalHeader>{this.state.winner} wins!</ModalHeader>
-                    <ModalBody>But winning isn't everything. It's just the only thing that matters.</ModalBody>
-                    <ModalFooter>
-                        <Button color="secondary" onClick={this.toggle.bind(this)}>Exit</Button>
-                    </ModalFooter>
-                </Modal>
-                {this.renderBoard()}
-            </div><Rules/>
+            <Container style={{display: 'inline-block'}}>
+                <div style={{display: 'inline-block'}} id="GamePage">
+                    {this.winMessage()}
+                    {this.turnMonitor()}
+                    {this.renderBoard()}
+                </div>
+                <Rules/>
             </Container>);
     }
 }
