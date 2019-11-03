@@ -9,13 +9,13 @@ class Main extends Component {
         super(props);
 
         this.state = {
+            board: null,
             display: true,
             displayBoard: false,
-            board: null,
             newGame: true,
             startGame: {
-                player1: "",
-                player2: "robotPlayer",
+                playerBlue: "",
+                playerRed: "robotPlayer",
                 createNewBoard: true
             }
         };
@@ -27,24 +27,27 @@ class Main extends Component {
 
     beginGame() {
         request(this.state.startGame, "newMatch").then(serverResponse => {
-            // TODO: Change this so that when we get a real JSON from the back-end, we can use it.
+            console.log("Got this board back: ");
             console.log(serverResponse);
-            this.showBoard(serverResponse)
+            this.showBoard(serverResponse);
         });
     }
 
     showBoard(response) {
-        let state = this.state;
-        state.board = response.board;
-        state.displayBoard = true;
+        console.log("This board in showBoard: ");
         console.log(response);
+        let state = this.state;
+        state.board = response;
+        state.displayBoard = true;
         this.setState({state});
+        console.log("Now state has board:");
+        console.log(this.state.jungleBoard.board);
     }
 
     updatePlayer1() {
-        if(this.state.startGame.player1 === "") {
+        if(this.state.startGame.playerBlue === "") {
             let state = this.state;
-            state.startGame.player1 = this.props.nickname;
+            state.startGame.playerBlue = this.props.nickname;
             this.setState({state});
         }
     }
@@ -61,9 +64,9 @@ class Main extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
             startButton = <div> </div>
         }
-        console.log("----");
-        console.log(this.state.startGame.player1);
-        console.log(this.state.startGame.player2);
+        // console.log("----");
+        // console.log(this.state.startGame.player1);
+        // console.log(this.state.startGame.player2);
         return (
             <div>
                 <h1 style={{color: "white", textAlign: "left"}}>JUNGLE</h1>

@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 class Match {
     private Gson gson = new Gson();
 
-    private transient JungleBoard board;
+    private JungleBoard jungleBoard;
     private String winner;
     private Boolean isActive = true;
     private String whoseTurn;
@@ -30,11 +30,11 @@ class Match {
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
-        System.out.println(requestBody);
+         System.out.println(requestBody);
 
         Match currentMatch = gson.fromJson(requestBody, Match.class);
 
-        this.board = currentMatch.board;
+        this.jungleBoard = currentMatch.jungleBoard;
         this.isActive = currentMatch.isActive;
         this.whoseTurn = currentMatch.whoseTurn;
         this.winner = currentMatch.winner;
@@ -44,25 +44,26 @@ class Match {
     }
 
     String createNewMatch() {
-        this.board = new JungleBoard();
-        this.board.initialize();
+        this.jungleBoard = new JungleBoard();
+        this.jungleBoard.initialize();
         this.isActive = true;
         this.whoseTurn = this.playerBlue;
 
         saveNewMatch();
 
-        return gson.toJson(this.board);
+        return this.jungleBoard.getBoardJSON();
     }
 
     String updateMatch() {
-        this.board.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
+        this.jungleBoard.resetBoard();
+        this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
         if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
             this.whoseTurn = this.playerRed;
         }else{
             this.whoseTurn = this.playerBlue;
         }
         checkWin();
-        return createJSON();
+        return getMatchJSON();
     }
 
     private void saveUpdatedMatch() {
@@ -92,10 +93,10 @@ class Match {
     //As long as a piece is inside the den, we know its a win for player. Same color pieces may not move into their own den.
     private void checkWin() {
         try {
-            if (this.board.getPiece(0, 3) != null) {
+            if (this.jungleBoard.getPiece(0, 3) != null) {
                 this.winner = this.playerBlue;
                 this.isActive = false;
-            } else if (this.board.getPiece(8, 3) != null) {
+            } else if (this.jungleBoard.getPiece(8, 3) != null) {
                 this.winner = this.playerRed;
                 this.isActive = false;
             }
@@ -112,7 +113,7 @@ class Match {
             String formattedTime = currentTime.format(timeFormatter);
 
             // Register new match into the database
-            statement.execute("INSERT INTO Game VALUES (NULL, '" + gson.toJson(this.board) + "', " +
+            statement.execute("INSERT INTO Game VALUES (NULL, '" + this.jungleBoard.getBoardJSON() + "', " +
                     "'" + this.isActive + "','" + this.whoseTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
 
@@ -121,5 +122,5 @@ class Match {
         }
     }
 
-    private String createJSON() { return gson.toJson(this); }
+    private String getMatchJSON() { return gson.toJson(this); }
 }

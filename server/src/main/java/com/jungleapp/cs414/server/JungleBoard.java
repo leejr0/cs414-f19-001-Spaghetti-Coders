@@ -1,5 +1,7 @@
 package com.jungleapp.cs414.server;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -38,7 +40,7 @@ public class JungleBoard {
         this.placePiece(new Elephant(this,"BLUE"), 6,0);
     }
 
-    public void resetBoard() {
+    void resetBoard() {
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
                 if(board[i][j] != null) {
@@ -105,4 +107,6 @@ public class JungleBoard {
     private boolean validPosition(int row, int column) {
         return row <= 8 && row >= 0 && column >= 0 && column <= 6;
     }
+
+    String getBoardJSON() { return new Gson().toJson(this.board); }
 }

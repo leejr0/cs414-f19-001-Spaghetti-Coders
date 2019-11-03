@@ -59,6 +59,7 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         Match match = new Match(request);
+        System.out.println(match.createNewMatch());
         return match.createNewMatch();
     }
 

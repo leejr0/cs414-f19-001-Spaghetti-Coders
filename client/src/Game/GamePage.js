@@ -4,7 +4,7 @@ import {request} from "../api/api";
 import Rules from "./Rules";
 
 class Piece {
-    constructor(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles) {
+    constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
         this.pieceColor = color;
         switch(rank) {
             case 1:
@@ -36,11 +36,19 @@ class Piece {
         this.rank = rank;
         this.row = row;
         this.column = column;
+        this.legalMoves = legalMoves;
         this.redTraps = redTraps;
         this.blueTraps = blueTraps;
         this.waterTiles = waterTiles;
     }
 }
+
+class JungleBoard {
+    constructor(board) {
+        this.board = board;
+    }
+}
+
 class GamePage extends Component {
     constructor(props) {
         super(props);
@@ -48,7 +56,8 @@ class GamePage extends Component {
         this.state = {
             //TODO: upon opening game, set state from server-side gamestate in DB
             //empty until board is retrieved from server
-            board: null,//this.getState(),
+            jungleBoard: null,
+            board: null,
             //TODO: get values from server for winner, playerBlue, playerRed, turnAction, whoseTurn and display relevant info
             winner: null,
             playerBlue: null,
@@ -112,15 +121,18 @@ class GamePage extends Component {
         //TODO: Communicate with backend to attempt the move and retrieve new board, server will determine if player gets to redo their move (invalid move), or if the turn is over
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
+
         request(this.state,"updateMatch").then(gameState => {
-            let newBoard = this.resetPieces(gameState.board);
+            let newBoard = this.resetPieces(gameState.jungleBoard.board);
             this.setState({
+                jungleBoard: gameState.jungleBoard,
                 board: newBoard,
                 winner: gameState.winner,
                 playerBlue: gameState.playerBlue,
                 playerRed: gameState.playerRed,
                 whoseTurn: gameState.whoseTurn,
-                isActive: gameState.isActive});
+                isActive: gameState.isActive}
+                );
         });
 
         //reset selections after move attempt
@@ -254,11 +266,10 @@ class GamePage extends Component {
 
     newBoard() {
         let state = this.state;
-        state.board = this.props.board;
         state.newGame = false;
-        state.whoseTurn = this.props.startGame.player1;
-        state.player1 = this.props.startGame.player1;
-        state.player2 = this.props.startGame.player2;
+        state.whoseTurn = this.props.startGame.playerBlue;
+        state.playerBlue = this.props.startGame.playerBlue;
+        state.playerRed = this.props.startGame.playerRed;
         for (let i = 0; i < state.board.length; i++) {
             for (let j = 0; j < state.board[i].length; j++) {
                 if(state.board[i][j] !== null) {
@@ -267,13 +278,16 @@ class GamePage extends Component {
                     let isTrapped = state.board[i][j].isTrapped;
                     let row = state.board[i][j].row;
                     let column = state.board[i][j].column;
+                    let legalMoves = state.board[i][j].legalMoves;
                     let redTraps = state.board[i][j].redTraps;
                     let blueTraps = state.board[i][j].blueTraps;
                     let waterTiles = state.board[i][j].waterTiles;
-                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles);
+                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles);
                 }
             }
         }
+        state.jungleBoard = new JungleBoard(state.board);
+
         this.setState({state});
     }
 
