@@ -22,12 +22,11 @@ class Main extends Component {
 
         this.showBoard = this.showBoard.bind(this);
         this.beginGame = this.beginGame.bind(this);
-        this.updatePlayer1 = this.updatePlayer1.bind(this);
+        this.updatePlayerNames = this.updatePlayerNames.bind(this);
     }
 
     beginGame() {
         request(this.state.startGame, "startGame").then(serverResponse => {
-            // TODO: Change this so that when we get a real JSON from the back-end, we can use it.
             this.showBoard(serverResponse)
         });
     }
@@ -40,16 +39,18 @@ class Main extends Component {
         this.setState({state});
     }
 
-    updatePlayer1() {
-        if(this.state.startGame.player1 === "") {
+    updatePlayerNames() {
+        //give both players the user's nickname with a number once the game is started
+        if (this.state.startGame.player1 === "Player 1") {
             let state = this.state;
-            state.startGame.player1 = this.props.nickname;
+            state.startGame.player1 = this.props.nickname + "_1";
+            state.startGame.player2 = this.props.nickname + "_2";
             this.setState({state});
         }
     }
 
     render() {
-        this.updatePlayer1();
+        this.updatePlayerNames();
         if(!this.state.display) {
             return (<h5> </h5>);
         }

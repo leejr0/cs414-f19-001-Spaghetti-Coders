@@ -27,14 +27,12 @@ class Login extends Component {
              this.props.updateLogin(true, this.state.loginInfo.nickname);
         }
         else {
-            //TODO: Display an error message that the credentials are incorrect
             this.setState({errorMessage: "Incorrect username/password combination."});
         }
     }
 
     validateCredentials() {
         //TODO: Hash given password
-        //TODO: Communicate with backend to confirm correct username/password combination
         request(this.state.loginInfo, "login").then(serverResponse => {
             this.updateValidation(serverResponse);
         });

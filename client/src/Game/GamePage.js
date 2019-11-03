@@ -46,10 +46,8 @@ class GamePage extends Component {
         super(props);
 
         this.state = {
-            //TODO: upon opening game, set state from server-side gamestate in DB
             //empty until board is retrieved from server
-            board: null,//this.getState(),
-            //TODO: get values from server for winner, player1, player2, turnAction, whoseTurn and display relevant info
+            board: null,
             winner: null,
             player1: null,
             player2: null,
@@ -69,18 +67,6 @@ class GamePage extends Component {
         };
 
         this.newBoard = this.newBoard.bind(this);
-    }
-
-    getState() {
-        //TODO: Communicate with backend to retrieve board from server (remove the below code)
-        //temporary client side null-initialization for testing
-        let retrievedBoard = [[],[],[],[],[],[],[],[],[]];
-        for (let i=0; i<9; i++) {
-            for (let j=0; j<7; j++) {
-                retrievedBoard[i][j] = null;
-            }
-        }
-        return this.setPieces(retrievedBoard);
     }
 
     setPieces(retrievedBoard) {
@@ -109,8 +95,7 @@ class GamePage extends Component {
         let move = this.state.chosenMove;
 
         //send move to server and retrieve new board
-        //TODO: Communicate with backend to attempt the move and retrieve new board, server will determine if player gets to redo their move (invalid move), or if the turn is over
-        let updatedBoard = this.state.board; //TODO: change to whatever server returns
+        let updatedBoard = this.state.board;
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
         request(this.state,"move").then(gameState => {
             let newBoard = this.resetPieces(gameState.board);
@@ -167,14 +152,14 @@ class GamePage extends Component {
                 if (piece.pieceColor === "BLUE") {
                     return true;
                 } else {
-                    console.log("Player 1 selected something that isn't a blue piece");
+                    console.log("Player 1 selected the other player's piece");
                     return false;
                 }
             } else if (this.state.whoseTurn === this.state.player2) {
                 if (piece.pieceColor === "RED") {
                     return true;
                 } else {
-                    console.log("Player 2 selected something that isn't a red piece");
+                    console.log("Player 2 selected the other player's piece");
                     return false;
                 }
             } else {
@@ -182,6 +167,7 @@ class GamePage extends Component {
                 return false;
             }
         } else {
+            console.log("Player selected nothing");
             return false;
         }
     }
@@ -261,11 +247,12 @@ class GamePage extends Component {
     renderSquare(i, j) {
         let square = this.state.board[i][j];
         //renders the square at the given position, using the board 2d array
-        return <div style={{
-            height: '40px',
-            width: '40px'}}
+        return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4> : null}
+            {(square != null) ? <div>
+                    <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>
+                    <p style={{color: 'black'}}>{square.rank}</p>
+                </div> : null}
         </div>
     }
 
