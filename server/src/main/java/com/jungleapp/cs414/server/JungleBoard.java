@@ -7,8 +7,8 @@ public class JungleBoard {
 
     private Piece[][] board;
     String winner;
-    String player1;
-    String player2;
+    String player1;//playerblue
+    String player2;//playerred
     String whoseTurn; //String for player name's turn
     Move chosenMove;
     Move selectedPiece;
@@ -107,7 +107,7 @@ public class JungleBoard {
         try {
             ArrayList<String> legalMoves = board[row][column].legalMoves();
             String move = Integer.toString(toRow) + Integer.toString(toColumn);
-            if(legalMoves.contains(move)) {
+            if(legalMoves.contains(move)) { //Checking that the move requested is legal
                 placePiece(getPiece(row, column), toRow, toColumn);
                 nullOldPiece(row, column);
                 if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
@@ -117,20 +117,12 @@ public class JungleBoard {
                 }
             }
             else {
-                errorMessage = "Illegal Move!";
+                errorMessage = "Illegal Move!"; //If not, return an error, and don't make the move.
             }
         } catch(IllegalPositionException e) {
 
         }
     }
-
-//    private boolean checkLegality(Piece movingPiece, int toRow, int toColumn) {
-//        String move = Integer.toString(toRow) + Integer.toString(toColumn);
-//        System.out.println(movingPiece.rank);
-//        ArrayList<String> legalMoves = movingPiece.legalMoves();
-//
-//        return legalMoves.contains(move);
-//    }
 
     private void nullOldPiece(int row, int column) {
         board[row][column] = null;

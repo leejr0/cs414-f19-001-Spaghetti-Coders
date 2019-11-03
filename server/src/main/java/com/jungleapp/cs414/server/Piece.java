@@ -65,6 +65,13 @@ public class Piece {
     //Pieces except Lion and Tiger can move one spot in each direction as long as the spot is null or contains an enemy piece of equal or lesser rank
     public ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
+        //If player1(blue) is moving a piece, they can only move a blue piece.
+        if(board.whoseTurn.equals(board.player1) && !this.pieceColor.equals("BLUE")) {
+            return moves;
+        }
+        else if(board.whoseTurn.equals(board.player2) && !this.pieceColor.equals("RED")) {
+            return moves;
+        }
 
         //check left
         if (column > 0) {
