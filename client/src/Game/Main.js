@@ -14,8 +14,8 @@ class Main extends Component {
             board: null,
             newGame: true,
             startGame: {
-                player1: "",
-                player2: "robotPlayer",
+                player1: "Player 1",
+                player2: "Player 2",
                 createNewBoard: true
             }
         };

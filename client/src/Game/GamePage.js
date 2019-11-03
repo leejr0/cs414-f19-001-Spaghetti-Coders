@@ -56,7 +56,7 @@ class GamePage extends Component {
             turnAction: null,
             whoseTurn: null,
             isActive: true,
-            announceWinner: true,
+            announceWinner: false,
             newGame: true,
             selectedPiece: {
                 row: null,
@@ -114,6 +114,10 @@ class GamePage extends Component {
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
         request(this.state,"move").then(gameState => {
             let newBoard = this.resetPieces(gameState.board);
+            let announceWinner = false;
+            if(gameState.winner !== undefined) {
+                announceWinner = true;
+            }
             this.setState({
                 board: newBoard,
                 winner: gameState.winner,
@@ -121,7 +125,8 @@ class GamePage extends Component {
                 player2: gameState.player2,
                 turnAction: gameState.turnAction,
                 whoseTurn: gameState.whoseTurn,
-                isActive: gameState.isActive});
+                isActive: gameState.isActive,
+                announceWinner: announceWinner});
         });
 
         //reset selections after move attempt
@@ -291,8 +296,8 @@ class GamePage extends Component {
         return (
             <Container style={{display: 'inline-block'}}><div style={{display: 'inline-block'}} id="GamePage">
                 <Modal isOpen={this.state.announceWinner}>
-                    <ModalHeader>You are the Winner!</ModalHeader>
-                    <ModalBody>Winning isn't everything. It's just the only thing that matters.</ModalBody>
+                    <ModalHeader>{this.state.winner} wins!</ModalHeader>
+                    <ModalBody>But winning isn't everything. It's just the only thing that matters.</ModalBody>
                     <ModalFooter>
                         <Button color="secondary" onClick={this.toggle.bind(this)}>Exit</Button>
                     </ModalFooter>
