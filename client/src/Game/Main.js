@@ -39,9 +39,8 @@ class Main extends Component {
         let state = this.state;
         state.board = response;
         state.displayBoard = true;
+
         this.setState({state});
-        console.log("Now state has board:");
-        console.log(this.state.jungleBoard.board);
     }
 
     updatePlayer1() {
@@ -61,6 +60,8 @@ class Main extends Component {
         let board = <div> </div>;
         let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
         if(this.state.displayBoard === true) {
+            console.log("Now state has board:");
+            console.log(this.state.board);
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
             startButton = <div> </div>
         }

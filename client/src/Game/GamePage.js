@@ -74,7 +74,14 @@ class GamePage extends Component {
             chosenMove: {
                 toRow: null,
                 toCol: null
-            }
+            },
+            move: {
+                row : null,
+                col : null,
+                toRow : null,
+                toCol : null
+            },
+            temp : null
         };
 
         this.newBoard = this.newBoard.bind(this);
@@ -122,6 +129,16 @@ class GamePage extends Component {
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
 
+        let updateMatchState = {jungleBoard : this.state.jungleBoard,
+            winner : this.state.winner,
+            isActive : this.state.isActive,
+            whoseTurn : this.state.whoseTurn,
+            playerBlue : this.state.playerBlue,
+            playerRed : this.state.playerRed,
+            move : {row : this.state.selectedPiece.row, col : this.state.selectedPiece.col,
+                toRow : this.state.chosenMove.toRow, toCol : this.state.chosenMove.toCol}};
+
+        console.log(this.state);
         request(this.state,"updateMatch").then(gameState => {
             let newBoard = this.resetPieces(gameState.jungleBoard.board);
             this.setState({
@@ -169,6 +186,7 @@ class GamePage extends Component {
     handleClick(i, j) {
         let piece = this.state.selectedPiece;
         let move = this.state.chosenMove;
+        let updateMove = this.state.move;
         //start new selection process if no piece is selected
         if (piece.row === null || piece.col === null) {
             //select piece
@@ -195,7 +213,13 @@ class GamePage extends Component {
         //execute the move if the selection/move process is complete
         if (move.toRow !== null && move.toCol !== null) {
             //try to make the move
-            this.setState({selectedPiece: piece, chosenMove: move}, this.makeMove);
+            updateMove.row = this.state.selectedPiece.row;
+            updateMove.col = this.state.selectedPiece.col;
+            updateMove.toRow = this.state.chosenMove.toRow;
+            updateMove.toCol = this.state.chosenMove.toCol;
+            console.log(this.state);
+            this.setState({selectedPiece: piece, chosenMove: move,
+                move: updateMove}, this.makeMove);
         }
     }
 
@@ -266,10 +290,12 @@ class GamePage extends Component {
 
     newBoard() {
         let state = this.state;
+        state.board = this.props.board;
         state.newGame = false;
         state.whoseTurn = this.props.startGame.playerBlue;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
+
         for (let i = 0; i < state.board.length; i++) {
             for (let j = 0; j < state.board[i].length; j++) {
                 if(state.board[i][j] !== null) {

@@ -7,7 +7,7 @@ import java.util.Arrays;
 
 public class JungleBoard {
 
-    private Piece[][] board;
+    public Piece[][] board;
 
     public JungleBoard() {
         board = new Piece[9][7];
@@ -41,11 +41,16 @@ public class JungleBoard {
     }
 
     void resetBoard() {
+        System.out.println(board.length);
+        System.out.println(board[0].length);
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
+                System.out.println(board[i][j]);
                 if(board[i][j] != null) {
                     board[i][j] = setPiece(board[i][j]);
                     if(board[i][j] != null) {
+                        //System.out.println("here");
+                        System.out.println(board[i][j].name);
                         board[i][j].setBoard(this);
                     }
                 }

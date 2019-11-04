@@ -66,7 +66,9 @@ class HTTPRestful {
     private String updateMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
+        System.out.println("Request body within updateMatch: " + request.body());
+        Match match = new Match(request);
 
-        return new Match(request).updateMatch();
+        return match.updateMatch();
     }
 }

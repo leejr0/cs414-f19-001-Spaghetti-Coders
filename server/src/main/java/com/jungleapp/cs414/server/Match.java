@@ -27,10 +27,11 @@ class Match {
 
     Match(Request request) {
         JsonParser jsonParser = new JsonParser();
+        System.out.println(request.body());
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
-         System.out.println(requestBody);
+        System.out.println("What we get back from client: " + requestBody);
 
         Match currentMatch = gson.fromJson(requestBody, Match.class);
 
@@ -55,7 +56,10 @@ class Match {
     }
 
     String updateMatch() {
+        System.out.println("update");
         this.jungleBoard.resetBoard();
+
+        System.out.println("Coordinates for moving: " + this.move.col + this.move.row + this.move.toRow + this.move.toCol);
         this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
         if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
             this.whoseTurn = this.playerRed;

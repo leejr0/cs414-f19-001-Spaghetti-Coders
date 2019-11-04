@@ -8,11 +8,11 @@ public class Rat extends Piece {
         super(board, color);
         rank = 1;
         name = "rat";
+        super.legalMoves = legalMoves();
     }
 
     Rat(Piece piece) {
         super(piece);
-        super.legalMoves = legalMoves();
     }
 
     //The rat uses the normal legal moves method in piece, but it can also move on water so checkspace is overridden
@@ -20,6 +20,7 @@ public class Rat extends Piece {
     public boolean checkSpace(int row, int column) {
         String currentPosition = this.getPosition(row, column);
         try {
+            System.out.println(board);
             if (board.getPiece(row, column) == null){
                 return true;
             }
