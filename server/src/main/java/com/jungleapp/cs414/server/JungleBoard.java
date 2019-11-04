@@ -82,12 +82,10 @@ public class JungleBoard {
 
     public boolean placePiece(Piece piece, int row, int column) {
         if(validPosition(row, column)) {
-            board[row][column] = piece;
             try {
                 piece.setPosition(row, column);
-            } catch (IllegalPositionException e) {
-
-            }
+                board[row][column] = piece;
+            } catch (IllegalPositionException ignored) {}
             return true;
         }
         return false;
@@ -103,8 +101,19 @@ public class JungleBoard {
 
     void makeMove(int row, int column, int toRow, int toColumn) {
         try {
-            placePiece(getPiece(row, column), toRow, toColumn);
-            board[row][column] = null;
+            if (getPiece(row, column).legalMoves.contains(getPiece(row, column).getPosition(toRow, toColumn))) {
+                placePiece(getPiece(row, column), toRow, toColumn);
+                board[row][column] = null;
+
+                // Update legal moves for each piece on the board
+                for (Piece[] pieces : this.board) {
+                    for (int j = 0; j < this.board[0].length; j++) {
+                        if (pieces[j] != null) {
+                            pieces[j].legalMoves = pieces[j].legalMoves();
+                        }
+                    }
+                }
+            }
         } catch(IllegalPositionException ignored) {}
     }
 

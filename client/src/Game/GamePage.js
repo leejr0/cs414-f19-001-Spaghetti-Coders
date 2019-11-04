@@ -80,8 +80,7 @@ class GamePage extends Component {
                 col : null,
                 toRow : null,
                 toCol : null
-            },
-            temp : null
+            }
         };
 
         this.newBoard = this.newBoard.bind(this);

@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 class Match {
+    MatchStructure currentMatch;
     private Gson gson = new Gson();
 
     private JungleBoard jungleBoard;
@@ -31,9 +32,8 @@ class Match {
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
-        System.out.println("What we get back from client: " + requestBody);
 
-        Match currentMatch = gson.fromJson(requestBody, Match.class);
+        currentMatch = gson.fromJson(requestBody, MatchStructure.class);
 
         this.jungleBoard = currentMatch.jungleBoard;
         this.isActive = currentMatch.isActive;
@@ -56,16 +56,14 @@ class Match {
     }
 
     String updateMatch() {
-        System.out.println("update");
         this.jungleBoard.resetBoard();
 
-        System.out.println("Coordinates for moving: " + this.move.col + this.move.row + this.move.toRow + this.move.toCol);
         this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
-        if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
-            this.whoseTurn = this.playerRed;
-        }else{
-            this.whoseTurn = this.playerBlue;
-        }
+//        if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
+//            this.whoseTurn = this.playerRed;
+//        }else{
+//            this.whoseTurn = this.playerBlue;
+//        }
         checkWin();
         return getMatchJSON();
     }
@@ -126,5 +124,13 @@ class Match {
         }
     }
 
-    private String getMatchJSON() { return gson.toJson(this); }
+    private String getMatchJSON() {
+        currentMatch.jungleBoard = this.jungleBoard;
+        currentMatch.isActive = this.isActive;
+        currentMatch.whoseTurn = this.whoseTurn;
+        currentMatch.winner = this.winner;
+        currentMatch.move = this.move;
+
+        return gson.toJson(currentMatch);
+    }
 }
