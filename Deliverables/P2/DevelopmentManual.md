@@ -49,8 +49,6 @@ The credentials used to access the `faure` database will be used by default. It 
 
 This database cannot be modified by anyone other than the MySQL account owner or the application, so the tables are assumed to be always up to date and ready to go (i.e. no additional setup required).
 
-**TODO: implement the below database connection attempt structure**
-
 If a connection cannot be opened to `faure`, the application will attempt to connect to a `localhost` database. This must be set up separately for each new non-CSU machine the application is run on *(see next section)*.
 
 ### Running a Local Database *(Outside of CSU Network)*
