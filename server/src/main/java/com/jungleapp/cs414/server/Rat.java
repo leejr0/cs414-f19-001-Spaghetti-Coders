@@ -20,7 +20,6 @@ public class Rat extends Piece {
     public boolean checkSpace(int row, int column) {
         String currentPosition = this.getPosition(row, column);
         try {
-            System.out.println(board);
             if (board.getPiece(row, column) == null){
                 return true;
             }

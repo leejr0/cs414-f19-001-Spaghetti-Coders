@@ -41,16 +41,11 @@ public class JungleBoard {
     }
 
     void resetBoard() {
-        System.out.println(board.length);
-        System.out.println(board[0].length);
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
-                System.out.println(board[i][j]);
                 if(board[i][j] != null) {
                     board[i][j] = setPiece(board[i][j]);
                     if(board[i][j] != null) {
-                        //System.out.println("here");
-                        System.out.println(board[i][j].name);
                         board[i][j].setBoard(this);
                     }
                 }
@@ -101,7 +96,7 @@ public class JungleBoard {
 
     void makeMove(int row, int column, int toRow, int toColumn) {
         try {
-            if (getPiece(row, column).legalMoves.contains(getPiece(row, column).getPosition(toRow, toColumn))) {
+            if (getPiece(row, column).legalMoves().contains(getPiece(row, column).moveMaker(toRow, toColumn))) {
                 placePiece(getPiece(row, column), toRow, toColumn);
                 board[row][column] = null;
 

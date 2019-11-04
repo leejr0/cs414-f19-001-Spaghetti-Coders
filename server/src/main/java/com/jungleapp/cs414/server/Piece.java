@@ -51,7 +51,7 @@ public class Piece {
         this.row = row;
         this.column = column;
 
-        //Update set of legal moves based on new position
+        //Update singular piece legalMoves for instantiation of a piece/board.
         this.legalMoves = this.legalMoves();
 
         //Check if the current piece is trapped
@@ -111,7 +111,7 @@ public class Piece {
 
     public boolean checkSpace(int row, int column) {
         try {
-            if (waterTiles.contains(getPosition())) {
+            if (waterTiles.contains(getPosition(row, column))) {
                 return false;
             }
 

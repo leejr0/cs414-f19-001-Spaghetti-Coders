@@ -39,7 +39,7 @@ class WolfTest {
         board.placePiece(new Wolf(board,"RED"),1, 2);
 
         try {
-            assertTrue(board.getPiece(2, 2).legalMoves.containsAll(Arrays.asList("32","21")));
+            assertTrue(board.getPiece(2, 2).legalMoves.containsAll(Arrays.asList("21")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

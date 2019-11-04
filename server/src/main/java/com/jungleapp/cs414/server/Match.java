@@ -28,7 +28,6 @@ class Match {
 
     Match(Request request) {
         JsonParser jsonParser = new JsonParser();
-        System.out.println(request.body());
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
