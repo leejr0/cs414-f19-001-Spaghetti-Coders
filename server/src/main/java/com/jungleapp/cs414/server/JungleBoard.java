@@ -94,7 +94,7 @@ public class JungleBoard {
         return board[row][column];
     }
 
-    void makeMove(int row, int column, int toRow, int toColumn) {
+    boolean makeMove(int row, int column, int toRow, int toColumn) {
         try {
             if (getPiece(row, column).legalMoves().contains(getPiece(row, column).moveMaker(toRow, toColumn))) {
                 placePiece(getPiece(row, column), toRow, toColumn);
@@ -108,8 +108,12 @@ public class JungleBoard {
                         }
                     }
                 }
+                return true;
             }
-        } catch(IllegalPositionException ignored) {}
+        } catch(IllegalPositionException ignored) {
+            return false;
+        }
+        return false;
     }
 
 

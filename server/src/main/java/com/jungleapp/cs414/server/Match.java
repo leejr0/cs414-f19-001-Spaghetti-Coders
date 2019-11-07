@@ -37,6 +37,8 @@ class Match {
         this.jungleBoard = currentMatch.jungleBoard;
         this.isActive = currentMatch.isActive;
         this.whoseTurn = currentMatch.whoseTurn;
+        this.playerBlue = currentMatch.playerBlue;
+        this.playerRed = currentMatch.playerRed;
         this.winner = currentMatch.winner;
         this.move = currentMatch.move;
 
@@ -57,13 +59,15 @@ class Match {
     String updateMatch() {
         this.jungleBoard.resetBoard();
 
-        this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
-//        if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
-//            this.whoseTurn = this.playerRed;
-//        }else{
-//            this.whoseTurn = this.playerBlue;
-//        }
-        checkWin();
+        boolean successfulMove = this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
+        if(successfulMove) {
+            if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
+                this.whoseTurn = this.playerRed;
+            }else{
+                this.whoseTurn = this.playerBlue;
+            }
+            checkWin();
+        }
         return getMatchJSON();
     }
 

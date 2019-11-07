@@ -128,16 +128,6 @@ class GamePage extends Component {
         let updatedBoard = this.state.board; //TODO: change to whatever server returns
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
 
-        let updateMatchState = {jungleBoard : this.state.jungleBoard,
-            winner : this.state.winner,
-            isActive : this.state.isActive,
-            whoseTurn : this.state.whoseTurn,
-            playerBlue : this.state.playerBlue,
-            playerRed : this.state.playerRed,
-            move : {row : this.state.selectedPiece.row, col : this.state.selectedPiece.col,
-                toRow : this.state.chosenMove.toRow, toCol : this.state.chosenMove.toCol}};
-
-        console.log(this.state);
         request(this.state,"updateMatch").then(gameState => {
             let newBoard = this.resetPieces(gameState.jungleBoard.board);
             this.setState({
@@ -148,8 +138,8 @@ class GamePage extends Component {
                 playerRed: gameState.playerRed,
                 whoseTurn: gameState.whoseTurn,
                 isActive: gameState.isActive,
-                announceWinner: (gameState.winner !== null) //evaluates to true if there is a winner}
-                );
+                announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
+            });
         });
 
         //reset selections after move attempt
@@ -186,14 +176,14 @@ class GamePage extends Component {
     playerOwnsPiece(pieceIndices) {
         let piece = this.state.board[pieceIndices.row][pieceIndices.col];
         if (piece !== null) {
-            if (this.state.whoseTurn === this.state.player1) {
+            if (this.state.whoseTurn === this.state.playerBlue) {
                 if (piece.pieceColor === "BLUE") {
                     return true;
                 } else {
                     console.log("Player 1 selected the other player's piece");
                     return false;
                 }
-            } else if (this.state.whoseTurn === this.state.player2) {
+            } else if (this.state.whoseTurn === this.state.playerRed) {
                 if (piece.pieceColor === "RED") {
                     return true;
                 } else {
@@ -249,7 +239,6 @@ class GamePage extends Component {
             updateMove.col = this.state.selectedPiece.col;
             updateMove.toRow = this.state.chosenMove.toRow;
             updateMove.toCol = this.state.chosenMove.toCol;
-            console.log(this.state);
             this.setState({selectedPiece: piece, chosenMove: move,
                 move: updateMove}, this.makeMove);
         }
@@ -384,7 +373,7 @@ class GamePage extends Component {
 
         //change color and position by player
         return (<div style={{backgroundColor: 'ecc530', border: '1px solid #1e4d2b'}} id="TurnMonitor">
-            <h4 style={(this.state.whoseTurn === this.state.player1 ?
+            <h4 style={(this.state.whoseTurn === this.state.playerBlue ?
                 {color: 'blue', textAlign: 'left'} :
                 {color: 'red', textAlign: 'right'})}>
                 {this.state.whoseTurn}{status}
@@ -396,7 +385,7 @@ class GamePage extends Component {
             this.newBoard()
         }
         return (
-            <<Container style={{display: 'inline-block'}}>
+            <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
                     {this.winMessage()}
                     {this.turnMonitor()}
