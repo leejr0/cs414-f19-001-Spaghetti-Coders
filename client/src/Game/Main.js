@@ -14,15 +14,15 @@ class Main extends Component {
             displayBoard: false,
             newGame: true,
             startGame: {
-                playerBlue: "",
-                playerRed: "robotPlayer",
+                playerBlue: "Player 1",
+                playerRed: "Player 2",
                 createNewBoard: true
             }
         };
 
         this.showBoard = this.showBoard.bind(this);
         this.beginGame = this.beginGame.bind(this);
-        this.updatePlayer1 = this.updatePlayer1.bind(this);
+        this.updatePlayerNames = this.updatePlayerNames.bind(this);
     }
 
     beginGame() {
@@ -43,16 +43,17 @@ class Main extends Component {
         this.setState({state});
     }
 
-    updatePlayer1() {
+    updatePlayerNames() {
         if(this.state.startGame.playerBlue === "") {
             let state = this.state;
-            state.startGame.playerBlue = this.props.nickname;
+            state.startGame.player1 = this.props.nickname + "_1";
+            state.startGame.player2 = this.props.nickname + "_2";
             this.setState({state});
         }
     }
 
     render() {
-        this.updatePlayer1();
+        this.updatePlayerNames();
         if(!this.state.display) {
             return (<h5> </h5>);
         }

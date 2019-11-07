@@ -79,7 +79,7 @@ class Register extends Component {
 
     validateNickName() {
         if(this.state.profileInfo.nickname.length < 3 || this.state.profileInfo.nickname.length > 15){
-            //TODO: Output an error seen by the user that the nickname is invalid
+            return false;
         }
     }
 
