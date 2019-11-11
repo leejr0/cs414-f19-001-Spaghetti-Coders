@@ -3,8 +3,12 @@
 
 We'll be creating the board game Jungle through Java code implementation
 
-Jungle Wikipedia: https://en.wikipedia.org/wiki/Jungle_(board_game)
+Here are the presentations we have created for each sprint:
+[Sprint1](https://docs.google.com/presentation/d/1w7ZtLvmVLuXeRFKH1XFkHbmGk243kizoUHkf70-5zSI/edit?usp=sharing)
+[Sprint2](https://docs.google.com/presentation/d/1qP5jXtBELm6FW_i50shO04Z1VioMIt-GJ7bMIphcZkM/edit?usp=sharing)
 
-http://www.chessvariants.com/other.dir/animal.html
-http://ancientchess.com/page/play-doushouqi.html
-http://liacs.leidenuniv.nl/~visjk/doushouqi/about.html
+
+References:
+- [Jungle Wikipedia](https://en.wikipedia.org/wiki/Jungle_(board_game))
+- [Rules - chessvariants.com](http://www.chessvariants.com/other.dir/animal.html)
+- [Rules - ancientchess.com](http://ancientchess.com/page/play-doushouqi.htm)

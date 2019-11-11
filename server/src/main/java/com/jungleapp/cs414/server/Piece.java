@@ -17,6 +17,8 @@ public class Piece {
     private final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
     private final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
     final ArrayList<String> waterTiles = new ArrayList<String>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
+    final String redDen = "03";
+    final String blueDen = "83";
 
     public Piece (JungleBoard board, String color) {
         this.board = board;
@@ -112,6 +114,11 @@ public class Piece {
     public boolean checkSpace(int row, int column) {
         try {
             if (waterTiles.contains(getPosition(row, column))) {
+                return false;
+            }
+
+            if((this.getColor().equals("RED") && redDen.equals(moveMaker(row, column))) ||
+                    (this.getColor().equals("BLUE") && blueDen.equals(moveMaker(row, column)))) {
                 return false;
             }
 

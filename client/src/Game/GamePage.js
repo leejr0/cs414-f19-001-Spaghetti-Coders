@@ -86,18 +86,6 @@ class GamePage extends Component {
         this.newBoard = this.newBoard.bind(this);
     }
 
-    getState() {
-        //TODO: Communicate with backend to retrieve board from server (remove the below code)
-        //temporary client side null-initialization for testing
-        let retrievedBoard = [[],[],[],[],[],[],[],[],[]];
-        for (let i=0; i<9; i++) {
-            for (let j=0; j<7; j++) {
-                retrievedBoard[i][j] = null;
-            }
-        }
-        return this.setPieces(retrievedBoard);
-    }
-
     setPieces(retrievedBoard) {
         retrievedBoard[0][0] = new Piece("red", "lion");
         retrievedBoard[0][6] = new Piece("red", "tiger");
@@ -124,8 +112,7 @@ class GamePage extends Component {
         let move = this.state.chosenMove;
 
         //send move to server and retrieve new board
-        //TODO: Communicate with backend to attempt the move and retrieve new board, server will determine if player gets to redo their move (invalid move), or if the turn is over
-        let updatedBoard = this.state.board; //TODO: change to whatever server returns
+        let updatedBoard = this.state.board;
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
 
         request(this.state,"updateMatch").then(gameState => {
