@@ -46,9 +46,9 @@ class Welcome extends Component {
         if(this.state.registerBool) {
             return (
                 <div id="Welcome">
-                    <h3 style={{color: "white"}}>Welcome to the </h3>
-                    <h2 style={{color: "white"}}>JUNGLE</h2>
-                    <h3 style={{color: "white"}}>--------</h3>
+                    <h3 style={{color: "black"}}>Welcome to the </h3>
+                    <h2 style={{color: "black"}}>JUNGLE</h2>
+                    <h3 style={{color: "black"}}>--------</h3>
                     <Register updateLogin={this.props.updateLogin}/>
                 </div>
             );
@@ -56,9 +56,9 @@ class Welcome extends Component {
         else if(this.state.loginBool) {
             return (
                 <div id="Welcome">
-                    <h3 style={{color: "white"}}>Welcome to the </h3>
-                    <h2 style={{color: "white"}}>JUNGLE</h2>
-                    <h3 style={{color: "white"}}>--------</h3>
+                    <h3 style={{color: "black"}}>Welcome to the </h3>
+                    <h2 style={{color: "black"}}>JUNGLE</h2>
+                    <h3 style={{color: "black"}}>--------</h3>
                     <Login updateLogin={this.props.updateLogin}/>
                 </div>
             );
@@ -66,9 +66,9 @@ class Welcome extends Component {
         else {
             return (
                 <div id="Welcome">
-                    <h3 style={{color: "white"}}>Welcome to the </h3>
-                    <h2 style={{color: "white"}}>JUNGLE</h2>
-                    <h3 style={{color: "white"}}>--------</h3>
+                    <h3 style={{color: "black"}}>Welcome to the </h3>
+                    <h2 style={{color: "black"}}>JUNGLE</h2>
+                    <h3 style={{color: "black"}}>--------</h3>
                     {this.renderButtons()}
                 </div>
             );

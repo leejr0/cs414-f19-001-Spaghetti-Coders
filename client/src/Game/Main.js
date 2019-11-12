@@ -71,8 +71,8 @@ class Main extends Component {
         // console.log(this.state.startGame.player2);
         return (
             <div>
-                <h1 style={{color: "white", textAlign: "left"}}>JUNGLE</h1>
-                <h5 style={{color: "white"}}>Here's the board! Make a move!</h5>
+                <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
+                <h5 style={{color: "black"}}>Here's the board! Make a move!</h5>
                 {startButton}
                 <div id="GamePage">
                     {board}
