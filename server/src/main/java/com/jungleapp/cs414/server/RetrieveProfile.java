@@ -10,6 +10,7 @@ import java.sql.*;
 
 public class RetrieveProfile {
     private Profile profile = new Profile();
+    private Gson gson = new Gson();
 
     private Connection connection;
 
@@ -80,6 +81,40 @@ public class RetrieveProfile {
         }
 
         return false;
+    }
+
+    public void getProfile() {
+        try {
+            Statement statement = connection.createStatement();
+            // Check if player already exists in database
+            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+                    profile.nickname + "'");
+            while (resultSet.next()) {
+                profile.email = resultSet.getString("email");
+                profile.password = resultSet.getString("password");
+                profile.wins = resultSet.getInt("wins");
+                profile.losses = resultSet.getInt("losses");
+                if(profile.losses == 0 && profile.wins == 0) {
+                    profile.ratio = 0.0;
+                }
+                else if(profile.losses == 0) {
+                    profile.ratio = (double)profile.wins;
+                }
+                else if(profile.wins == 0) {
+                    profile.ratio = 0.0;
+                }
+                else{
+                    profile.ratio = (double)profile.wins/profile.losses;
+                }
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERROR");
+        }
+    }
+
+    public String getProfileJSON() {
+        return gson.toJson(profile);
     }
 
 }
