@@ -31,6 +31,8 @@ class HTTPRestful {
 
         post("/updateMatch", this::updateMatch);
 
+        post("/retrieveProfile", this::retrieveProfile);
+
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
@@ -68,5 +70,14 @@ class HTTPRestful {
         Match match = new Match(request);
 
         return match.updateMatch();
+    }
+
+    private String retrieveProfile(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+        loginProfile.getProfile();
+        return loginProfile.getProfileJSON();
     }
 }

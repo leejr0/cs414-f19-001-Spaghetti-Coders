@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {Button} from 'reactstrap';
+import {Button, Card, CardBody, Nav, NavItem, NavLink, TabContent, TabPane} from 'reactstrap';
 
 import {request} from '../api/api';
 import GamePage from "./GamePage";
+import Profile from "./Profile";
+import Rules from "./Rules";
 
 class Main extends Component {
     constructor(props) {
@@ -13,6 +15,8 @@ class Main extends Component {
             display: true,
             displayBoard: false,
             newGame: true,
+            activeTab: "Home",
+            nickname: this.props.nickname,
             startGame: {
                 playerBlue: "Player 1",
                 playerRed: "Player 2",
@@ -52,6 +56,38 @@ class Main extends Component {
         }
     }
 
+    toggleTab(tabID) {
+        if (this.state.activeTab !== tabID) {
+            this.setState({
+                activeTab: tabID
+            });
+        }
+    }
+
+    renderTab(tabID) {
+        return (
+            <NavItem key={tabID}>
+                <NavLink key={tabID}
+                         onClick={() => {
+                             this.toggleTab(tabID);
+                         }}
+                >
+                    {tabID}
+                </NavLink>
+            </NavItem>
+        );
+    }
+
+    renderTabContents(tabContents, tabID) {
+        return (
+            <TabContent key={tabID} activeTab={this.state.activeTab}>
+                <TabPane key={tabID} tabId={tabID}>
+                    {tabContents}
+                </TabPane>
+            </TabContent>
+        );
+    }
+
     render() {
         this.updatePlayerNames();
         if(!this.state.display) {
@@ -66,17 +102,55 @@ class Main extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
             startButton = <div> </div>
         }
-        // console.log("----");
-        // console.log(this.state.startGame.player1);
-        // console.log(this.state.startGame.player2);
-        return (
+
+        let tabs = ["Home", "Profile", "Rules", "Invites"];
+
+        let home = [
             <div>
-                <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
+                <br></br>
                 <h5 style={{color: "black"}}>Here's the board! Make a move!</h5>
                 {startButton}
                 <div id="GamePage">
                     {board}
                 </div>
+            </div>];
+        let profile = [
+            <Card key="cardkey">
+                <CardBody key="cardbodykey">
+                    <br></br>
+                    <Profile nickname={this.props.nickname}/>
+                </CardBody>
+            </Card>
+        ];
+        let rules = [
+            <Card key="cardkey">
+                <CardBody key="cardbodykey">
+                    <br></br>
+                    <Rules/>
+                </CardBody>
+            </Card>
+        ];
+        let invites = [
+            <Card key="cardkey">
+                <CardBody key="cardbodykey">
+                    <br></br>
+                    <p> I'm going to be an invite! </p>
+                </CardBody>
+            </Card>
+        ];
+
+        return (
+            <div>
+                <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
+                <Nav tabs key="2">
+                    {tabs.map((tabToRender) => {
+                        return this.renderTab(tabToRender);
+                    })}
+                </Nav>
+                {this.renderTabContents(home, 'Home')}
+                {this.renderTabContents(profile, 'Profile')}
+                {this.renderTabContents(rules, 'Rules')}
+                {this.renderTabContents(invites, 'Invites')}
             </div>
         );
     }
