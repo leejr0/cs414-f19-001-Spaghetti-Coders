@@ -10,13 +10,13 @@ const render = Component => {
         </AppContainer>,
         document.getElementById('root')
     )
-}
+};
 
 render(App);
 
 if (module.hot) {
     module.hot.accept('./App.js', () => {
-        render(App)
+        render(App);
         render(require('./App.js'))
     })
 }

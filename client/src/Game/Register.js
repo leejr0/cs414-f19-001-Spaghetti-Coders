@@ -131,7 +131,7 @@ class Register extends Component {
 
         return (
             <div id="Register">
-                <h5 style={{color: "white"}}>Register with a new username, email, and password!</h5>
+                <h5 style={{color: "black"}}>Register with a new username, email, and password!</h5>
                 <Input type="text" placeholder="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
                 <Input type="password" placeholder="password" onChange={(input) => this.updatePassword(input.target.value)}/>
                 <Input type="password" placeholder="confirm password" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>

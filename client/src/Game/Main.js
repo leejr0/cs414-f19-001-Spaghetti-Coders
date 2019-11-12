@@ -9,13 +9,13 @@ class Main extends Component {
         super(props);
 
         this.state = {
+            board: null,
             display: true,
             displayBoard: false,
-            board: null,
             newGame: true,
             startGame: {
-                player1: "Player 1",
-                player2: "Player 2",
+                playerBlue: "Player 1",
+                playerRed: "Player 2",
                 createNewBoard: true
             }
         };
@@ -26,22 +26,25 @@ class Main extends Component {
     }
 
     beginGame() {
-        request(this.state.startGame, "startGame").then(serverResponse => {
-            this.showBoard(serverResponse)
+        request(this.state.startGame, "newMatch").then(serverResponse => {
+            console.log("Got this board back: ");
+            console.log(serverResponse);
+            this.showBoard(serverResponse);
         });
     }
 
     showBoard(response) {
-        let state = this.state;
-        state.board = response.board;
-        state.displayBoard = true;
+        console.log("This board in showBoard: ");
         console.log(response);
+        let state = this.state;
+        state.board = response;
+        state.displayBoard = true;
+
         this.setState({state});
     }
 
     updatePlayerNames() {
-        //give both players the user's nickname with a number once the game is started
-        if (this.state.startGame.player1 === "Player 1") {
+        if(this.state.startGame.playerBlue === "") {
             let state = this.state;
             state.startGame.player1 = this.props.nickname + "_1";
             state.startGame.player2 = this.props.nickname + "_2";
@@ -58,16 +61,18 @@ class Main extends Component {
         let board = <div> </div>;
         let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
         if(this.state.displayBoard === true) {
+            console.log("Now state has board:");
+            console.log(this.state.board);
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
             startButton = <div> </div>
         }
-        console.log("----");
-        console.log(this.state.startGame.player1);
-        console.log(this.state.startGame.player2);
+        // console.log("----");
+        // console.log(this.state.startGame.player1);
+        // console.log(this.state.startGame.player2);
         return (
             <div>
-                <h1 style={{color: "white", textAlign: "left"}}>JUNGLE</h1>
-                <h5 style={{color: "white"}}>Here's the board! Make a move!</h5>
+                <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
+                <h5 style={{color: "black"}}>Here's the board! Make a move!</h5>
                 {startButton}
                 <div id="GamePage">
                     {board}

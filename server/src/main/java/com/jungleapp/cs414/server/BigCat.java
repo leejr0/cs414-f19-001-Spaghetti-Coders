@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class BigCat extends Piece{
     public BigCat(JungleBoard board, String color) {
         super(board, color);
+        super.legalMoves = legalMoves();
     }
 
     BigCat(Piece piece) {

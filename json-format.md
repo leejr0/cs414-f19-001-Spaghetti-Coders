@@ -38,40 +38,39 @@ When a game is opened, the server sends the current gamestate in `board` as a 2d
                                   "player": pieceOwner,
                                   "legalMoves": [
                                       {
-                                         "row": i,
-                                         "col": j
+                                         "row": int,
+                                         "col": int
                                       },
                                       {
-                                         "row": i,
-                                         "col": j
+                                         "row": int,
+                                         "col": int
                                       }
-                                  ],
-                                  "spaceType": spaceType
+                                  ]
                                },
-                               { Object },
-                               { Object },
+                               { Piece Object },
+                               { Piece Object },
                                "..."
                             ],
                             [
-                               { Object },
-                               { Object },
-                               { Object },
+                               { Piece Object },
+                               { Piece Object },
+                               { Piece Object },
                                "..."
                             ],
                             "..."
                          ],
-  "winner"             : { Object },
-  "player1"            : { Object },
-  "player2"            : { Object },
-  "turnAction"         : { Object },
-  "whoseTurn"          : { Object },
+  "winner"             : { string },
+  "player1"            : { string },
+  "player2"            : { string },
+  "turnAction"         : { string },
+  "whoseTurn"          : { string },
   "selectedPiece"      : {
-                            "row": i, 
-                            "col": j
+                            "row": int, 
+                            "col": int
                          },
   "chosenMove"         : {
-                            "toRow": i, 
-                            "toCol": j
+                            "toRow": int, 
+                            "toCol": int
                          }
 }
 ```

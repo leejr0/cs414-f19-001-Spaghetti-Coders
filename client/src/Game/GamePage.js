@@ -4,7 +4,7 @@ import {request} from "../api/api";
 import Rules from "./Rules";
 
 class Piece {
-    constructor(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles) {
+    constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
         this.pieceColor = color;
         switch(rank) {
             case 1:
@@ -36,21 +36,32 @@ class Piece {
         this.rank = rank;
         this.row = row;
         this.column = column;
+        this.legalMoves = legalMoves;
         this.redTraps = redTraps;
         this.blueTraps = blueTraps;
         this.waterTiles = waterTiles;
     }
 }
+
+class JungleBoard {
+    constructor(board) {
+        this.board = board;
+    }
+}
+
 class GamePage extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
+            //TODO: upon opening game, set state from server-side gamestate in DB
             //empty until board is retrieved from server
+            jungleBoard: null,
             board: null,
+            //TODO: get values from server for winner, playerBlue, playerRed, turnAction, whoseTurn and display relevant info
             winner: null,
-            player1: null,
-            player2: null,
+            playerBlue: null,
+            playerRed: null,
             turnAction: null,
             whoseTurn: null,
             isActive: true,
@@ -63,6 +74,12 @@ class GamePage extends Component {
             chosenMove: {
                 toRow: null,
                 toCol: null
+            },
+            move: {
+                row : null,
+                col : null,
+                toRow : null,
+                toCol : null
             }
         };
 
@@ -97,21 +114,19 @@ class GamePage extends Component {
         //send move to server and retrieve new board
         let updatedBoard = this.state.board;
         console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
-        request(this.state,"move").then(gameState => {
-            let newBoard = this.resetPieces(gameState.board);
-            let announceWinner = false;
-            if(gameState.winner !== undefined) {
-                announceWinner = true;
-            }
+
+        request(this.state,"updateMatch").then(gameState => {
+            let newBoard = this.resetPieces(gameState.jungleBoard.board);
             this.setState({
+                jungleBoard: gameState.jungleBoard,
                 board: newBoard,
                 winner: gameState.winner,
-                player1: gameState.player1,
-                player2: gameState.player2,
-                turnAction: gameState.turnAction,
+                playerBlue: gameState.playerBlue,
+                playerRed: gameState.playerRed,
                 whoseTurn: gameState.whoseTurn,
                 isActive: gameState.isActive,
-                announceWinner: announceWinner});
+                announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
+            });
         });
 
         //reset selections after move attempt
@@ -148,14 +163,14 @@ class GamePage extends Component {
     playerOwnsPiece(pieceIndices) {
         let piece = this.state.board[pieceIndices.row][pieceIndices.col];
         if (piece !== null) {
-            if (this.state.whoseTurn === this.state.player1) {
+            if (this.state.whoseTurn === this.state.playerBlue) {
                 if (piece.pieceColor === "BLUE") {
                     return true;
                 } else {
                     console.log("Player 1 selected the other player's piece");
                     return false;
                 }
-            } else if (this.state.whoseTurn === this.state.player2) {
+            } else if (this.state.whoseTurn === this.state.playerRed) {
                 if (piece.pieceColor === "RED") {
                     return true;
                 } else {
@@ -175,6 +190,7 @@ class GamePage extends Component {
     handleClick(i, j) {
         let piece = this.state.selectedPiece;
         let move = this.state.chosenMove;
+        let updateMove = this.state.move;
         //start new selection process if no piece is selected
         if (piece.row === null || piece.col === null) {
             //select piece
@@ -206,7 +222,12 @@ class GamePage extends Component {
         //execute the move if the selection/move process is complete
         if (move.toRow !== null && move.toCol !== null) {
             //try to make the move
-            this.setState({selectedPiece: piece, chosenMove: move}, this.makeMove);
+            updateMove.row = this.state.selectedPiece.row;
+            updateMove.col = this.state.selectedPiece.col;
+            updateMove.toRow = this.state.chosenMove.toRow;
+            updateMove.toCol = this.state.chosenMove.toCol;
+            this.setState({selectedPiece: piece, chosenMove: move,
+                move: updateMove}, this.makeMove);
         }
     }
 
@@ -250,9 +271,9 @@ class GamePage extends Component {
         return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
             {(square != null) ? <div>
-                    <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>
-                    <p style={{color: 'black'}}>{square.rank}</p>
-                </div> : null}
+                <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>
+                <p style={{color: 'black'}}>{square.rank}</p>
+            </div> : null}
         </div>
     }
 
@@ -280,9 +301,10 @@ class GamePage extends Component {
         let state = this.state;
         state.board = this.props.board;
         state.newGame = false;
-        state.whoseTurn = this.props.startGame.player1;
-        state.player1 = this.props.startGame.player1;
-        state.player2 = this.props.startGame.player2;
+        state.whoseTurn = this.props.startGame.playerBlue;
+        state.playerBlue = this.props.startGame.playerBlue;
+        state.playerRed = this.props.startGame.playerRed;
+
         for (let i = 0; i < state.board.length; i++) {
             for (let j = 0; j < state.board[i].length; j++) {
                 if(state.board[i][j] !== null) {
@@ -291,13 +313,16 @@ class GamePage extends Component {
                     let isTrapped = state.board[i][j].isTrapped;
                     let row = state.board[i][j].row;
                     let column = state.board[i][j].column;
+                    let legalMoves = state.board[i][j].legalMoves;
                     let redTraps = state.board[i][j].redTraps;
                     let blueTraps = state.board[i][j].blueTraps;
                     let waterTiles = state.board[i][j].waterTiles;
-                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles);
+                    state.board[i][j] = new Piece(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles);
                 }
             }
         }
+        state.jungleBoard = new JungleBoard(state.board);
+
         this.setState({state});
     }
 
@@ -335,7 +360,7 @@ class GamePage extends Component {
 
         //change color and position by player
         return (<div style={{backgroundColor: 'ecc530', border: '1px solid #1e4d2b'}} id="TurnMonitor">
-            <h4 style={(this.state.whoseTurn === this.state.player1 ?
+            <h4 style={(this.state.whoseTurn === this.state.playerBlue ?
                 {color: 'blue', textAlign: 'left'} :
                 {color: 'red', textAlign: 'right'})}>
                 {this.state.whoseTurn}{status}
