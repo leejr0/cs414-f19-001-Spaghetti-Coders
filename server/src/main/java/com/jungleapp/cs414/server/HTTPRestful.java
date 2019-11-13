@@ -33,6 +33,8 @@ class HTTPRestful {
 
         post("/retrieveProfile", this::retrieveProfile);
 
+        post("/unregister", this::unregisterProfile);
+
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
@@ -79,5 +81,14 @@ class HTTPRestful {
         RetrieveProfile loginProfile = new RetrieveProfile(request);
         loginProfile.getProfile();
         return loginProfile.getProfileJSON();
+    }
+
+    private boolean unregisterProfile(Request request, Response response){
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        RetrieveProfile removeProfile = new RetrieveProfile(request);
+        removeProfile.unregisterProfile();
+        return removeProfile.unregisterProfile();
     }
 }
