@@ -33,8 +33,6 @@ public class RetrieveProfile {
         connection = MySQLConnection.establishMySQLConnection();
     }
 
-
-
     boolean establishProfileIdentity() {
         boolean result = false;
 
@@ -86,7 +84,6 @@ public class RetrieveProfile {
     public void getProfile() {
         try {
             Statement statement = connection.createStatement();
-            // Check if player already exists in database
             ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
                     profile.nickname + "'");
             while (resultSet.next()) {
@@ -109,8 +106,23 @@ public class RetrieveProfile {
             }
 
         } catch (SQLException e) {
-            System.out.println("ERROR");
+
         }
+    }
+
+    public boolean unregisterProfile() {
+        try {
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate("DELETE FROM Player WHERE Player.nickname = '" +
+                    profile.nickname + "';");
+            statement.executeUpdate("DELETE FROM Played_By WHERE Played_By.nickname = '" +
+                    profile.nickname + "';");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public String getProfileJSON() {

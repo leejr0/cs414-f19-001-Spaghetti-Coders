@@ -34,10 +34,31 @@ class Profile extends Component {
         });
     }
 
+    unregister() {
+        console.log(this.state.nickname);
+        request(this.state, "unregister").then(serverResponse => {
+            console.log(serverResponse);
+            if (serverResponse) {
+                console.log("Removed " + this.state.nickname + " from the database");
+                let state = this.state;
+                state.nickname = null;
+                state.password = null;
+                state.ratio = null;
+                state.wins = null;
+                state.losses = null;
+                state.email = null;
+                state.gotProfile = false;
+                this.setState(({state}, window.location.reload()));
+            }
+        });
+    }
+
     render() {
         if(this.state.gotProfile === false) {
             this.retrieveInformation();
         }
+
+        let unregisterButton = <Button onClick={this.unregister.bind(this)}>Unregister</Button>;
 
         return (
             <Container style={{display: 'inline-block'}}>
@@ -45,6 +66,7 @@ class Profile extends Component {
                 <p>You've won {this.state.wins} games, and you have lost {this.state.losses}</p>
                 <p>Your win/loss ratio {this.state.ratio}</p>
                 <p>{this.state.email}</p>
+                {unregisterButton}
             </Container>
         );
     }
