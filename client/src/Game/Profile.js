@@ -58,7 +58,7 @@ class Profile extends Component {
             this.retrieveInformation();
         }
 
-        let unregisterButton = <Button onClick={this.unregister.bind(this)}>Unregister</Button>;
+        let unregisterButton = <Button outline color="success" style={{float: 'right'}} onClick={this.unregister.bind(this)}>Unregister</Button>;
 
         return (
             <Container style={{display: 'inline-block'}}>

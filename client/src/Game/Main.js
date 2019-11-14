@@ -88,6 +88,19 @@ class Main extends Component {
         );
     }
 
+    logout() {
+        let state = this.state;
+        state.board = null;
+        state.display = false;
+        state.displayBoard = false;
+        state.newGame = false;
+        state.activeTab = null;
+        state.nickname = null;
+        state.startGame = null;
+        this.setState(({state}, window.location.reload()));
+    }
+
+
     render() {
         this.updatePlayerNames();
         if(!this.state.display) {
@@ -139,18 +152,29 @@ class Main extends Component {
             </Card>
         ];
 
+        let logoutButton = <Button outline color="success" style={{float: 'right'}} onClick={this.logout.bind(this)}>Logout</Button>;
+
         return (
             <div>
-                <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
-                <Nav tabs key="2">
-                    {tabs.map((tabToRender) => {
-                        return this.renderTab(tabToRender);
-                    })}
-                </Nav>
-                {this.renderTabContents(home, 'Home')}
-                {this.renderTabContents(profile, 'Profile')}
-                {this.renderTabContents(rules, 'Rules')}
-                {this.renderTabContents(invites, 'Invites')}
+                <div>
+                    <div style={{ padding: '.5rem' }}>
+                        {logoutButton}
+                    </div>
+                    <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
+                </div>
+                <div>
+                    <Nav tabs key="2">
+                        {tabs.map((tabToRender) => {
+                            return this.renderTab(tabToRender);
+                        })}
+                    </Nav>
+                </div>
+                <div>
+                    {this.renderTabContents(home, 'Home')}
+                    {this.renderTabContents(profile, 'Profile')}
+                    {this.renderTabContents(rules, 'Rules')}
+                    {this.renderTabContents(invites, 'Invites')}
+                </div>
             </div>
         );
     }
