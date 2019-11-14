@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, Input, InputGroup, InputGroupAddon } from 'reactstrap'
 import {request} from "../api/api";
 
 class Profile extends Component {
@@ -35,11 +35,8 @@ class Profile extends Component {
     }
 
     unregister() {
-        console.log(this.state.nickname);
         request(this.state, "unregister").then(serverResponse => {
-            console.log(serverResponse);
             if (serverResponse) {
-                console.log("Removed " + this.state.nickname + " from the database");
                 let state = this.state;
                 state.nickname = null;
                 state.password = null;
@@ -58,16 +55,34 @@ class Profile extends Component {
             this.retrieveInformation();
         }
 
-        let unregisterButton = <Button outline color="success" style={{float: 'right'}} onClick={this.unregister.bind(this)}>Unregister</Button>;
+        let unregisterButton = <Button outline color="success" style={{float: 'right', padding: '.5rem'}} onClick={this.unregister.bind(this)}>Unregister</Button>;
 
         return (
-            <Container style={{display: 'inline-block'}}>
-                <h2>This is {this.state.nickname}'s profile!</h2>
-                <p>You've won {this.state.wins} games, and you have lost {this.state.losses}</p>
-                <p>Your win/loss ratio {this.state.ratio}</p>
-                <p>{this.state.email}</p>
-                {unregisterButton}
-            </Container>
+            <div>
+                <div>
+                    <h4 style={{float: 'left'}}>Search for another player:</h4>
+                    <InputGroup>
+                        <InputGroupAddon addonType="append">
+                            <Button outline color="success">Search</Button>
+                        </InputGroupAddon>
+                        <Input/>
+                    </InputGroup>
+                    <br/>
+                </div>
+                <div>
+                    <Card>
+                        <div align={"left"} style={{ padding: '.5rem' }}>
+                        <h2>Player: {this.state.nickname}</h2>
+                        <h3>Wins: {this.state.wins}</h3>
+                        <h3>Losses: {this.state.losses}</h3>
+                        <h3>W/L Ratio: {this.state.ratio}</h3>
+                        <h3>Email: {this.state.email}</h3>
+                        </div>
+                        </Card>
+                    {unregisterButton}
+                </div>
+
+            </div>
         );
     }
 }
