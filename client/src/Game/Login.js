@@ -60,7 +60,7 @@ class Login extends Component {
                 <h5 style={{color: "black"}}>Login and continue playing!</h5>
                 <Input type="text" placeholder="username" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
                 <Input type="password" placeholder="password" onChange={(input) => this.updateValue("password", input.target.value)}/>
-                <Button onClick={this.validateCredentials}>Login</Button>
+                <Button color="success" onClick={this.validateCredentials}>Login</Button>
                 {errorMessage}
             </div>
         );
