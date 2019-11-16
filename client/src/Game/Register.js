@@ -136,7 +136,7 @@ class Register extends Component {
                 <Input type="password" placeholder="password" onChange={(input) => this.updatePassword(input.target.value)}/>
                 <Input type="password" placeholder="confirm password" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
                 <Input type="text" placeholder="email address" onChange={(input) => this.updateValue("email", input.target.value)}/>
-                <Button color="success" onClick={this.validateCredentials}>Submit</Button>
+                <Button color="success" onClick={this.validateCredentials}>Register</Button>
                 {errorMessage}
             </div>
         );
