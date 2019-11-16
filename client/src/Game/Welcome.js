@@ -36,8 +36,8 @@ class Welcome extends Component {
     renderButtons() {
         return (
             <ButtonGroup>
-                <Button color="success" onClick={this.toggleRegister}>REGISTER</Button>
                 <Button color="success" onClick={this.toggleLogIn}>LOG-IN</Button>
+                <Button color="success" onClick={this.toggleRegister}>REGISTER</Button>
             </ButtonGroup>
         );
     }
