@@ -80,9 +80,18 @@ class Register extends Component {
     }
 
     validateEmail() {
-        if(!this.state.profileInfo.email.includes("@") || this.state.profileInfo.email === ""){
+        let email = this.state.profileInfo.email;
+        var validation = /[\w.]+@[\w]+(.com|.org)$/;
+        if(!email.includes("@") || email === ""){
             return false;
         }
+        if(!validation.test(email)) {
+            console.log("validating email!");
+            return false;
+        }
+        // if(email.) {
+        //
+        // }
 
         return true;
     }
@@ -135,8 +144,8 @@ class Register extends Component {
                 <Input type="text" placeholder="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
                 <Input type="password" placeholder="password" onChange={(input) => this.updatePassword(input.target.value)}/>
                 <Input type="password" placeholder="confirm password" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
-                <Input type="text" placeholder="email address" onChange={(input) => this.updateValue("email", input.target.value)}/>
-                <Button color="success" onClick={this.validateCredentials}>Submit</Button>
+                <Input type="email" placeholder="email address" onChange={(input) => this.updateValue("email", input.target.value)}/>
+                <Button color="success" onClick={this.validateCredentials}>Register</Button>
                 {errorMessage}
             </div>
         );
