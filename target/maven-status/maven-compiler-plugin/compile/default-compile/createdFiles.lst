@@ -10,6 +10,7 @@ com/jungleapp/cs414/server/RetrieveProfile.class
 com/jungleapp/cs414/server/Rat.class
 com/jungleapp/cs414/server/IllegalPositionException.class
 com/jungleapp/cs414/server/HTTPRestful.class
+com/jungleapp/cs414/server/MySQLConnection.class
 com/jungleapp/cs414/server/Leopard.class
 com/jungleapp/cs414/server/IllegalMoveException.class
 com/jungleapp/cs414/server/Dog.class

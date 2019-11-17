@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Input, Alert, Form, FormGroup, Label} from 'reactstrap';
+import {Button, Input, Alert, Form, FormGroup, Label, Card} from 'reactstrap';
 
 import {get, request} from '../api/api'
 
@@ -130,14 +130,27 @@ class Register extends Component {
         }
 
         return (
-            <div id="Register">
+            <div id="Register" style={{width: "600px", display: "inline-block"}}>
                 <h5 style={{color: "black"}}>Register with a new username, email, and password!</h5>
-                <Input type="text" placeholder="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
-                <Input type="password" placeholder="password" onChange={(input) => this.updatePassword(input.target.value)}/>
-                <Input type="password" placeholder="confirm password" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
-                <Input type="text" placeholder="email address" onChange={(input) => this.updateValue("email", input.target.value)}/>
-                <Button color="success" onClick={this.validateCredentials}>Submit</Button>
-                {errorMessage}
+                <Card>
+                    <div style={{width: "400px", margin: "auto"}}>
+                        <Form>
+                            <FormGroup>
+                                <Label for="nickname">Nickname</Label>
+                                <Input type="text" placeholder="nickname" id="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
+                                <Label for="password">Password</Label>
+                                <Input type="password" placeholder="password" id="password" onChange={(input) => this.updatePassword(input.target.value)}/>
+                                <Label for="confirmPassword">Confirm Password</Label>
+                                <Input type="password" placeholder="confirm password" id="confirmPassword" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
+                                <Label for="email">Email Address</Label>
+                                <Input type="text" placeholder="email address" id="email" onChange={(input) => this.updateValue("email", input.target.value)}/>
+                                <br/>
+                                <Button color="success" onClick={this.validateCredentials}>Submit</Button>
+                                {errorMessage}
+                            </FormGroup>
+                        </Form>
+                    </div>
+                </Card>
             </div>
         );
     }
