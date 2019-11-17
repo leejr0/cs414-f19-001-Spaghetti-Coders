@@ -80,9 +80,18 @@ class Register extends Component {
     }
 
     validateEmail() {
-        if(!this.state.profileInfo.email.includes("@") || this.state.profileInfo.email === ""){
+        let email = this.state.profileInfo.email;
+        var validation = /[\w.]+@[\w]+(.com|.org)$/;
+        if(!email.includes("@") || email === ""){
             return false;
         }
+        if(!validation.test(email)) {
+            console.log("validating email!");
+            return false;
+        }
+        // if(email.) {
+        //
+        // }
 
         return true;
     }

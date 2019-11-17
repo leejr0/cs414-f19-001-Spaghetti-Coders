@@ -125,6 +125,18 @@ public class RetrieveProfile {
         return false;
     }
 
+    public boolean updateProfile(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("UPDATE Player SET Player.password = '" + profile.newPassword + "', Player.email = '" + profile.newEmail +
+                    "' WHERE Player.nickname = '" + profile.nickname + "';");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public String getProfileJSON() {
         return gson.toJson(profile);
     }

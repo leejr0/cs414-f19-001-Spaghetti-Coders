@@ -7,4 +7,6 @@ class Profile {
     Integer wins;
     Integer losses;
     Double ratio;
+    String newPassword;
+    String newEmail;
 }
