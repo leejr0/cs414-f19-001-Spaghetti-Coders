@@ -1,21 +1,5 @@
 import React, {Component} from 'react';
-import {
-    Container,
-    Table,
-    Button,
-    Modal,
-    ModalHeader,
-    ModalBody,
-    ModalFooter,
-    Card,
-    Input,
-    Form,
-    FormGroup,
-    Label,
-    Row,
-    Col,
-    Alert
-} from 'reactstrap'
+import {Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter, Card, Input, Form, FormGroup, Label, Row, Col, Alert} from 'reactstrap'
 import {request} from "../api/api";
 
 class Profile extends Component {
