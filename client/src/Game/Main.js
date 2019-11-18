@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import {Button, Card, CardBody, Nav, NavItem, NavLink, TabContent, TabPane} from 'reactstrap';
+import {Button, Card, CardBody, ModalBody, ModalFooter, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane, Input, Modal, ButtonGroup} from 'reactstrap';
 
-import {request} from '../api/api';
+import {get, request} from '../api/api';
 import GamePage from "./GamePage";
 import Profile from "./Profile";
 import Rules from "./Rules";
@@ -17,16 +17,27 @@ class Main extends Component {
             newGame: true,
             activeTab: "Home",
             nickname: this.props.nickname,
+            invitePlayer: false,
             startGame: {
                 playerBlue: "Player 1",
                 playerRed: "Player 2",
                 createNewBoard: true
+            },
+            playerSearch: {
+                opponentFound: false,
+                nickname: "",
+                errorMessage: ""
             }
         };
 
         this.showBoard = this.showBoard.bind(this);
         this.beginGame = this.beginGame.bind(this);
         this.updatePlayerNames = this.updatePlayerNames.bind(this);
+        this.updateSearchValue = this.updateSearchValue.bind(this);
+        this.searchOpponent = this.searchOpponent.bind(this);
+        this.sendInvite = this.sendInvite.bind(this);
+        this.toggleModal = this.toggleModal.bind(this);
+        this.displayInvite = this.displayInvite.bind(this);
     }
 
     beginGame() {
@@ -100,6 +111,74 @@ class Main extends Component {
         this.setState(({state}, window.location.reload()));
     }
 
+    updateSearchValue(id, value) {
+        let state = this.state;
+        state.playerSearch[id] = value;
+        this.setState({state});
+    }
+
+    searchOpponent(random) {
+        if(random) {
+            get("getRandomPlayer").then(serverResponse => {
+                let state = this.state;
+                state.playerSearch.nickname = serverResponse.nickname;
+                state.playerSearch.errorMessage = "";
+                this.setState({state});
+            });
+        }
+        else {
+            request(this.state.playerSearch, "searchPlayer").then(serverResponse => {
+                let state = this.state;
+                if(!serverResponse){
+                    state.playerSearch.errorMessage = "Player not found!";
+                }
+                else{
+                    state.playerSearch.opponentFound = serverResponse;
+                    state.playerSearch.errorMessage = "";
+                }
+
+                this.setState({state});
+            });
+        }
+    }
+
+    sendInvite() {
+        request(this.state.playerSearch, "invitePlayer").then(serverResponse => {
+            if(!serverResponse) {
+
+            }
+        });
+    }
+
+    displayInvite() {
+        let foundOpponent = <p style={{textAlign: "center"}}>Select your opponent!</p>;
+        if(this.state.playerSearch.opponentFound) {
+            foundOpponent = <p style={{textAlign: "center"}}>Your opponent, {this.state.playerSearch.nickname}, has been found!</p>
+        }
+        return (
+            <Modal isOpen={this.state.invitePlayer}>
+                <ModalHeader>Invite your friends or get a random opponent!</ModalHeader>
+                <ModalBody>
+                    <Input type="text" onChange={(input) => this.updateSearchValue("opponentName", input.target.value)}/>
+                    <Button onClick={() => this.searchOpponent(false)}>SEARCH</Button>
+                    <Button onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
+                    <br/>
+                    {foundOpponent}
+                </ModalBody>
+                <ModalFooter>
+                    <Button onClick={this.sendInvite}>INVITE</Button>
+                    <Button onClick={this.toggleModal}>EXIT</Button>
+                </ModalFooter>
+            </Modal>
+        );
+    }
+
+    toggleModal() {
+        let state = this.state;
+        state.invitePlayer = !state.invitePlayer;
+        this.setState({state});
+    }
+
 
     render() {
         this.updatePlayerNames();
@@ -117,11 +196,13 @@ class Main extends Component {
         }
 
         let tabs = ["Home", "Profile", "Rules", "Invites"];
-
+        console.log(this.state);
         let home = [
             <div>
-                <br></br>
+                <br/>
                 <h5 style={{color: "black"}}>Here's the board! Make a move!</h5>
+                <Button onClick={this.toggleModal}>START</Button>
+                {this.displayInvite()}
                 {startButton}
                 <div id="GamePage">
                     {board}
@@ -130,7 +211,7 @@ class Main extends Component {
         let profile = [
             <Card key="cardkey">
                 <CardBody key="cardbodykey">
-                    <br></br>
+                    <br/>
                     <Profile nickname={this.props.nickname}/>
                 </CardBody>
             </Card>
@@ -138,7 +219,7 @@ class Main extends Component {
         let rules = [
             <Card key="cardkey">
                 <CardBody key="cardbodykey">
-                    <br></br>
+                    <br/>
                     <Rules/>
                 </CardBody>
             </Card>
@@ -146,7 +227,7 @@ class Main extends Component {
         let invites = [
             <Card key="cardkey">
                 <CardBody key="cardbodykey">
-                    <br></br>
+                    <br/>
                     <p> I'm going to be an invite! </p>
                 </CardBody>
             </Card>
