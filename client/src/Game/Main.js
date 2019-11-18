@@ -1,5 +1,21 @@
 import React, {Component} from 'react';
-import {Button, Card, CardBody, ModalBody, ModalFooter, ModalHeader, Nav, NavItem, NavLink, TabContent, TabPane, Input, Modal, ButtonGroup} from 'reactstrap';
+import {
+    Button,
+    Card,
+    CardBody,
+    ModalBody,
+    ModalFooter,
+    ModalHeader,
+    Nav,
+    NavItem,
+    NavLink,
+    TabContent,
+    TabPane,
+    Input,
+    Modal,
+    ButtonGroup,
+    Alert
+} from 'reactstrap';
 
 import {get, request} from '../api/api';
 import GamePage from "./GamePage";
@@ -118,7 +134,12 @@ class Main extends Component {
     }
 
     searchOpponent(random) {
-        if(random) {
+        if(this.state.playerSearch.nickname === this.state.nickname) {
+            let state = this.state;
+            state.playerSearch.errorMessage = "You can't challenge yourself, silly!";
+            this.setState({state});
+        }
+        else if(random) {
             get("getRandomPlayer").then(serverResponse => {
                 let state = this.state;
                 state.playerSearch.nickname = serverResponse.nickname;
@@ -130,7 +151,7 @@ class Main extends Component {
             request(this.state.playerSearch, "searchPlayer").then(serverResponse => {
                 let state = this.state;
                 if(!serverResponse){
-                    state.playerSearch.errorMessage = "Player not found!";
+                    state.playerSearch.errorMessage = this.state.playerSearch.nickname + " player not found!";
                 }
                 else{
                     state.playerSearch.opponentFound = serverResponse;
@@ -151,19 +172,26 @@ class Main extends Component {
     }
 
     displayInvite() {
+        let errorMessage;
+        if(this.state.playerSearch.errorMessage !== ""){
+            errorMessage = <Alert color="danger">{this.state.playerSearch.errorMessage}</Alert>
+        }
         let foundOpponent = <p style={{textAlign: "center"}}>Select your opponent!</p>;
         if(this.state.playerSearch.opponentFound) {
             foundOpponent = <p style={{textAlign: "center"}}>Your opponent, {this.state.playerSearch.nickname}, has been found!</p>
         }
+        // TODO: Center top text in Modal
         return (
             <Modal isOpen={this.state.invitePlayer}>
-                <ModalHeader>Invite your friends or get a random opponent!</ModalHeader>
+                <ModalHeader><h5 style={{textAlign: "center"}}>Invite your friends or get a random opponent!</h5></ModalHeader>
                 <ModalBody>
-                    <Input type="text" onChange={(input) => this.updateSearchValue("opponentName", input.target.value)}/>
+                    <Input type="text" onChange={(input) => this.updateSearchValue("nickname", input.target.value)}/>
                     <Button onClick={() => this.searchOpponent(false)}>SEARCH</Button>
-                    <Button onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
+                    <Button className="float-right" onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
+                    <br/>
                     <br/>
                     {foundOpponent}
+                    {errorMessage}
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.sendInvite}>INVITE</Button>
