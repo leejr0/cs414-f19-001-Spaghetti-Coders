@@ -234,10 +234,40 @@ class GamePage extends Component {
     colorSquare(i, j) {
         //pick a background color for square based on type, selection, or hover (priority: selection, hover, type)
         //independent of server, since the coloring is always the same except for the (client-side) piece selection
+        let lightLand = ['00', '20', '40', '60', '80', '11', '71', '22', '62', '33', '53', '24', '64', '15', '75', '06', '26', '46', '66', '86'];
+        let darkLand = ['10', '30', '50', '70', '01', '21', '61', '81', '12', '72', '23', '63', '14', '74', '05', '25', '65', '85', '16', '36', '56', '76'];
+
+
+
         if (i === this.state.selectedPiece.row && j === this.state.selectedPiece.col) { //selection (yellow)
             return 'ecc530'
         }
-        //water (light blue)
+        if (j === 3) {
+            if (i === 0) {
+                return '111111'
+            }
+            if (i === 8) {
+                return 'eeeeee'
+            }
+        }
+        let ij = ''+i+j;
+        if (lightLand.includes(ij)) {
+            return 'd8cdbd';
+        }
+        if (darkLand.includes(ij)) {
+            return 'a8a5a1';
+        }
+        /*if (lightWater.includes(ij)) {
+            return 'c8d0d1';
+        }
+        if (darkWater.includes([ij])) {
+            return 'a0b3c1';
+        }
+        if (traps.includes(ij)) {
+            return '6b7639';
+        }*/
+
+        /*//water (light blue)
         if (i===3 || i===4 || i===5) {
             if (j===1 || j===2 || j===4 || j===5) {
                 return '12a4b6'
@@ -260,7 +290,7 @@ class GamePage extends Component {
             if(j===3) {
                 return '000000'
             }
-        }
+        }*/
         //land (light green)
         return '7ec850'
     }
