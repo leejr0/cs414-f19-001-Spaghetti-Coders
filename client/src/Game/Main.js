@@ -139,6 +139,11 @@ class Main extends Component {
             state.playerSearch.errorMessage = "You can't challenge yourself, silly!";
             this.setState({state});
         }
+        else if(this.state.playerSearch.nickname === "") {
+            let state = this.state;
+            state.playerSearch.errorMessage = "Please type in a player to search.";
+            this.setState({state});
+        }
         else if(random) {
             get("getRandomPlayer").then(serverResponse => {
                 let state = this.state;
