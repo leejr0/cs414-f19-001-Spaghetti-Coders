@@ -23,6 +23,8 @@ class HTTPRestful {
         // start with HTTP GET
         get("/hello", (req, res) -> "Hello World");
 
+        get("/getRandomPlayer", this::getRandomPlayer);
+
         post("/login", this::login);
 
         post("/register", this::register);
@@ -36,6 +38,10 @@ class HTTPRestful {
         post("/unregister", this::unregisterProfile);
 
         post("/updateProfile", this::updateProfile);
+
+        post("/searchPlayer", this::searchPlayer);
+
+        post("/invitePlayer", this::invitePlayer);
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
@@ -57,6 +63,33 @@ class HTTPRestful {
         RetrieveProfile loginProfile = new RetrieveProfile(request);
 
         return loginProfile.establishProfileIdentity();
+    }
+
+    private boolean searchPlayer(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        // TODO: Implement player search, based on nickname only
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+
+        return false;
+    }
+
+    private String getRandomPlayer(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        // TODO: Implement random player search
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+
+        return "";
+    }
+
+    private boolean invitePlayer(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        // TODO: Implement invitation mechanic
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+
+        return false;
     }
 
     private String createNewMatch(Request request, Response response) {
