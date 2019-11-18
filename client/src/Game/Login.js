@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Input, Alert} from "reactstrap";
+import {Button, Input, Alert, Card, Form, FormGroup, Label} from "reactstrap";
 
 import {get, request} from '../api/api'
 
@@ -56,12 +56,23 @@ class Login extends Component {
         }
 
         return (
-            <div id="logIn">
+            <div id="logIn" style={{width: "600px", display: "inline-block"}}>
                 <h5 style={{color: "black"}}>Login and continue playing!</h5>
-                <Input type="text" placeholder="username" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
-                <Input type="password" placeholder="password" onChange={(input) => this.updateValue("password", input.target.value)}/>
-                <Button color="success" onClick={this.validateCredentials}>Login</Button>
-                {errorMessage}
+                <Card>
+                    <div style={{width: "400px", margin: "auto"}}>
+                        <Form>
+                            <FormGroup>
+                                <Label for="nickname">Nickname</Label>
+                                <Input type="text" placeholder="nickname" id="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
+                                <Label for="password">Password</Label>
+                                <Input type="password" placeholder="password" id="password" onChange={(input) => this.updateValue("password", input.target.value)}/>
+                                <br/>
+                                <Button color="success" onClick={this.validateCredentials}>Login</Button>
+                                {errorMessage}
+                            </FormGroup>
+                        </Form>
+                    </div>
+                </Card>
             </div>
         );
     }
