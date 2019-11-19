@@ -7,6 +7,7 @@ public class Elephant extends Piece {
     Elephant(JungleBoard board, String color){
         super(board, color);
         rank = 8;
+        super.legalMoves = legalMoves();
         name = "elephant";
     }
 

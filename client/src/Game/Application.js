@@ -37,7 +37,7 @@ class Application extends Component {
 
         return (
             <div id="main" style={{margin: '50 0 0 0'}}>
-                <h4 style={{color: "white"}}>From the Spaghetti Coders:</h4>
+                <h4 style={{color: "black"}}>From the Spaghetti Coders:</h4>
                 <Welcome
                 updateLogin={this.updateLogin}/>
             </div>

@@ -23,14 +23,25 @@ class HTTPRestful {
         // start with HTTP GET
         get("/hello", (req, res) -> "Hello World");
 
+        get("/getRandomPlayer", this::getRandomPlayer);
+
         post("/login", this::login);
 
         post("/register", this::register);
 
-        post("/startGame", this::startGame);
+        post("/newMatch", this::createNewMatch);
 
-        post("/move", this::move);
+        post("/updateMatch", this::updateMatch);
 
+        post("/retrieveProfile", this::retrieveProfile);
+
+        post("/unregister", this::unregisterProfile);
+
+        post("/updateProfile", this::updateProfile);
+
+        post("/searchPlayer", this::searchPlayer);
+
+        post("/invitePlayer", this::invitePlayer);
 
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
@@ -54,19 +65,73 @@ class HTTPRestful {
         return loginProfile.establishProfileIdentity();
     }
 
-    private String startGame(Request request, Response response) {
+    private boolean searchPlayer(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
+        // TODO: Implement player search, based on nickname only
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
 
-        Match m = new Match(request);
-        return m.createJSON();
+        return false;
     }
 
-    private String move(Request request, Response response) {
+    private String getRandomPlayer(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        //Return the board state with the move completed, and the winner, players etc.
-        Match m = new Match(request);
-        return m.createJSON();
+        // TODO: Implement random player search
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+
+        return "";
+    }
+
+    private boolean invitePlayer(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        // TODO: Implement invitation mechanic
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+
+        return false;
+    }
+
+    private String createNewMatch(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        Match match = new Match(request);
+        return match.createNewMatch();
+    }
+
+    private String updateMatch(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        Match match = new Match(request);
+
+        return match.updateMatch();
+    }
+
+    private String retrieveProfile(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        RetrieveProfile loginProfile = new RetrieveProfile(request);
+        loginProfile.getProfile();
+        return loginProfile.getProfileJSON();
+    }
+
+    private boolean unregisterProfile(Request request, Response response){
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        RetrieveProfile removeProfile = new RetrieveProfile(request);
+        removeProfile.unregisterProfile();
+        return removeProfile.unregisterProfile();
+    }
+
+    private boolean updateProfile(Request request, Response response){
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        RetrieveProfile updateProfile = new RetrieveProfile(request);
+        updateProfile.updateProfile();
+        return updateProfile.updateProfile();
     }
 }

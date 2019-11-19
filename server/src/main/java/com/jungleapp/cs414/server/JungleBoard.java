@@ -1,20 +1,13 @@
 package com.jungleapp.cs414.server;
 
+import com.google.gson.Gson;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class JungleBoard {
 
-    private Piece[][] board;
-    String winner;
-    String player1;//playerblue
-    String player2;//playerred
-    String whoseTurn; //String for player name's turn
-    Move chosenMove;
-    Move selectedPiece;
-    String errorMessage;
-    boolean isActive;
-    boolean createNewBoard;
+    public Piece[][] board;
 
     public JungleBoard() {
         board = new Piece[9][7];
@@ -47,7 +40,7 @@ public class JungleBoard {
         this.placePiece(new Elephant(this,"BLUE"), 6,0);
     }
 
-    public void resetBoard() {
+    void resetBoard() {
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
                 if(board[i][j] != null) {
@@ -84,12 +77,10 @@ public class JungleBoard {
 
     public boolean placePiece(Piece piece, int row, int column) {
         if(validPosition(row, column)) {
-            board[row][column] = piece;
             try {
                 piece.setPosition(row, column);
-            } catch (IllegalPositionException e) {
-
-            }
+                board[row][column] = piece;
+            } catch (IllegalPositionException ignored) {}
             return true;
         }
         return false;
@@ -103,37 +94,32 @@ public class JungleBoard {
         return board[row][column];
     }
 
-    public void makeMove(int row, int column, int toRow, int toColumn) {
+    boolean makeMove(int row, int column, int toRow, int toColumn) {
         try {
-            ArrayList<String> legalMoves = board[row][column].legalMoves();
-            String move = Integer.toString(toRow) + Integer.toString(toColumn);
-            if(legalMoves.contains(move)) { //Checking that the move requested is legal
+            if (getPiece(row, column).legalMoves().contains(getPiece(row, column).moveMaker(toRow, toColumn))) {
                 placePiece(getPiece(row, column), toRow, toColumn);
-                nullOldPiece(row, column);
-                if (whoseTurn.equals(player1)){     //if piece was placed, switch turn to other player
-                    whoseTurn = player2;
-                }else{
-                    whoseTurn = player1;
+                board[row][column] = null;
+
+                // Update legal moves for each piece on the board
+                for (Piece[] pieces : this.board) {
+                    for (int j = 0; j < this.board[0].length; j++) {
+                        if (pieces[j] != null) {
+                            pieces[j].legalMoves = pieces[j].legalMoves();
+                        }
+                    }
                 }
+                return true;
             }
-            else {
-                errorMessage = "Illegal Move!"; //If not, return an error, and don't make the move.
-            }
-        } catch(IllegalPositionException e) {
-
+        } catch(IllegalPositionException ignored) {
+            return false;
         }
+        return false;
     }
 
-    private void nullOldPiece(int row, int column) {
-        board[row][column] = null;
-    }
 
     private boolean validPosition(int row, int column) {
         return row <= 8 && row >= 0 && column >= 0 && column <= 6;
     }
 
-    public void declareWinner() {
-        winner = whoseTurn;
-        isActive = false;
-    }
+    String getBoardJSON() { return new Gson().toJson(this.board); }
 }

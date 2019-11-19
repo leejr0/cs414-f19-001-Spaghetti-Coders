@@ -22,8 +22,8 @@ class DogTest {
         board.initialize();
 
         try {
-            assertTrue(board.getPiece(1, 1).legalMoves().containsAll(Arrays.asList("01","21","10","12")));
-            assertTrue(board.getPiece(7, 5).legalMoves().containsAll(Arrays.asList("74","76","65","85")));
+            assertTrue(board.getPiece(1, 1).legalMoves.containsAll(Arrays.asList("01","21","10","12")));
+            assertTrue(board.getPiece(7, 5).legalMoves.containsAll(Arrays.asList("74","76","65","85")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
@@ -38,7 +38,7 @@ class DogTest {
         board.placePiece(new Dog(board,"RED"),1, 2);
 
         try {
-            assertTrue(board.getPiece(2, 2).legalMoves().containsAll(Arrays.asList("32","21")));
+            assertTrue(board.getPiece(2, 2).legalMoves.containsAll(Arrays.asList("21")));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }

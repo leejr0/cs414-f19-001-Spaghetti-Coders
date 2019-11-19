@@ -7,6 +7,7 @@ public class Dog extends Piece{
     Dog(JungleBoard board, String color) {
         super(board, color);
         rank = 4;
+        super.legalMoves = legalMoves();
         name = "dog";
     }
 

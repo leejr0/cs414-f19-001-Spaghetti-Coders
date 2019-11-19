@@ -11,10 +11,11 @@ public class Piece {
     protected int column;
     String name;
     private String pieceColor;
-
     protected boolean isTrapped = false;
-    final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
-    final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
+    protected ArrayList<String> legalMoves;
+
+    private final ArrayList<String> redTraps = new ArrayList<String>(Arrays.asList("02", "13", "04"));
+    private final ArrayList<String> blueTraps = new ArrayList<String>(Arrays.asList("82", "73", "84"));
     final ArrayList<String> waterTiles = new ArrayList<String>(Arrays.asList("31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"));
     final String redDen = "03";
     final String blueDen = "83";
@@ -31,6 +32,10 @@ public class Piece {
         this.name = piece.name;
         this.pieceColor = piece.pieceColor;
         this.isTrapped = piece.isTrapped;
+        this.legalMoves = piece.legalMoves;
+//        this.redTraps = piece.redTraps;
+//        this.blueTraps = piece.blueTraps;
+//        this.waterTiles = piece.waterTiles;
     }
 
     public String getColor(){
@@ -39,7 +44,7 @@ public class Piece {
 
     public int getRank() { return rank; }
 
-    public void setPosition(int row, int column) throws IllegalPositionException{
+    void setPosition(int row, int column) throws IllegalPositionException{
 
         if(row > 8 || row < 0 || column < 0 || column > 6) {
             throw new IllegalPositionException("The given position is not on the board.");
@@ -47,8 +52,12 @@ public class Piece {
 
         this.row = row;
         this.column = column;
+
+        //Update singular piece legalMoves for instantiation of a piece/board.
+        this.legalMoves = this.legalMoves();
+
+        //Check if the current piece is trapped
         checkTrapped();
-        checkWin();
     }
 
     String getPosition() {
@@ -63,15 +72,8 @@ public class Piece {
     }
 
     //Pieces except Lion and Tiger can move one spot in each direction as long as the spot is null or contains an enemy piece of equal or lesser rank
-    public ArrayList<String> legalMoves() {
+    protected ArrayList<String> legalMoves() {
         ArrayList<String> moves = new ArrayList<String>();
-        //If player1(blue) is moving a piece, they can only move a blue piece.
-        if(board.whoseTurn.equals(board.player1) && !this.pieceColor.equals("BLUE")) {
-            return moves;
-        }
-        else if(board.whoseTurn.equals(board.player2) && !this.pieceColor.equals("RED")) {
-            return moves;
-        }
 
         //check left
         if (column > 0) {
@@ -94,7 +96,6 @@ public class Piece {
         }
 
         return moves;
-
     }
 
     String moveMaker(int row, int column) {
@@ -104,9 +105,15 @@ public class Piece {
         return move;
     }
 
+    private void checkTrapped() {
+        //check if piece moved to a trap location of the opposite color
+        isTrapped = (getColor().equals("BLUE") && redTraps.contains(getPosition()))
+                || (getColor().equals("RED") && blueTraps.contains(getPosition()));
+    }
+
     public boolean checkSpace(int row, int column) {
         try {
-            if (waterTiles.contains(Integer.toString(row) + Integer.toString(column))) {
+            if (waterTiles.contains(getPosition(row, column))) {
                 return false;
             }
 
@@ -130,26 +137,7 @@ public class Piece {
         return false;
     }
 
-    public void checkTrapped() {
-        //check if piece moved to a trap location of the opposite color
-        if ((getColor().equals("BLUE") && redTraps.contains(getPosition()))
-                || (getColor().equals("RED") && blueTraps.contains(getPosition()))) {
-            isTrapped = true;
-        }else{
-            isTrapped = false;
-        }
-    }
-
-    public void checkWin() {
-        if ((getColor().equals("BLUE") && getPosition().equals("03"))
-                || (getColor().equals("RED") && getPosition().equals("83"))) {
-
-            board.declareWinner();
-        }
-    }
-
     public void setBoard(JungleBoard board) {
         this.board = board;
     }
-
 }

@@ -7,6 +7,7 @@ public class Leopard extends Piece {
     Leopard(JungleBoard board, String color) {
         super(board, color);
         rank = 5;
+        super.legalMoves = legalMoves();
         name = "panther";
     }
 

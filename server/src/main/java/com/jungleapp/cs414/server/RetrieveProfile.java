@@ -9,18 +9,10 @@ import spark.Request;
 import java.sql.*;
 
 public class RetrieveProfile {
-    Profile profile = new Profile();
-    //FAURE DATABASE
-    String MySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
-    String DBUsername = "vstepa";
-    String DBPassword = "830982615";
+    private Profile profile = new Profile();
+    private Gson gson = new Gson();
 
-    //LOCAL DATABASE
-    String MySQLConnectionURL1 = "jdbc:mysql://localhost/cs414?useTimezone=true&serverTimezone=UTC";
-    String DBUsername1 = "root";
-    String DBPassword1 = "pass";
-
-    Connection connection;
+    private Connection connection;
 
     RetrieveProfile(Request request) {
         JsonParser jsonParser = new JsonParser();
@@ -29,7 +21,7 @@ public class RetrieveProfile {
         Gson gson = new Gson();
         profile = gson.fromJson(requestBody, Profile.class);
 
-        establishMySQLConnection();
+        connection = MySQLConnection.establishMySQLConnection();
     }
 
     // Default for testing purposes.
@@ -38,17 +30,7 @@ public class RetrieveProfile {
         profile.password = password;
         profile.email = email;
 
-        establishMySQLConnection();
-    }
-
-
-    private void establishMySQLConnection() {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            openMySQLConnection();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+        connection = MySQLConnection.establishMySQLConnection();
     }
 
     boolean establishProfileIdentity() {
@@ -74,7 +56,7 @@ public class RetrieveProfile {
 
     public boolean createNewProfile() {
         if (!establishProfileIdentity()) {
-            openMySQLConnection();
+            connection = MySQLConnection.establishMySQLConnection();
             try {
                 Statement statement = connection.createStatement();
 
@@ -99,15 +81,64 @@ public class RetrieveProfile {
         return false;
     }
 
-    private void openMySQLConnection() {
+    public void getProfile() {
         try {
-            try {
-                connection = DriverManager.getConnection(MySQLConnectionURL, DBUsername, DBPassword);
-            } catch (SQLException e) {
-                connection = DriverManager.getConnection(MySQLConnectionURL1, DBUsername1, DBPassword1);
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+                    profile.nickname + "'");
+            while (resultSet.next()) {
+                profile.email = resultSet.getString("email");
+                profile.password = resultSet.getString("password");
+                profile.wins = resultSet.getInt("wins");
+                profile.losses = resultSet.getInt("losses");
+                if(profile.losses == 0 && profile.wins == 0) {
+                    profile.ratio = 0.0;
+                }
+                else if(profile.losses == 0) {
+                    profile.ratio = (double)profile.wins;
+                }
+                else if(profile.wins == 0) {
+                    profile.ratio = 0.0;
+                }
+                else{
+                    profile.ratio = (double)profile.wins/profile.losses;
+                }
             }
+
+        } catch (SQLException e) {
+
+        }
+    }
+
+    public boolean unregisterProfile() {
+        try {
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate("DELETE FROM Player WHERE Player.nickname = '" +
+                    profile.nickname + "';");
+            statement.executeUpdate("DELETE FROM Played_By WHERE Played_By.nickname = '" +
+                    profile.nickname + "';");
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
+
+    public boolean updateProfile(){
+        try {
+            Statement statement = connection.createStatement();
+            statement.executeUpdate("UPDATE Player SET Player.password = '" + profile.newPassword + "', Player.email = '" + profile.newEmail +
+                    "' WHERE Player.nickname = '" + profile.nickname + "';");
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public String getProfileJSON() {
+        return gson.toJson(profile);
+    }
+
 }

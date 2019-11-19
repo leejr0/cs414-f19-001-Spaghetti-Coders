@@ -8,6 +8,7 @@ public class Rat extends Piece {
         super(board, color);
         rank = 1;
         name = "rat";
+        super.legalMoves = legalMoves();
     }
 
     Rat(Piece piece) {
