@@ -130,6 +130,7 @@ class Main extends Component {
     updateSearchValue(id, value) {
         let state = this.state;
         state.playerSearch[id] = value;
+        state.playerSearch.opponentFound = false;
         this.setState({state});
     }
 
@@ -190,12 +191,13 @@ class Main extends Component {
             <Modal isOpen={this.state.invitePlayer}>
                 <ModalHeader><h5 style={{textAlign: "center"}}>Invite your friends or get a random opponent!</h5></ModalHeader>
                 <ModalBody>
+                    {foundOpponent}
                     <Input type="text" onChange={(input) => this.updateSearchValue("nickname", input.target.value)}/>
+                    <br/>
                     <Button onClick={() => this.searchOpponent(false)}>SEARCH</Button>
                     <Button className="float-right" onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
                     <br/>
                     <br/>
-                    {foundOpponent}
                     {errorMessage}
                 </ModalBody>
                 <ModalFooter>

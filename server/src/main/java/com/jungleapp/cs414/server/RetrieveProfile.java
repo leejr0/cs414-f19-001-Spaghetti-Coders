@@ -137,6 +137,23 @@ public class RetrieveProfile {
         return false;
     }
 
+    public boolean searchPlayer(){
+        try {
+            Statement statement = connection.createStatement();
+            System.out.println("select * from Player where Player.nickname = '" +
+                    profile.nickname + "';");
+            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+                    profile.nickname + "';");
+            if (resultSet.next()){
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public String getProfileJSON() {
         return gson.toJson(profile);
     }

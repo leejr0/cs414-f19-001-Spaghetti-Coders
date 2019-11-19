@@ -69,9 +69,9 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         // TODO: Implement player search, based on nickname only
-        RetrieveProfile loginProfile = new RetrieveProfile(request);
+        RetrieveProfile searchProfile = new RetrieveProfile(request);
 
-        return false;
+        return searchProfile.searchPlayer();
     }
 
     private String getRandomPlayer(Request request, Response response) {
