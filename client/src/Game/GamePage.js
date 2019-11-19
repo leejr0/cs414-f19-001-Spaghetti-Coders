@@ -3,6 +3,9 @@ import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } 
 import {request} from "../api/api";
 import Rules from "./Rules";
 
+import bRat from "./assets/30BR.png";
+import wRat from "./assets/30WR.png";
+
 class Piece {
     constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
         this.pieceColor = color;
@@ -250,6 +253,7 @@ class GamePage extends Component {
         //legal moves
         if (this.state.selectedPiece.row !== null && this.state.selectedPiece.col !== null) {
             let piece = this.state.board[this.state.selectedPiece.row][this.state.selectedPiece.col];
+            console.log(piece);
             if (piece.legalMoves.includes(ij)) {
                 return 'eff556';
             }
@@ -285,9 +289,11 @@ class GamePage extends Component {
         //renders the square at the given position, using the board 2d array
         return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <div>
-                <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>
-                <p style={{color: 'black'}}>{square.rank}</p>
+            {(square != null) ? <div style={{position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}>
+                {/*<h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>*/}
+                <img  src={wRat} alt="blackRat"/>
+                <p style={{color: square.pieceColor}}>{square.rank}</p>
+
             </div> : null}
         </div>
     }
