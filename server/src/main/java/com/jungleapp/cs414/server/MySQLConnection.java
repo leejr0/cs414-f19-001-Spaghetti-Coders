@@ -24,7 +24,7 @@ class MySQLConnection {
             String DBPassword = "830982615";
 
             //LOCAL DATABASE
-            //String MySQLConnectionURL = "jdbc:mysql://localhost/cs414?useTimezone=true&serverTimezone=UTC";
+            //String mySQLConnectionURL = "jdbc:mysql://localhost:3306/cs414?useTimezone=true&serverTimezone=UTC";
             //String DBUsername = "root";
             //String DBPassword = "pass";
 

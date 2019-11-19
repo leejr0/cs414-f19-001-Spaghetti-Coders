@@ -234,35 +234,50 @@ class GamePage extends Component {
     colorSquare(i, j) {
         //pick a background color for square based on type, selection, or hover (priority: selection, hover, type)
         //independent of server, since the coloring is always the same except for the (client-side) piece selection
+        const lightLand = ['00', '20', '40', '60', '80', '11', '71', '22', '62', '33', '53', '24', '64', '15', '75', '06', '26', '46', '66', '86'];
+        const darkLand = ['10', '30', '50', '70', '01', '21', '61', '81', '12', '72', '23', '43', '63', '14', '74', '05', '25', '65', '85', '16', '36', '56', '76'];
+        const lightWater = ['31', '51', '42', '44', '35', '55'];
+        const darkWater = ['41', '32', '52', '34', '54', '45'];
+        const dens = ['03', '83'];
+        
+        //selection
         if (i === this.state.selectedPiece.row && j === this.state.selectedPiece.col) { //selection (yellow)
-            return 'ecc530'
-        }
-        //water (light blue)
-        if (i===3 || i===4 || i===5) {
-            if (j===1 || j===2 || j===4 || j===5) {
-                return '12a4b6'
-            }
+            return 'ecc530';
         }
 
-        if (i===0 || i===8){
-            if(j===2  || j===4) {
-                return '47100D';
+        let ij = ''+ i + j;
+
+        //legal moves
+        if (this.state.selectedPiece.row !== null && this.state.selectedPiece.col !== null) {
+            let piece = this.state.board[this.state.selectedPiece.row][this.state.selectedPiece.col];
+            if (piece.legalMoves.includes(ij)) {
+                return 'eff556';
             }
+        }
+        
+        //land
+        if (lightLand.includes(ij)) {
+            return 'f2ca8a';
+        }
+        if (darkLand.includes(ij)) {
+            return 'd19764';
+        }
+        
+        //water
+        if (lightWater.includes(ij)) {
+            return '96bbbb';
+        }
+        if (darkWater.includes(ij)) {
+            return '618985';
         }
 
-        if (i===1 || i===7) {
-            if(j===3) {
-                return '47100D';
-            }
+        //dens
+        if (dens.includes(ij)) {
+            return '004400';
         }
 
-        if(i===0 || i===8) {
-            if(j===3) {
-                return '000000'
-            }
-        }
-        //land (light green)
-        return '7ec850'
+        //traps
+        return '8f9e49';
     }
 
     renderSquare(i, j) {
