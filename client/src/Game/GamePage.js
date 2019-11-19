@@ -152,7 +152,8 @@ class GamePage extends Component {
                     let redTraps = board[i][j].redTraps;
                     let blueTraps = board[i][j].blueTraps;
                     let waterTiles = board[i][j].waterTiles;
-                    board[i][j] = new Piece(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles);
+                    let legalMoves = board[i][j].legalMoves;
+                    board[i][j] = new Piece(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles);
                 }
             }
         }
@@ -285,11 +286,11 @@ class GamePage extends Component {
     }
 
     renderSquare(i, j) {
-        let square = this.state.board[i][j];
+        let square = this.state.board[i][j];// style={{position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}
         //renders the square at the given position, using the board 2d array
         return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <div style={{position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}>
+            {(square != null) ? <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
                 {/*<h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>*/}
                 <img  src={wRat} alt="blackRat"/>
                 <p style={{color: square.pieceColor}}>{square.rank}</p>
