@@ -3,22 +3,29 @@ import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } 
 import {request} from "../api/api";
 import Rules from "./Rules";
 
-import bRat from "./assets/30BR.png";
-import wRat from "./assets/30WR.png";
-import bCat from "./assets/30BC.png";
-import wCat from "./assets/30WC.png";
-import bWolf from "./assets/30BW.png";
-import wWolf from "./assets/30WW.png";
-import bDog from "./assets/30BD.png";
-import wDog from "./assets/30WD.png";
-import bPanther from "./assets/30BP.png";
-import wPanther from "./assets/30WP.png";
-import bTiger from "./assets/30BT.png";
-import wTiger from "./assets/30WT.png";
-import bLion from "./assets/30BL.png";
-import wLion from "./assets/30WL.png";
-import bElephant from "./assets/30BE.png";
-import wElephant from "./assets/30WE.png";
+import bRat from "./assets/40BR.png";
+import bRatWater from "./assets/40BRWater.png";
+import wRat from "./assets/40WR.png";
+import wRatWater from "./assets/40WRWater.png";
+import bCat from "./assets/40BC.png";
+import wCat from "./assets/40WC.png";
+import bWolf from "./assets/40BW.png";
+import wWolf from "./assets/40WW.png";
+import bDog from "./assets/40BD.png";
+import wDog from "./assets/40WD.png";
+import bPanther from "./assets/40BP.png";
+import wPanther from "./assets/40WP.png";
+import bTiger from "./assets/40BT.png";
+import wTiger from "./assets/40WT.png";
+import bLion from "./assets/40BL.png";
+import wLion from "./assets/40WL.png";
+import bElephant from "./assets/40BE.png";
+import wElephant from "./assets/40WE.png";
+import bDen from "./assets/40BDen.png";
+import wDen from "./assets/40WDen.png";
+import water from "./assets/40Water.png";
+import trap from "./assets/40Trap.png";
+
 
 class Piece {
     constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
@@ -299,9 +306,16 @@ class GamePage extends Component {
         return 'bbbbbb';
     }
 
-    getIcon(color, name) {
+    getIcon(color, name, i, j) {
         if (color === 'blue') {
-            if (name === 'rat') {return wRat;}
+            if (name === 'rat') {
+                if (i === 3 ||i === 4 ||i === 5) {
+                    if (j === 1 || j === 2 || j === 4 || j === 5) {
+                        return wRatWater;
+                    }
+                }
+                return wRat;
+            }
             if (name === 'cat') {return wCat;}
             if (name === 'wolf') {return wWolf;}
             if (name === 'dog') {return wDog;}
@@ -311,7 +325,14 @@ class GamePage extends Component {
             if (name === 'elephant') {return wElephant;}
         }
         if (color === 'red') {
-            if (name === 'rat') {return bRat;}
+            if (name === 'rat') {
+                if (i === 3 ||i === 4 ||i === 5) {
+                    if (j === 1 || j === 2 || j === 4 || j === 5) {
+                        return bRatWater;
+                    }
+                }
+                return bRat;
+            }
             if (name === 'cat') {return bCat;}
             if (name === 'wolf') {return bWolf;}
             if (name === 'dog') {return bDog;}
@@ -331,7 +352,9 @@ class GamePage extends Component {
         return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
             {(square != null) ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                <img  src={this.getIcon(square.pieceColor.toLowerCase(), square.name)} alt={square.pieceColor.toLowerCase() + ' ' + square.name}/>
+                <div>
+                <img  src={this.getIcon(square.pieceColor.toLowerCase(), square.name, i, j)} alt={square.pieceColor.toLowerCase() + ' ' + square.name}/>
+                </div>
                 <h5 style={{color: square.pieceColor}}>{square.rank}</h5>
             </div> : null}
         </div>
@@ -438,7 +461,6 @@ class GamePage extends Component {
                     {this.turnMonitor()}
                     {this.renderBoard()}
                 </div>
-                <Rules/>
             </Container>);
     }
 }
