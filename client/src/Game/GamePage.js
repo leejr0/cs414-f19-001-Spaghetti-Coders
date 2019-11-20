@@ -5,6 +5,20 @@ import Rules from "./Rules";
 
 import bRat from "./assets/30BR.png";
 import wRat from "./assets/30WR.png";
+import bCat from "./assets/30BC.png";
+import wCat from "./assets/30WC.png";
+import bWolf from "./assets/30BW.png";
+import wWolf from "./assets/30WW.png";
+import bDog from "./assets/30BD.png";
+import wDog from "./assets/30WD.png";
+import bPanther from "./assets/30BP.png";
+import wPanther from "./assets/30WP.png";
+import bTiger from "./assets/30BT.png";
+import wTiger from "./assets/30WT.png";
+import bLion from "./assets/30BL.png";
+import wLion from "./assets/30WL.png";
+import bElephant from "./assets/30BE.png";
+import wElephant from "./assets/30WE.png";
 
 class Piece {
     constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
@@ -278,23 +292,47 @@ class GamePage extends Component {
 
         //dens
         if (dens.includes(ij)) {
-            return '004400';
+            return '666666';
         }
 
         //traps
-        return '8f9e49';
+        return 'bbbbbb';
+    }
+
+    getIcon(color, name) {
+        if (color === 'blue') {
+            if (name === 'rat') {return wRat;}
+            if (name === 'cat') {return wCat;}
+            if (name === 'wolf') {return wWolf;}
+            if (name === 'dog') {return wDog;}
+            if (name === 'panther') {return wPanther;}
+            if (name === 'tiger') {return wTiger;}
+            if (name === 'lion') {return wLion;}
+            if (name === 'elephant') {return wElephant;}
+        }
+        if (color === 'red') {
+            if (name === 'rat') {return bRat;}
+            if (name === 'cat') {return bCat;}
+            if (name === 'wolf') {return bWolf;}
+            if (name === 'dog') {return bDog;}
+            if (name === 'panther') {return bPanther;}
+            if (name === 'tiger') {return bTiger;}
+            if (name === 'lion') {return bLion;}
+            if (name === 'elephant') {return bElephant;}
+        }
+
+        //renders alt text with 'broken' image if icon cannot be found
+        return null;
     }
 
     renderSquare(i, j) {
-        let square = this.state.board[i][j];// style={{position: 'absolute', left: '50%', top: '50%',transform: 'translate(-50%, -50%)'}}
+        let square = this.state.board[i][j];
         //renders the square at the given position, using the board 2d array
         return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                {/*<h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>*/}
-                <img  src={wRat} alt="blackRat"/>
-                <p style={{color: square.pieceColor}}>{square.rank}</p>
-
+            {(square != null) ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <img  src={this.getIcon(square.pieceColor.toLowerCase(), square.name)} alt={square.pieceColor.toLowerCase() + ' ' + square.name}/>
+                <h5 style={{color: square.pieceColor}}>{square.rank}</h5>
             </div> : null}
         </div>
     }
