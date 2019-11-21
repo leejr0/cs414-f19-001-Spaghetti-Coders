@@ -2,6 +2,8 @@ package com.jungleapp.cs414.server;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JungleBoardTest {
@@ -54,12 +56,36 @@ public class JungleBoardTest {
 
         try {
             assertEquals(redElephant1,board.getPiece(2, 2));
+            assertNull(board.getPiece(0,5));
         } catch (IllegalPositionException e) {
             e.printStackTrace();
         }
     }
 
     @Test
-    public void move() {
+    public void makeMove() {
+        JungleBoard board = new JungleBoard();
+        board.initialize();
+        board.makeMove(6,0,5,0);
+        try {
+            assertTrue(board.getPiece(5, 0).rank == 8);
+            assertTrue(board.getPiece(5, 0).legalMoves().containsAll(Arrays.asList("40","60")));
+        } catch (IllegalPositionException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void makeCaptureMoves() {
+        JungleBoard board = new JungleBoard();
+
+        board.placePiece(new Elephant(board, "RED"), 3, 3);
+        board.placePiece(new Lion(board, "BLUE"), 4, 3);
+        board.placePiece(new Elephant(board, "RED"), 5, 3);
+
+        assertFalse(board.makeMove(4,3,3,3));
+        assertTrue(board.makeMove(3,3,4,3));
+        assertFalse(board.makeMove(5, 3, 3, 3));
     }
 }
