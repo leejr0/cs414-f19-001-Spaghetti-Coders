@@ -13,14 +13,13 @@ import {
     TabPane,
     Input,
     Modal,
-    ButtonGroup,
     Alert
 } from 'reactstrap';
-
 import {get, request} from '../api/api';
 import GamePage from "./GamePage";
 import Profile from "./Profile";
 import Rules from "./Rules";
+import Home from "./Home";
 
 class Main extends Component {
     constructor(props) {
@@ -114,6 +113,7 @@ class Main extends Component {
             </TabContent>
         );
     }
+
 
     logout() {
         let state = this.state;
@@ -212,7 +212,6 @@ class Main extends Component {
         this.setState({state});
     }
 
-
     render() {
         this.updatePlayerNames();
         if(!this.state.display) {
@@ -231,16 +230,12 @@ class Main extends Component {
         let tabs = ["Home", "Profile", "Rules", "Invites"];
         console.log(this.state);
         let home = [
-            <div>
-                <br/>
-                <h5 style={{color: "black"}}>Here's the board! Make a move!</h5>
-                <Button onClick={this.toggleModal}>START</Button>
-                {this.displayInvite()}
-                {startButton}
-                <div id="GamePage">
-                    {board}
-                </div>
-            </div>];
+            <Card key="cardkey">
+                <CardBody key="cardbodykey">
+                    <Home startButton={startButton} board={board}/>
+                </CardBody>
+            </Card>
+        ];
         let profile = [
             <Card key="cardkey">
                 <CardBody key="cardbodykey">
@@ -274,7 +269,6 @@ class Main extends Component {
                     <div style={{ padding: '.5rem' }}>
                         {logoutButton}
                     </div>
-                    <h1 style={{color: "black", textAlign: "left"}}>JUNGLE</h1>
                 </div>
                 <div>
                     <Nav tabs key="2">
