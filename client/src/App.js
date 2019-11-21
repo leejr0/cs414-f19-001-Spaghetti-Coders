@@ -3,6 +3,7 @@ import './App.css';
 import Application from  './Game/Application'
 import { HashRouter as Router, Route, Switch} from 'react-router-dom';
 import { TransitionGroup, CSSTransition } from 'react-transition-group';
+import Main from "./Game/Main";
 
 class App extends Component {
   constructor (props) {
@@ -16,7 +17,6 @@ class App extends Component {
               <div className="App">
                   <Route render={({ location }) => (
                       <div>
-                        <header></header>
 
                         <TransitionGroup>
                           <CSSTransition
