@@ -187,6 +187,7 @@ class Main extends Component {
                 let state = this.state;
                 if (!serverResponse) {
                     state.playerSearch.errorMessage = "Invitation failed!";
+                    state.playerSearch.invitationSent = false;
                     this.setState({state});
                 }
                 else {
