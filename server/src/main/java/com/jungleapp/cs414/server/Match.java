@@ -23,6 +23,8 @@ class Match {
     private String playerBlue;
     private String playerRed;
     private Move move;
+    private String status;
+    private Integer matchID;
 
     private Connection connection;
 
@@ -41,6 +43,8 @@ class Match {
         this.playerRed = currentMatch.playerRed;
         this.winner = currentMatch.winner;
         this.move = currentMatch.move;
+        this.matchID = currentMatch.matchID;
+        this.status = "Pending";
 
         connection = MySQLConnection.establishMySQLConnection();
     }
@@ -56,7 +60,18 @@ class Match {
         return this.jungleBoard.getBoardJSON();
     }
 
+    //Temporary class that doesn't interfere with old functionality
+    boolean createNewPendingMatch() {
+        this.jungleBoard = new JungleBoard();
+        this.jungleBoard.initialize();
+        this.isActive = true;
+        this.whoseTurn = this.playerBlue;
+
+        return saveNewMatch();
+    }
+
     String updateMatch() {
+        // TODO: Retrieve an old match from the database based on player data or Match-ID
         this.jungleBoard.resetBoard();
 
         boolean successfulMove = this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
@@ -108,7 +123,7 @@ class Match {
         } catch (IllegalPositionException ignored) {}
     }
 
-    private void saveNewMatch() {
+    private boolean saveNewMatch() {
         try {
             Statement statement = connection.createStatement();
 
@@ -121,10 +136,12 @@ class Match {
             statement.execute("INSERT INTO Game VALUES (NULL, '" + this.jungleBoard.getBoardJSON() + "', " +
                     "'" + this.isActive + "','" + this.whoseTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private String getMatchJSON() {

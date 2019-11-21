@@ -8,4 +8,6 @@ class MatchStructure {
     String playerBlue;
     String playerRed;
     Move move;
+    Integer matchID;
+    String status;
 }

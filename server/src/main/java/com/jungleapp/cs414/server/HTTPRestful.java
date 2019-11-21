@@ -68,7 +68,6 @@ class HTTPRestful {
     private boolean searchPlayer(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        // TODO: Implement player search, based on nickname only
         RetrieveProfile searchProfile = new RetrieveProfile(request);
 
         return searchProfile.searchPlayer();
@@ -83,13 +82,14 @@ class HTTPRestful {
         return "";
     }
 
+    //Class that doesn't interfere with other functionality
     private boolean invitePlayer(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         // TODO: Implement invitation mechanic
-        RetrieveProfile loginProfile = new RetrieveProfile(request);
+        Match match = new Match(request);
 
-        return false;
+        return match.createNewPendingMatch();
     }
 
     private String createNewMatch(Request request, Response response) {

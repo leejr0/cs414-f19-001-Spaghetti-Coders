@@ -42,7 +42,8 @@ class Main extends Component {
             playerSearch: {
                 opponentFound: false,
                 nickname: "",
-                errorMessage: ""
+                errorMessage: "",
+                invitationSent: false
             }
         };
 
@@ -138,11 +139,13 @@ class Main extends Component {
         if(this.state.playerSearch.nickname === this.state.nickname) {
             let state = this.state;
             state.playerSearch.errorMessage = "You can't challenge yourself, silly!";
+            state.playerSearch.opponentFound = false;
             this.setState({state});
         }
         else if(this.state.playerSearch.nickname === "") {
             let state = this.state;
             state.playerSearch.errorMessage = "Please type in a player to search.";
+            state.playerSearch.opponentFound = false;
             this.setState({state});
         }
         else if(random) {
@@ -150,14 +153,17 @@ class Main extends Component {
                 let state = this.state;
                 state.playerSearch.nickname = serverResponse.nickname;
                 state.playerSearch.errorMessage = "";
+                state.playerSearch.invitationSent = false;
                 this.setState({state});
             });
         }
         else {
             request(this.state.playerSearch, "searchPlayer").then(serverResponse => {
                 let state = this.state;
+                state.playerSearch.invitationSent = false;
                 if(!serverResponse){
                     state.playerSearch.errorMessage = this.state.playerSearch.nickname + " player not found!";
+                    state.playerSearch.opponentFound = false;
                 }
                 else{
                     state.playerSearch.opponentFound = serverResponse;
@@ -170,11 +176,30 @@ class Main extends Component {
     }
 
     sendInvite() {
-        request(this.state.playerSearch, "invitePlayer").then(serverResponse => {
-            if(!serverResponse) {
+        if(this.state.playerSearch.opponentFound === false) {
+            let state = this.state;
+            state.playerSearch.errorMessage = "Please search for a player above.";
 
-            }
-        });
+            this.setState({state});
+        }
+        else {
+            request(this.state.playerSearch, "invitePlayer").then(serverResponse => {
+                let state = this.state;
+                if (!serverResponse) {
+                    state.playerSearch.errorMessage = "Invitation failed!";
+                    this.setState({state});
+                }
+                else {
+                    state.playerSearch.errorMessage = "";
+                    state.playerSearch.invitationSent = true;
+                    state.startGame.playerRed = this.state.nickname;
+                    state.startGame.playerBlue = this.state.playerSearch.nickname;
+                    //Temporary callback to show functionality
+                    this.setState({state}, () => {this.beginGame()});
+                }
+                //this.setState({state});
+            });
+        }
     }
 
     displayInvite() {
@@ -185,6 +210,10 @@ class Main extends Component {
         let foundOpponent = <p style={{textAlign: "center"}}>Select your opponent!</p>;
         if(this.state.playerSearch.opponentFound) {
             foundOpponent = <p style={{textAlign: "center"}}>Your opponent, {this.state.playerSearch.nickname}, has been found!</p>
+        }
+        let invitationSent = <p> </p>;
+        if(this.state.playerSearch.invitationSent) {
+            invitationSent = <Alert color="success">Your invitation was successfully sent!</Alert>
         }
         // TODO: Center top text in Modal
         return (
@@ -199,6 +228,7 @@ class Main extends Component {
                     <br/>
                     <br/>
                     {errorMessage}
+                    {invitationSent}
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.sendInvite}>INVITE</Button>
