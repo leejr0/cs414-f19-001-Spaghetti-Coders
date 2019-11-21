@@ -3,6 +3,30 @@ import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } 
 import {request} from "../api/api";
 import Rules from "./Rules";
 
+import bRat from "./assets/40BR.png";
+import bRatWater from "./assets/40BRWater.png";
+import wRat from "./assets/40WR.png";
+import wRatWater from "./assets/40WRWater.png";
+import bCat from "./assets/40BC.png";
+import wCat from "./assets/40WC.png";
+import bWolf from "./assets/40BW.png";
+import wWolf from "./assets/40WW.png";
+import bDog from "./assets/40BD.png";
+import wDog from "./assets/40WD.png";
+import bPanther from "./assets/40BP.png";
+import wPanther from "./assets/40WP.png";
+import bTiger from "./assets/40BT.png";
+import wTiger from "./assets/40WT.png";
+import bLion from "./assets/40BL.png";
+import wLion from "./assets/40WL.png";
+import bElephant from "./assets/40BE.png";
+import wElephant from "./assets/40WE.png";
+import bDen from "./assets/40BDen.png";
+import wDen from "./assets/40WDen.png";
+import water from "./assets/40Water.png";
+import trap from "./assets/40Trap.png";
+
+
 class Piece {
     constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
         this.pieceColor = color;
@@ -149,7 +173,8 @@ class GamePage extends Component {
                     let redTraps = board[i][j].redTraps;
                     let blueTraps = board[i][j].blueTraps;
                     let waterTiles = board[i][j].waterTiles;
-                    board[i][j] = new Piece(color, rank, isTrapped, row, column, redTraps, blueTraps, waterTiles);
+                    let legalMoves = board[i][j].legalMoves;
+                    board[i][j] = new Piece(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles);
                 }
             }
         }
@@ -234,35 +259,91 @@ class GamePage extends Component {
     colorSquare(i, j) {
         //pick a background color for square based on type, selection, or hover (priority: selection, hover, type)
         //independent of server, since the coloring is always the same except for the (client-side) piece selection
+        const lightLand = ['00', '20', '40', '60', '80', '11', '71', '22', '62', '33', '53', '24', '64', '15', '75', '06', '26', '46', '66', '86'];
+        const darkLand = ['10', '30', '50', '70', '01', '21', '61', '81', '12', '72', '23', '43', '63', '14', '74', '05', '25', '65', '85', '16', '36', '56', '76'];
+        const lightWater = ['31', '51', '42', '44', '35', '55'];
+        const darkWater = ['41', '32', '52', '34', '54', '45'];
+        const dens = ['03', '83'];
+        
+        //selection
         if (i === this.state.selectedPiece.row && j === this.state.selectedPiece.col) { //selection (yellow)
-            return 'ecc530'
-        }
-        //water (light blue)
-        if (i===3 || i===4 || i===5) {
-            if (j===1 || j===2 || j===4 || j===5) {
-                return '12a4b6'
-            }
+            return 'ecc530';
         }
 
-        if (i===0 || i===8){
-            if(j===2  || j===4) {
-                return '47100D';
+        let ij = ''+ i + j;
+
+        //legal moves
+        if (this.state.selectedPiece.row !== null && this.state.selectedPiece.col !== null) {
+            let piece = this.state.board[this.state.selectedPiece.row][this.state.selectedPiece.col];
+            console.log(piece);
+            if (piece.legalMoves.includes(ij)) {
+                return 'eff556';
             }
+        }
+        
+        //land
+        if (lightLand.includes(ij)) {
+            return 'f2ca8a';
+        }
+        if (darkLand.includes(ij)) {
+            return 'd19764';
+        }
+        
+        //water
+        if (lightWater.includes(ij)) {
+            return '96bbbb';
+        }
+        if (darkWater.includes(ij)) {
+            return '618985';
         }
 
-        if (i===1 || i===7) {
-            if(j===3) {
-                return '47100D';
-            }
+        //dens
+        if (dens.includes(ij)) {
+            return '666666';
         }
 
-        if(i===0 || i===8) {
-            if(j===3) {
-                return '000000'
+        //traps
+        return 'bbbbbb';
+    }
+
+    getIcon(color, name, i, j) {
+        if (color === 'blue') {
+            if (name === 'rat') {
+                if (i === 3 ||i === 4 ||i === 5) {
+                    if (j === 1 || j === 2 || j === 4 || j === 5) {
+                        return wRatWater;
+                    }
+                }
+                return wRat;
             }
+            if (name === 'cat') {return wCat;}
+            if (name === 'wolf') {return wWolf;}
+            if (name === 'dog') {return wDog;}
+            if (name === 'panther') {return wPanther;}
+            if (name === 'tiger') {return wTiger;}
+            if (name === 'lion') {return wLion;}
+            if (name === 'elephant') {return wElephant;}
         }
-        //land (light green)
-        return '7ec850'
+        if (color === 'red') {
+            if (name === 'rat') {
+                if (i === 3 ||i === 4 ||i === 5) {
+                    if (j === 1 || j === 2 || j === 4 || j === 5) {
+                        return bRatWater;
+                    }
+                }
+                return bRat;
+            }
+            if (name === 'cat') {return bCat;}
+            if (name === 'wolf') {return bWolf;}
+            if (name === 'dog') {return bDog;}
+            if (name === 'panther') {return bPanther;}
+            if (name === 'tiger') {return bTiger;}
+            if (name === 'lion') {return bLion;}
+            if (name === 'elephant') {return bElephant;}
+        }
+
+        //renders alt text with 'broken' image if icon cannot be found
+        return null;
     }
 
     renderSquare(i, j) {
@@ -270,9 +351,11 @@ class GamePage extends Component {
         //renders the square at the given position, using the board 2d array
         return <div style={{height: '40px', width: '40px'}}
             onClick={this.handleClick.bind(this, i, j)}>
-            {(square != null) ? <div>
-                <h4 style={{color: square.pieceColor}}>{square.name[0].toUpperCase()}</h4>
-                <p style={{color: 'black'}}>{square.rank}</p>
+            {(square != null) ? <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                <div>
+                <img  src={this.getIcon(square.pieceColor.toLowerCase(), square.name, i, j)} alt={square.pieceColor.toLowerCase() + ' ' + square.name}/>
+                </div>
+                <h5 style={{color: square.pieceColor}}>{square.rank}</h5>
             </div> : null}
         </div>
     }
@@ -378,7 +461,6 @@ class GamePage extends Component {
                     {this.turnMonitor()}
                     {this.renderBoard()}
                 </div>
-                <Rules/>
             </Container>);
     }
 }

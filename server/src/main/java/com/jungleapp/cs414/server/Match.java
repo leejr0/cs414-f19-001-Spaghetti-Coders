@@ -16,14 +16,6 @@ class Match {
     MatchStructure currentMatch;
     private Gson gson = new Gson();
 
-    private JungleBoard jungleBoard;
-    private String winner;
-    private Boolean isActive = true;
-    private String whoseTurn;
-    private String playerBlue;
-    private String playerRed;
-    private Move move;
-
     private Connection connection;
 
     Match(Request request) {
@@ -34,37 +26,40 @@ class Match {
 
         currentMatch = gson.fromJson(requestBody, MatchStructure.class);
 
-        this.jungleBoard = currentMatch.jungleBoard;
-        this.isActive = currentMatch.isActive;
-        this.whoseTurn = currentMatch.whoseTurn;
-        this.playerBlue = currentMatch.playerBlue;
-        this.playerRed = currentMatch.playerRed;
-        this.winner = currentMatch.winner;
-        this.move = currentMatch.move;
-
         connection = MySQLConnection.establishMySQLConnection();
     }
 
     String createNewMatch() {
-        this.jungleBoard = new JungleBoard();
-        this.jungleBoard.initialize();
-        this.isActive = true;
-        this.whoseTurn = this.playerBlue;
+        currentMatch.jungleBoard = new JungleBoard();
+        currentMatch.jungleBoard.initialize();
+        currentMatch.isActive = true;
+        currentMatch.whoseTurn = currentMatch.playerBlue;
 
         saveNewMatch();
 
-        return this.jungleBoard.getBoardJSON();
+        return currentMatch.jungleBoard.getBoardJSON();
+    }
+
+    //Temporary class that doesn't interfere with old functionality
+    boolean createNewPendingMatch() {
+        currentMatch.jungleBoard = new JungleBoard();
+        currentMatch.jungleBoard.initialize();
+        currentMatch.isActive = true;
+        currentMatch.whoseTurn = currentMatch.playerBlue;
+
+        return saveNewMatch();
     }
 
     String updateMatch() {
-        this.jungleBoard.resetBoard();
+        // TODO: Retrieve an old match from the database based on player data or Match-ID
+        currentMatch.jungleBoard.resetBoard();
 
-        boolean successfulMove = this.jungleBoard.makeMove(this.move.row, this.move.col, this.move.toRow, this.move.toCol);
+        boolean successfulMove = currentMatch.jungleBoard.makeMove(currentMatch.move.row, currentMatch.move.col, currentMatch.move.toRow, currentMatch.move.toCol);
         if(successfulMove) {
-            if (this.whoseTurn.equals(this.playerBlue)){     //if piece was placed, switch turn to other player
-                this.whoseTurn = this.playerRed;
+            if (currentMatch.whoseTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
+                currentMatch.whoseTurn = currentMatch.playerRed;
             }else{
-                this.whoseTurn = this.playerBlue;
+                currentMatch.whoseTurn = currentMatch.playerBlue;
             }
             checkWin();
         }
@@ -98,17 +93,17 @@ class Match {
     //As long as a piece is inside the den, we know its a win for player. Same color pieces may not move into their own den.
     private void checkWin() {
         try {
-            if (this.jungleBoard.getPiece(0, 3) != null) {
-                this.winner = this.playerBlue;
-                this.isActive = false;
-            } else if (this.jungleBoard.getPiece(8, 3) != null) {
-                this.winner = this.playerRed;
-                this.isActive = false;
+            if (currentMatch.jungleBoard.getPiece(0, 3) != null) {
+                currentMatch.winner = currentMatch.playerBlue;
+                currentMatch.isActive = false;
+            } else if (currentMatch.jungleBoard.getPiece(8, 3) != null) {
+                currentMatch.winner = currentMatch.playerRed;
+                currentMatch.isActive = false;
             }
         } catch (IllegalPositionException ignored) {}
     }
 
-    private void saveNewMatch() {
+    private boolean saveNewMatch() {
         try {
             Statement statement = connection.createStatement();
 
@@ -118,22 +113,18 @@ class Match {
             String formattedTime = currentTime.format(timeFormatter);
 
             // Register new match into the database
-            statement.execute("INSERT INTO Game VALUES (NULL, '" + this.jungleBoard.getBoardJSON() + "', " +
-                    "'" + this.isActive + "','" + this.whoseTurn + "', NULL ," +
+            statement.execute("INSERT INTO Game VALUES (NULL, '" + currentMatch.jungleBoard.getBoardJSON() + "', " +
+                    "'" + currentMatch.isActive + "','" + currentMatch.whoseTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
+            return true;
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return false;
     }
 
     private String getMatchJSON() {
-        currentMatch.jungleBoard = this.jungleBoard;
-        currentMatch.isActive = this.isActive;
-        currentMatch.whoseTurn = this.whoseTurn;
-        currentMatch.winner = this.winner;
-        currentMatch.move = this.move;
-
         return gson.toJson(currentMatch);
     }
 }
