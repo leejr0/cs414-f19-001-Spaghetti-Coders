@@ -96,7 +96,7 @@ public class JungleBoard {
 
     boolean makeMove(int row, int column, int toRow, int toColumn) {
         try {
-            if (getPiece(row, column).legalMoves().contains(getPiece(row, column).moveMaker(toRow, toColumn))) {
+            if (getPiece(row, column).legalMoves().contains(getPiece(row, column).getPosition(toRow, toColumn))) {
                 placePiece(getPiece(row, column), toRow, toColumn);
                 board[row][column] = null;
 
