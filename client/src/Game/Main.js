@@ -26,18 +26,9 @@ class Main extends Component {
         super(props);
 
         this.state = {
-            board: null,
             display: true,
-            displayBoard: false,
-            newGame: true,
             activeTab: "Home",
-            nickname: this.props.nickname,
             invitePlayer: false,
-            startGame: {
-                playerBlue: "Player 1",
-                playerRed: "Player 2",
-                createNewBoard: true
-            },
             playerSearch: {
                 opponentFound: false,
                 nickname: "",
@@ -46,41 +37,11 @@ class Main extends Component {
             }
         };
 
-        this.showBoard = this.showBoard.bind(this);
-        this.beginGame = this.beginGame.bind(this);
-        this.updatePlayerNames = this.updatePlayerNames.bind(this);
         this.updateSearchValue = this.updateSearchValue.bind(this);
         this.searchOpponent = this.searchOpponent.bind(this);
         this.sendInvite = this.sendInvite.bind(this);
         this.toggleModal = this.toggleModal.bind(this);
         this.displayInvite = this.displayInvite.bind(this);
-    }
-
-    beginGame() {
-        request(this.state.startGame, "newMatch").then(serverResponse => {
-            console.log("Got this board back: ");
-            console.log(serverResponse);
-            this.showBoard(serverResponse);
-        });
-    }
-
-    showBoard(response) {
-        console.log("This board in showBoard: ");
-        console.log(response);
-        let state = this.state;
-        state.board = response;
-        state.displayBoard = true;
-
-        this.setState({state});
-    }
-
-    updatePlayerNames() {
-        if(this.state.startGame.playerBlue === "") {
-            let state = this.state;
-            state.startGame.player1 = this.props.nickname + "_1";
-            state.startGame.player2 = this.props.nickname + "_2";
-            this.setState({state});
-        }
     }
 
     toggleTab(tabID) {
@@ -246,28 +207,13 @@ class Main extends Component {
     }
 
     render() {
-        this.updatePlayerNames();
         if(!this.state.display) {
             return (<h5> </h5>);
         }
 
-        let board = <div> </div>;
-        let startButton = <Button onClick={this.beginGame}>Start a new game</Button>;
-        if(this.state.displayBoard === true) {
-            console.log("Now state has board:");
-            console.log(this.state.board);
-            board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
-            startButton = <div> </div>
-        }
-
         let tabs = ["Home", "Profile", "Rules", "Invites"];
-        console.log(this.state);
         let home = [
-            <Card key="cardkey">
-                <CardBody key="cardbodykey">
-                    <Home startButton={startButton} board={board}/>
-                </CardBody>
-            </Card>
+            <Home nickname={this.props.nickname}/>
         ];
         let profile = [
             <Card key="cardkey">
