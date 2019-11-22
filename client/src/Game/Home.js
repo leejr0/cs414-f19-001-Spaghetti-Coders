@@ -76,6 +76,7 @@ class Home extends Component {
             <Card>
                 <CardBody>
                     {startButton}
+                    <br/><br/>
                     <Container>
                         <Nav tabs>
                             {gameTabs.map((tab) => {
@@ -103,6 +104,7 @@ class Home extends Component {
                                     return (
                                         <TabContent activeTab={this.state.homeState}>
                                             <TabPane tabId={tab}>
+                                                <br/><br/><br/>
                                                 <Jumbotron>
                                                     <p>{tab} Games Here</p>
                                                     {board}
@@ -119,4 +121,4 @@ class Home extends Component {
         );
     }
 }
-export default Home
+export default Home;
