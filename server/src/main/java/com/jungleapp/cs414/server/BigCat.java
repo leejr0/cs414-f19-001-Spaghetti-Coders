@@ -18,13 +18,13 @@ public class BigCat extends Piece{
 
         //check left
         if (column > 0) {
-            String checkLeft = moveMaker(row, column - 1);
+            String checkLeft = getPosition(row, column - 1);
             if (checkSpace(row, column - 1)) { moves.add(checkLeft); }
 
             // If tile is water, then jump across two water columns.
             if (checkWaterMove(checkLeft)) {
                 if (checkJump("LEFT")){
-                    moves.add(moveMaker(row, column - 3));
+                    moves.add(getPosition(row, column - 3));
                 }
             }
 
@@ -32,37 +32,37 @@ public class BigCat extends Piece{
 
         //check right
         if (column < 6) {
-            String checkRight = moveMaker(row, column + 1);
+            String checkRight = getPosition(row, column + 1);
             if (checkSpace(row, column + 1)) { moves.add(checkRight); }
 
             if (checkWaterMove(checkRight)) {
                 if (checkJump("RIGHT")) {
-                    moves.add(moveMaker(row, column + 3));
+                    moves.add(getPosition(row, column + 3));
                 }
             }
         }
 
         //check up
         if (row > 0) {
-            String checkUp = moveMaker(row - 1,column);
+            String checkUp = getPosition(row - 1,column);
             if (checkSpace(row - 1, column)) { moves.add(checkUp); }
 
             //If tile is water, then jump across three water rows.
             if (checkWaterMove(checkUp)) {
                 if (checkJump("UP")){
-                    moves.add(moveMaker(row - 4, column));
+                    moves.add(getPosition(row - 4, column));
                 }
             }
         }
 
         //check down
         if (row < 8) {
-            String checkDown = moveMaker(row + 1,column);
+            String checkDown = getPosition(row + 1,column);
             if (checkSpace(row + 1, column)){ moves.add(checkDown); }
 
             if (checkWaterMove(checkDown)) {
                 if (checkJump("DOWN")){
-                    moves.add(moveMaker(row + 4, column));
+                    moves.add(getPosition(row + 4, column));
                 }
             }
 

@@ -24,8 +24,8 @@ public class Rat extends Piece {
                 return true;
             }
 
-            if((this.getColor().equals("RED") && redDen.equals(moveMaker(row, column))) ||
-                    (this.getColor().equals("BLUE") && blueDen.equals(moveMaker(row, column)))) {
+            if((this.getColor().equals("RED") && redDen.equals(getPosition(row, column))) ||
+                    (this.getColor().equals("BLUE") && blueDen.equals(getPosition(row, column)))) {
                 return false;
             }
 

@@ -77,32 +77,25 @@ public class Piece {
 
         //check left
         if (column > 0) {
-            if (checkSpace(row, column-1)) { moves.add(moveMaker(row, column-1)); }
+            if (checkSpace(row, column-1)) { moves.add(getPosition(row, column-1)); }
         }
 
         //check right
         if (column < 6) {
-            if (checkSpace(row, column+1)) { moves.add(moveMaker(row, column+1)); }
+            if (checkSpace(row, column+1)) { moves.add(getPosition(row, column+1)); }
         }
 
         //check up
         if (row > 0) {
-            if (checkSpace(row-1,column)) { moves.add(moveMaker(row-1,column)); }
+            if (checkSpace(row-1,column)) { moves.add(getPosition(row-1,column)); }
         }
 
         //check down
         if (row < 8) {
-            if (checkSpace(row+1,column)){ moves.add(moveMaker(row+1,column)); }
+            if (checkSpace(row+1,column)){ moves.add(getPosition(row+1,column)); }
         }
 
         return moves;
-    }
-
-    String moveMaker(int row, int column) {
-        String move = "";
-        move += Integer.toString(row);
-        move += Integer.toString(column);
-        return move;
     }
 
     private void checkTrapped() {
@@ -117,8 +110,8 @@ public class Piece {
                 return false;
             }
 
-            if((this.getColor().equals("RED") && redDen.equals(moveMaker(row, column))) ||
-                    (this.getColor().equals("BLUE") && blueDen.equals(moveMaker(row, column)))) {
+            if((this.getColor().equals("RED") && redDen.equals(getPosition(row, column))) ||
+                    (this.getColor().equals("BLUE") && blueDen.equals(getPosition(row, column)))) {
                 return false;
             }
 
