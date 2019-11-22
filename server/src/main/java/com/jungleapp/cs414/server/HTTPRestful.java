@@ -43,6 +43,8 @@ class HTTPRestful {
 
         post("/invitePlayer", this::invitePlayer);
 
+        post("/retrieveMatch", this::retrieveMatch);
+
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
     }
@@ -133,5 +135,12 @@ class HTTPRestful {
         RetrieveProfile updateProfile = new RetrieveProfile(request);
         updateProfile.updateProfile();
         return updateProfile.updateProfile();
+    }
+
+    private boolean retrieveMatch(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        System.out.println("I made it!");
+        return true;
     }
 }
