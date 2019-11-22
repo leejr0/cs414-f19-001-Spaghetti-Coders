@@ -81,7 +81,7 @@ class Main extends Component {
             return (<h5> </h5>);
         }
 
-        let tabs = ["Home", "Profile", "Rules", "Invites"];
+        let tabs = ["Home", "Profile", "Rules"];
         let home = [
             <Home nickname={this.props.nickname}/>
         ];
@@ -98,14 +98,6 @@ class Main extends Component {
                 <CardBody key="cardbodykey">
                     <br/>
                     <Rules/>
-                </CardBody>
-            </Card>
-        ];
-        let invites = [
-            <Card key="cardkey">
-                <CardBody key="cardbodykey">
-                    <br/>
-                    <p> I'm going to be an invite! </p>
                 </CardBody>
             </Card>
         ];
@@ -130,7 +122,6 @@ class Main extends Component {
                     {this.renderTabContents(home, 'Home')}
                     {this.renderTabContents(profile, 'Profile')}
                     {this.renderTabContents(rules, 'Rules')}
-                    {this.renderTabContents(invites, 'Invites')}
                 </div>
             </div>
         );

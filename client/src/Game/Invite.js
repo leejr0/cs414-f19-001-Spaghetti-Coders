@@ -7,6 +7,7 @@ class Invite extends Component {
         super(props);
         this.state = {
             invitePlayer: false,
+            nickname: this.props.nickname,
             playerSearch: {
                 opponentFound: false,
                 nickname: "",
@@ -88,10 +89,12 @@ class Invite extends Component {
                 else {
                     state.playerSearch.errorMessage = "";
                     state.playerSearch.invitationSent = true;
-                    state.startGame.playerRed = this.state.nickname;
-                    state.startGame.playerBlue = this.state.playerSearch.nickname;
+                    this.props.startGame.playerRed = this.state.nickname;
+                    this.props.startGame.playerBlue = this.state.playerSearch.nickname;
                     //Temporary callback to show functionality
-                    this.setState({state}, () => {this.beginGame()});
+                    this.setState({state}, () => {
+                        this.props.beginGame();
+                    });
                 }
                 //this.setState({state});
             });

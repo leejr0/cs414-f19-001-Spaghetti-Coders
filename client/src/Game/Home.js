@@ -76,7 +76,7 @@ class Home extends Component {
         return(
             <Card>
                 <CardBody>
-                    <Invite/>
+                    <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
                     {startButton}
                     <br/><br/>
                     <Container>
