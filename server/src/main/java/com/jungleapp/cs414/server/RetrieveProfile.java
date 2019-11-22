@@ -128,8 +128,14 @@ public class RetrieveProfile {
     public boolean updateProfile(){
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate("UPDATE Player SET Player.password = '" + profile.newPassword + "', Player.email = '" + profile.newEmail +
-                    "' WHERE Player.nickname = '" + profile.nickname + "';");
+            if (profile.newPassword != null) {
+                statement.executeUpdate("UPDATE Player SET Player.password = '" + profile.newPassword +
+                        "' WHERE Player.nickname = '" + profile.nickname + "';");
+            }
+            if (profile.newEmail != null) {
+                statement.executeUpdate("UPDATE Player SET Player.email = '" + profile.newEmail +
+                        "' WHERE Player.nickname = '" + profile.nickname + "';");
+            }
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
