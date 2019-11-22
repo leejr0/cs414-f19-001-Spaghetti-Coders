@@ -142,7 +142,10 @@ class Invite extends Component {
 
     render() {
         return (
-            <Button onClick={this.toggleModal}>Invite</Button>
+            <div>
+                <Button onClick={this.toggleModal}>Invite</Button>
+                {this.displayInvite()}
+            </div>
         );
     }
 }

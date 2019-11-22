@@ -16,6 +16,7 @@ import {
 } from "reactstrap";
 import {request} from "../api/api";
 import GamePage from "./GamePage";
+import Invite from "./Invite";
 
 class Home extends Component {
     constructor(props) {
@@ -75,6 +76,7 @@ class Home extends Component {
         return(
             <Card>
                 <CardBody>
+                    <Invite/>
                     {startButton}
                     <br/><br/>
                     <Container>
