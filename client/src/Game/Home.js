@@ -43,6 +43,7 @@ class Home extends Component {
         this.currentGames = this.currentGames.bind(this);
         this.finishedGames = this.finishedGames.bind(this);
         this.pendingGames = this.pendingGames.bind(this);
+        this.getTabContents = this.getTabContents.bind(this);
     }
 
     updatePlayerNames() {
@@ -94,11 +95,13 @@ class Home extends Component {
 
     currentGames(match) {
         let turn = match.turn;
+        let play = "PLAY"
         if(turn === this.state.nickname) {
             turn = "Your turn!"
         }
         else {
             turn = turn + "'s turn!"
+            play = "VIEW BOARD"
         }
         return (
             <div>
@@ -106,7 +109,7 @@ class Home extends Component {
                     <Row>
                         <Col xs="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
                         <Col xs="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{turn}</div></Col>
-                        <Col xs="4" style={{borderLeft: "1px solid black"}}><Button color={"success"} style={{margin: "3px"}}>PLAY</Button></Col>
+                        <Col xs="4" style={{borderLeft: "1px solid black"}}><Button color={"success"} style={{margin: "3px"}}>{play}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -136,6 +139,36 @@ class Home extends Component {
             </div>);
     }
 
+    getTabContents(type) {
+        if(type === "Active") {
+            let activeGames = [];
+            for(let i = 0; i < this.state.activeMatches.length; i++) {
+                activeGames.push(this.currentGames(this.state.activeMatches[i]));
+            }
+
+            return activeGames;
+        }
+
+        if(type === "Pending") {
+            let pendingGames = [];
+            for(let i = 0; i < this.state.pendingMatches.length; i++) {
+                pendingGames.push(this.pendingGames(this.state.pendingMatches[i]));
+            }
+
+            return pendingGames;
+        }
+
+        if(type === "Finished") {
+            let finishedGames = [];
+            for(let i = 0; i < this.state.finishedMatches.length; i++) {
+                finishedGames.push(this.finishedGames(this.state.finishedMatches[i]));
+            }
+
+            return finishedGames;
+        }
+
+    }
+
     render() {
         this.updatePlayerNames();
 
@@ -147,20 +180,6 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame}/>;
         }
 
-        let activeGames = [];
-        for(let i = 0; i < this.state.activeMatches.length; i++) {
-            activeGames.push(this.currentGames(this.state.activeMatches[i]));
-        }
-
-        let pendingGames = [];
-        for(let i = 0; i < this.state.pendingMatches.length; i++) {
-            pendingGames.push(this.pendingGames(this.state.pendingMatches[i]));
-        }
-
-        let finishedGames = [];
-        for(let i = 0; i < this.state.finishedMatches.length; i++) {
-            finishedGames.push(this.finishedGames(this.state.finishedMatches[i]));
-        }
 
         return(
             <Card>
@@ -197,10 +216,8 @@ class Home extends Component {
                                             <TabPane tabId={tab}>
                                                 <br/><br/><br/>
                                                 <Jumbotron>
-                                                    <p>{tab} Games Here</p>
-                                                    {activeGames}
-                                                    {pendingGames}
-                                                    {finishedGames}
+                                                    <p>{tab} Games</p>
+                                                    {this.getTabContents(tab)}
                                                     {board}
                                                 </Jumbotron>
                                             </TabPane>
