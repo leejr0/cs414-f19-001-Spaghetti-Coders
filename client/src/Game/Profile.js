@@ -17,6 +17,7 @@ class Profile extends Component {
             newPassword: null,
             newEmail: null,
             errorMessage: null,
+            confirmMessage: false,
         };
 
         this.retrieveInformation = this.retrieveInformation.bind(this);
@@ -54,14 +55,16 @@ class Profile extends Component {
     }
 
     validateEmail() {
-        let email = this.state.newEmail;
-        let validation = /[\w.]+@[\w]+(.com|.org)$/;
-        if (!email.includes("@") || email === "") {
-            return false;
-        }
-        if (!validation.test(email)) {
-            console.log("validating email!");
-            return false;
+        if (this.newEmail != null){
+            let email = this.state.newEmail;
+            let validation = /[\w.]+@[\w]+(.com|.org)$/;
+            if (!email.includes("@") || email === "") {
+                return false;
+            }
+            if (!validation.test(email)) {
+                console.log("validating email!");
+                return false;
+            }
         }
         return true;
     }
@@ -88,6 +91,23 @@ class Profile extends Component {
         this.setState({state});
     }
 
+    dismissConfirmationMessage() {
+        let state = this.state;
+        state.confirmMessage = false;
+        this.setState({state});
+    }
+
+    confirmationMessage() {
+        return <Modal isOpen = {this.state.confirmMessage}>
+            <ModalHeader>Confirm Unregister</ModalHeader>
+            <ModalBody>Are you sure you want to unregister? All Profile information will be lost.</ModalBody>
+            <ModalFooter>
+                <Button outline color="success" style={{float: 'left', padding: '.5rem'}} onClick={this.unregister.bind(this)}>Unregister</Button>
+                <Button outline color="success" style={{float: 'right', padding: '.5rem'}} onClick={this.dismissConfirmationMessage.bind(this)}>Cancel</Button>
+            </ModalFooter>
+        </Modal>
+    }
+
     render() {
         if(this.state.gotProfile === false) {
             this.retrieveInformation();
@@ -97,7 +117,7 @@ class Profile extends Component {
             errorMessage = <Alert color="danger">{this.state.errorMessage}</Alert>
         }
 
-        let unregisterButton = <Button outline color="success" style={{float: 'right', padding: '.5rem'}} onClick={this.unregister.bind(this)}>Unregister</Button>;
+        let unregisterButton = <Button outline color="success" style={{float: 'right', padding: '.5rem'}} onClick={() => this.setState({confirmMessage: true})}>Unregister</Button>;
         let updateButton = <Button outline color="success" style={{float: 'left', padding: '.5rem'}} onClick={this.update.bind(this)}>Update Info</Button>;
 
         return (
@@ -112,8 +132,10 @@ class Profile extends Component {
                                         <br></br>
                                         <FormGroup style={{padding: '.5rem', width: "550px"}}>
                                             <Label style={{float: 'left'}}>Nickname</Label>
-                                            <Input type="text" placeholder={this.state.nickname}/>
+                                            <br/>
+                                            <Label style={{float: 'left'}}>{this.state.nickname}</Label>
                                             <br></br>
+                                            <br/>
                                             <Label style={{float: 'left'}}>Password</Label>
                                             <Input type="password" placeholder={"********"} onChange={(input) => this.updateValue("newPassword", input.target.value)}/>
                                             <br></br>
@@ -123,7 +145,7 @@ class Profile extends Component {
                                     </Form>
                                 </Col>
                                 <Col xs="6">
-                                    <br></br>
+
                                     <br></br>
                                     <div style={{padding: '.5rem', float: 'left'}}>
                                     <h2 style={{float: 'left'}}>Wins: {this.state.wins}</h2>
@@ -144,6 +166,7 @@ class Profile extends Component {
 
                     </Card>
                     <br></br>
+                    {this.confirmationMessage()}
                     {errorMessage}
                     {updateButton}
                     {unregisterButton}

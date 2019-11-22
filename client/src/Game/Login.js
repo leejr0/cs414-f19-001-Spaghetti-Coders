@@ -57,17 +57,19 @@ class Login extends Component {
 
         return (
             <div id="logIn" style={{width: "600px", display: "inline-block"}}>
-                <h5 style={{color: "black"}}>Login and continue playing!</h5>
+
                 <Card>
                     <div style={{width: "400px", margin: "auto"}}>
                         <Form>
                             <FormGroup>
+                                <br/>
                                 <Label for="nickname">Nickname</Label>
                                 <Input type="text" placeholder="nickname" id="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
+                                <br/>
                                 <Label for="password">Password</Label>
                                 <Input type="password" placeholder="password" id="password" onChange={(input) => this.updateValue("password", input.target.value)}/>
                                 <br/>
-                                <Button color="success" onClick={this.validateCredentials}>Login</Button>
+                                <Button color="success" onClick={this.validateCredentials}>LOG IN</Button>
                                 {errorMessage}
                             </FormGroup>
                         </Form>

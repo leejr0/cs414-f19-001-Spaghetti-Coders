@@ -137,21 +137,24 @@ class Register extends Component {
 
         return (
             <div id="Register" style={{width: "600px", display: "inline-block"}}>
-                <h5 style={{color: "black"}}>Register with a new username, email, and password!</h5>
                 <Card>
                     <div style={{width: "400px", margin: "auto"}}>
                         <Form>
                             <FormGroup>
+                                <br/>
                                 <Label for="nickname">Nickname</Label>
                                 <Input type="text" placeholder="nickname" id="nickname" onChange={(input) => this.updateValue("nickname", input.target.value)}/>
+                                <br/>
                                 <Label for="password">Password</Label>
                                 <Input type="password" placeholder="password" id="password" onChange={(input) => this.updatePassword(input.target.value)}/>
+                                <br/>
                                 <Label for="confirmPassword">Confirm Password</Label>
                                 <Input type="password" placeholder="confirm password" id="confirmPassword" onChange={(input) => this.updateVerifyPassword(input.target.value)}/>
+                                <br/>
                                 <Label for="email">Email Address</Label>
                                 <Input type="text" placeholder="email address" id="email" onChange={(input) => this.updateValue("email", input.target.value)}/>
                                 <br/>
-                                <Button color="success" onClick={this.validateCredentials}>Submit</Button>
+                                <Button color="success" onClick={this.validateCredentials}>REGISTER</Button>
                                 {errorMessage}
                             </FormGroup>
                         </Form>
