@@ -33,7 +33,8 @@ class Home extends Component {
             startGame: {
                 playerBlue: "Player 1",
                 playerRed: "Player 2",
-                createNewBoard: true
+                createNewBoard: true,
+                whoseTurn: ""
             },
             getGame: {
                 nickname: this.props.nickname
@@ -81,6 +82,14 @@ class Home extends Component {
         state.finishedMatches = [];
         for(let i = 0; i < serverResponse.matches; i++) {
             let match = serverResponse.matches[i];
+            if(match.playerRed === state.nickname) {
+                match.opponent = match.playerBlue;
+            }
+            else{
+                match.opponent = match.playerRed;
+            }
+
+
             if(match.state === "active") {
                 state.activeMatches.push(match);
             }
@@ -103,19 +112,17 @@ class Home extends Component {
 
     setGame(type, index, response) {
         let state = this.state;
-        state.board = response.board;
+        state.board = response;
         state.displayBoard = true;
         state.newGame = true;
-        state.startGame.playerBlue = response.playerBlue;
-        state.startGame.playerRed = response.playerRed;
-        // if(state[type][index].color === "red") {
-        //     state.startGame.playerBlue = state[type][index].opponent;
-        //     state.startGame.playerRed = state.nickname;
-        // }
-        // else {
-        //     state.startGame.playerRed = state[type][index].opponent;
-        //     state.startGame.playerBlue = state.nickname;
-        // }
+        if(state[type][index].color === "red") {
+            state.startGame.playerBlue = state[type][index].opponent;
+            state.startGame.playerRed = state.nickname;
+        }
+        else {
+            state.startGame.playerRed = state[type][index].opponent;
+            state.startGame.playerBlue = state.nickname;
+        }
 
         this.setState({state});
     }
