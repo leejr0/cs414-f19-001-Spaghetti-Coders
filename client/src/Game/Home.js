@@ -18,7 +18,7 @@ class Home extends Component {
             activeMatches: [
                 {ID: 1, color: "red", opponent: "stuffity", turn: this.props.nickname, state: "active", winner: null},
                 {ID: 2, color: "red", opponent: "Dave Matthews", turn: "Dave Matthews", state: "active", winner: null},
-                {ID: 3, color: "blue", opponent: "Kim Possible", turn: "12345678901234", state: "active", winner: null}
+                {ID: 3, color: "blue", opponent: "Kim Possible", turn: "123456789012345", state: "active", winner: null}
             ],
             pendingMatches: [
                 {ID: 123, color: "blue", opponent: "Toucan Sam", turn: this.props.nickname, state: "pending", winner: null},
@@ -95,8 +95,7 @@ class Home extends Component {
     }
 
     getGames() {
-        // TODO: Make mock backend call to get the games based on type
-        request(this.state.getGame,"getMatches").then(serverResponse => {
+        request(this.state.getGame,"retrieveMatches").then(serverResponse => {
             this.sortGames(serverResponse);
         });
     }
@@ -120,7 +119,6 @@ class Home extends Component {
 
     getMatch(ID, type) {
         console.log("Let's get match: " + ID + "  of this type: " + type);
-        // TODO: Send call to back-end to get this match
         let index = -1;
         if(type === "pending") {
             for(let i = 0; i < this.state.pendingMatches.length; i++) {
@@ -177,7 +175,6 @@ class Home extends Component {
 
     declineInvite(ID) {
         console.log("I'm declining this match: " + ID);
-        // TODO: Send call to back-end to decline this match
         let index = -1;
         for(let i = 0; i < this.state.pendingMatches.length; i++) {
             if(this.state.pendingMatches[i].ID === ID) {
@@ -216,7 +213,7 @@ class Home extends Component {
         }
         return (
             <div>
-                <Card style={{display: "inline-block", height: "45px", width: "600px"}}>
+                <Card style={{display: "inline-block", minWidth: "100%"}}>
                     {display}
                 </Card>
                 <br/>
@@ -236,11 +233,11 @@ class Home extends Component {
         }
         return (
             <div>
-                <Card style={{display: "inline-block", height: "45px", width: "600px"}}>
+                <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
-                        <Col xs="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
-                        <Col xs="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{turn}</div></Col>
-                        <Col xs="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.ID,"active")} color={"success"} style={{margin: "3px"}}>{play}</Button></Col>
+                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent}</div></Col>
+                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{turn}</div></Col>
+                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.ID,"active")} color={"success"} style={{margin: "3px"}}>{play}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -258,11 +255,11 @@ class Home extends Component {
         }
         return (
             <div>
-                <Card style={{display: "inline-block", height: "45px", width: "600px"}}>
+                <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
-                        <Col xs="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
-                        <Col xs="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{winner}</div></Col>
-                        <Col xs="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.ID, "finished")} color={"success"} style={{margin: "3px"}}>VIEW</Button></Col>
+                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
+                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{winner}</div></Col>
+                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.ID, "finished")} color={"success"} style={{margin: "3px"}}>VIEW</Button></Col>
                     </Row>
                 </Card>
                 <br/>
