@@ -20,6 +20,7 @@ import GamePage from "./GamePage";
 import Profile from "./Profile";
 import Rules from "./Rules";
 import Home from "./Home";
+import icon from "./assets/jungleicon.png";
 
 class Main extends Component {
     constructor(props) {
@@ -113,10 +114,12 @@ class Main extends Component {
                 </div>
                 <div>
                     <Nav tabs key="2">
+                        <img  src={icon} width = "200" height = "50" style={{padding: '5px'}}/>
                         {tabs.map((tabToRender) => {
                             return this.renderTab(tabToRender);
                         })}
                     </Nav>
+
                 </div>
                 <div>
                     {this.renderTabContents(home, 'Home')}
