@@ -139,6 +139,17 @@ class HTTPRestful {
         return updateProfile.updateProfile();
     }
 
+    private String retrieveMatches(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+
+        RetrieveMatches retrieveMatches = new RetrieveMatches(request);
+
+        String result = retrieveMatches.getMatches();
+        retrieveMatches.closeMySQLConnection();
+        return result;
+    }
+
     private boolean retrieveMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");

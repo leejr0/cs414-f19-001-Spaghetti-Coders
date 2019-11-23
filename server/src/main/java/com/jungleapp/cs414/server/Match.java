@@ -116,6 +116,8 @@ class Match {
             statement.execute("INSERT INTO Game VALUES (NULL, '" + currentMatch.jungleBoard.getBoardJSON() + "', " +
                     "'" + currentMatch.isActive + "','" + currentMatch.whoseTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
+            statement.execute("SELECT gameID FROM Game ORDER BY gameID DESC LIMIT 1");
+
             return true;
 
         } catch (SQLException e) {
@@ -127,4 +129,13 @@ class Match {
     private String getMatchJSON() {
         return gson.toJson(currentMatch);
     }
+
+    void closeMySQLConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

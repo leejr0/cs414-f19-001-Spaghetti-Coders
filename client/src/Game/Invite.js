@@ -11,6 +11,7 @@ class Invite extends Component {
             playerSearch: {
                 opponentFound: false,
                 nickname: "",
+                nickname2: this.props.nickname,
                 errorMessage: "",
                 invitationSent: false
             }
