@@ -18,7 +18,7 @@ class Home extends Component {
             activeMatches: [
                 {ID: 1, color: "red", opponent: "stuffity", turn: this.props.nickname, state: "active", winner: null},
                 {ID: 2, color: "red", opponent: "Dave Matthews", turn: "Dave Matthews", state: "active", winner: null},
-                {ID: 3, color: "blue", opponent: "Kim Possible", turn: "Kim Possible", state: "active", winner: null}
+                {ID: 3, color: "blue", opponent: "Kim Possible", turn: "12345678901234", state: "active", winner: null}
             ],
             pendingMatches: [
                 {ID: 123, color: "blue", opponent: "Toucan Sam", turn: this.props.nickname, state: "pending", winner: null},
@@ -36,8 +36,7 @@ class Home extends Component {
                 createNewBoard: true
             },
             getGame: {
-                nickname: this.props.nickname,
-                type: "active"
+                nickname: this.props.nickname
             }
         };
 
@@ -48,7 +47,6 @@ class Home extends Component {
         this.finishedGames = this.finishedGames.bind(this);
         this.pendingGames = this.pendingGames.bind(this);
         this.getTabContents = this.getTabContents.bind(this);
-        this.setType = this.setType.bind(this);
         this.getGames = this.getGames.bind(this);
         this.getMatch = this.getMatch.bind(this);
         this.declineInvite = this.declineInvite.bind(this);
@@ -76,15 +74,31 @@ class Home extends Component {
         this.setState({state});
     }
 
-    getGames() {
-        // TODO: Make mock backend call to get the games based on type
-        request(this.state.getGame,"getMatches").then(gameState => {
+    sortGames(serverResponse) {
+        let state = this.state;
+        state.activeMatches = [];
+        state.pendingMatches = [];
+        state.finishedMatches = [];
+        for(let i = 0; i < serverResponse.matches; i++) {
+            if(serverResponse.matches[i].state === "active") {
+                state.activeMatches.push(serverResponse.matches[i]);
+            }
+            else if(serverResponse.matches[i].state === "pending") {
+                state.pendingMatches.push(serverResponse.matches[i]);
+            }
+            else if(serverResponse.matches[i].state === "finished") {
+                state.finishedMatches.push(serverResponse.matches[i]);
+            }
+        }
 
-        });
+        this.setState({state});
     }
 
-    setType(type) {
-        this.setState({getGame:{type: type}}, () => this.getGames());
+    getGames() {
+        // TODO: Make mock backend call to get the games based on type
+        request(this.state.getGame,"getMatches").then(serverResponse => {
+            this.sortGames(serverResponse);
+        });
     }
 
     setGame(type, index, response) {
@@ -197,7 +211,7 @@ class Home extends Component {
                     <Col xs="6"><div style={{marginTop: "10px"}}>{match.opponent} wants to play!</div></Col>
                     <Col xs="6" style={{borderLeft: "1px solid black"}}>
                         <Button onClick={() => this.getMatch(match.ID, "pending")} color={"success"} style={{margin: "3px"}}>ACCEPT</Button>
-                        <Button onClick={() => this.declineInvite(match.ID)}color={"danger"} style={{margin: "3px"}}>DECLINE</Button></Col>
+                        <Button onClick={() => this.declineInvite(match.ID)} color={"danger"} style={{margin: "3px"}}>DECLINE</Button></Col>
                 </Row>);
         }
         return (
@@ -315,7 +329,7 @@ class Home extends Component {
                                                     if (this.state.homeState !== tab){
                                                         this.setState({homeState : tab});
                                                     }
-                                                    this.getGames(tab)
+                                                    this.getGames()
                                                 }}
                                             >
                                                 {tab} Games
