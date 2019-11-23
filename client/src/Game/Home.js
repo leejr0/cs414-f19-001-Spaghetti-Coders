@@ -76,7 +76,7 @@ class Home extends Component {
         this.setState({state});
     }
 
-    getGames() {
+    getGames(type) {
         // TODO: Make mock backend call to get the games based on type
     }
 
@@ -301,7 +301,6 @@ class Home extends Component {
                     <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
                     {startButton}
                     <br/><br/>
-                    <Container>
                         <Nav tabs>
                             {gameTabs.map((tab) => {
                                 return (
@@ -313,6 +312,7 @@ class Home extends Component {
                                                     if (this.state.homeState !== tab){
                                                         this.setState({homeState : tab});
                                                     }
+                                                    this.getGames(tab)
                                                 }}
                                             >
                                                 {tab} Games
@@ -340,7 +340,6 @@ class Home extends Component {
                                 })}
                             </Col>
                         </Row>
-                    </Container>
                 </CardBody>
             </Card>
         );
