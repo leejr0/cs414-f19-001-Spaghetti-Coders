@@ -76,8 +76,11 @@ class Home extends Component {
         this.setState({state});
     }
 
-    getGames(type) {
+    getGames() {
         // TODO: Make mock backend call to get the games based on type
+        request(this.state.getGame,"getMatches").then(gameState => {
+
+        });
     }
 
     setType(type) {
