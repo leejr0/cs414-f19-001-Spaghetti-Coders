@@ -19,9 +19,9 @@ class MySQLConnection {
     static Connection openMySQLConnection() {
         try {
             //FAURE DATABASE
-            String mySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
-            String DBUsername = "vstepa";
-            String DBPassword = "830982615";
+            String mySQLConnectionURL = "jdbc:mysql://faure/sstobbs?useTimezone=true&serverTimezone=UTC";
+            String DBUsername = "sstobbs";
+            String DBPassword = "830576272";
 
             //LOCAL DATABASE
             //String mySQLConnectionURL = "jdbc:mysql://localhost:3306/cs414?useTimezone=true&serverTimezone=UTC";
