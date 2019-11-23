@@ -146,6 +146,18 @@ class Home extends Component {
         }
     }
 
+    removeInvite(index) {
+        let pendingMatches = [];
+        for(let i = 0; i < this.state.pendingMatches.length; i++) {
+            if(index !== i) {
+                pendingMatches.push(this.state.pendingMatches[i]);
+            }
+
+        }
+
+        this.setState({pendingMatches: pendingMatches});
+    }
+
     declineInvite(ID) {
         console.log("I'm declining this match: " + ID);
         // TODO: Send call to back-end to decline this match
@@ -161,6 +173,9 @@ class Home extends Component {
             if(!status) {
                 //Error or something?
                 //Refresh page without the game?
+            }
+            else {
+                this.removeInvite(index);
             }
         });
     }

@@ -45,6 +45,8 @@ class HTTPRestful {
 
         post("/retrieveMatch", this::retrieveMatch);
 
+        post("/declineMatch", this::declineMatch);
+
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
     }
@@ -141,6 +143,13 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         System.out.println("I made it!");
+        return true;
+    }
+
+    private boolean declineMatch(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        System.out.println("Declining");
         return true;
     }
 }
