@@ -29,7 +29,7 @@ class Profile extends Component {
             let state = this.state;
             state.nickname = profile.nickname;
             state.password = profile.password;
-            state.ratio = profile.ratio;
+            state.ratio = profile.ratio.toFixed(2);
             state.wins = profile.wins;
             state.losses = profile.losses;
             state.email = profile.email;
