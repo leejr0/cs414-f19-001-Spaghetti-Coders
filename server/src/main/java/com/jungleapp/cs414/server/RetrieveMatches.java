@@ -18,23 +18,27 @@ class RetrieveMatches {
         connection = MySQLConnection.establishMySQLConnection();
     }
 
+    RetrieveMatches(String nickname) {
+        this.nickname = nickname;
+        connection = MySQLConnection.establishMySQLConnection();
+    }
     String getMatches() {
         try {
             Statement statement;
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from Game join Played_By on Game.gameID = Played_By.gameID where Played_By.nickname = '" +
-                    this.nickname + "' or Played_By.nickname2 = '" + this.nickname + "'");
+            ResultSet resultSet = statement.executeQuery("select * from Game where playerBlue = '" +
+                    this.nickname + "' or playerRed = '" + this.nickname + "';");
 
             //Initialize and populate match list with a list of matches gathered from the database.
             ArrayList<MatchStructure> matchList = new ArrayList <> ();
             while(resultSet.next()){
                 MatchStructure matchStructure = new MatchStructure();
-                matchStructure.matchID = resultSet.getInt("gameID");
+                matchStructure.gameID = resultSet.getInt("gameID");
+                matchStructure.playerBlue = resultSet.getString("playerBlue");
+                matchStructure.playerRed = resultSet.getString("playerRed");
                 matchStructure.status = resultSet.getString("status");
-                matchStructure.whoseTurn = resultSet.getString("playerTurn");
+                matchStructure.playerTurn = resultSet.getString("playerTurn");
                 matchStructure.winner = resultSet.getString("winner");
-                matchStructure.playerBlue = resultSet.getString("nickname");
-                matchStructure.playerRed = resultSet.getString("nickname2");
 
                 matchList.add(matchStructure);
             }
@@ -47,7 +51,7 @@ class RetrieveMatches {
             e.printStackTrace();
         }
 
-        // Something went horribly wrong with database, return red flag.
+        // Something went horribly wrong with the database, return red flag.
         return null;
     }
 

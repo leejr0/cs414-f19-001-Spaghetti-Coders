@@ -43,7 +43,7 @@ class Match {
         currentMatch.jungleBoard = new JungleBoard();
         currentMatch.jungleBoard.initialize();
         currentMatch.status = "Pending";
-        currentMatch.whoseTurn = currentMatch.playerBlue;
+        currentMatch.playerTurn = currentMatch.playerBlue;
 
         saveNewMatch();
 
@@ -54,8 +54,7 @@ class Match {
     boolean createNewPendingMatch() {
         currentMatch.jungleBoard = new JungleBoard();
         currentMatch.jungleBoard.initialize();
-        currentMatch.isActive = true;
-        currentMatch.whoseTurn = currentMatch.playerBlue;
+        currentMatch.playerTurn = currentMatch.playerBlue;
 
         return saveNewMatch();
     }
@@ -66,10 +65,10 @@ class Match {
 
         boolean successfulMove = currentMatch.jungleBoard.makeMove(currentMatch.move.row, currentMatch.move.col, currentMatch.move.toRow, currentMatch.move.toCol);
         if(successfulMove) {
-            if (currentMatch.whoseTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
-                currentMatch.whoseTurn = currentMatch.playerRed;
+            if (currentMatch.playerTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
+                currentMatch.playerTurn = currentMatch.playerRed;
             }else{
-                currentMatch.whoseTurn = currentMatch.playerBlue;
+                currentMatch.playerTurn = currentMatch.playerBlue;
             }
             checkWin();
         }
@@ -105,10 +104,10 @@ class Match {
         try {
             if (currentMatch.jungleBoard.getPiece(0, 3) != null) {
                 currentMatch.winner = currentMatch.playerBlue;
-                currentMatch.isActive = false;
+                currentMatch.status = "Finished";
             } else if (currentMatch.jungleBoard.getPiece(8, 3) != null) {
                 currentMatch.winner = currentMatch.playerRed;
-                currentMatch.isActive = false;
+                currentMatch.status = "Finished";
             }
         } catch (IllegalPositionException ignored) {}
     }
@@ -125,7 +124,7 @@ class Match {
             // Register new match into Game table.
             statement.execute("INSERT INTO Game VALUES (NULL, '" + currentMatch.jungleBoard.getBoardJSON() + "', " +
                     "'" + currentMatch.playerBlue + "', '" + currentMatch.playerRed + "'," +
-                    "'" + currentMatch.status + "','" + currentMatch.whoseTurn + "', NULL ," +
+                    "'" + currentMatch.status + "','" + currentMatch.playerTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
 
 
