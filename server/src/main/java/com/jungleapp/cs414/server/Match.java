@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 class Match {
-    MatchStructure currentMatch;
+    private MatchStructure currentMatch;
     private Gson gson = new Gson();
 
     private Connection connection;
@@ -29,10 +29,20 @@ class Match {
         connection = MySQLConnection.establishMySQLConnection();
     }
 
+    // Alternative constructor for JUnit testing.
+    Match(String requestBody) {
+        JsonParser jsonParser = new JsonParser();
+        JsonElement request = jsonParser.parse(requestBody);
+        Gson gson = new Gson();
+
+        currentMatch = gson.fromJson(request, MatchStructure.class);
+        connection = MySQLConnection.establishMySQLConnection();
+    }
+
     String createNewMatch() {
         currentMatch.jungleBoard = new JungleBoard();
         currentMatch.jungleBoard.initialize();
-        currentMatch.isActive = true;
+        currentMatch.status = "Pending";
         currentMatch.whoseTurn = currentMatch.playerBlue;
 
         saveNewMatch();
@@ -112,11 +122,12 @@ class Match {
 
             String formattedTime = currentTime.format(timeFormatter);
 
-            // Register new match into the database
+            // Register new match into Game table.
             statement.execute("INSERT INTO Game VALUES (NULL, '" + currentMatch.jungleBoard.getBoardJSON() + "', " +
-                    "'" + currentMatch.isActive + "','" + currentMatch.whoseTurn + "', NULL ," +
+                    "'" + currentMatch.playerBlue + "', '" + currentMatch.playerRed + "'," +
+                    "'" + currentMatch.status + "','" + currentMatch.whoseTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
-            statement.execute("SELECT gameID FROM Game ORDER BY gameID DESC LIMIT 1");
+
 
             return true;
 

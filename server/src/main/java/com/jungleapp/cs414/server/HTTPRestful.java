@@ -56,8 +56,10 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile retrieveProfile = new RetrieveProfile(request);
+        boolean result = retrieveProfile.createNewProfile();
+        retrieveProfile.closeMySQLConnection();
 
-        return retrieveProfile.createNewProfile();
+        return result;
     }
 
     private boolean login(Request request, Response response) {
@@ -65,16 +67,20 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile loginProfile = new RetrieveProfile(request);
+        boolean result = loginProfile.establishProfileIdentity();
+        loginProfile.closeMySQLConnection();
 
-        return loginProfile.establishProfileIdentity();
+        return result;
     }
 
     private boolean searchPlayer(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         RetrieveProfile searchProfile = new RetrieveProfile(request);
+        boolean result = searchProfile.searchPlayer();
+        searchProfile.closeMySQLConnection();
 
-        return searchProfile.searchPlayer();
+        return result;
     }
 
     private String getRandomPlayer(Request request, Response response) {
@@ -101,15 +107,20 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         Match match = new Match(request);
-        return match.createNewMatch();
+        String result = match.createNewMatch();
+        match.closeMySQLConnection();
+
+        return result;
     }
 
     private String updateMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         Match match = new Match(request);
+        String result = match.updateMatch();
+        match.closeMySQLConnection();
 
-        return match.updateMatch();
+        return result;
     }
 
     private String retrieveProfile(Request request, Response response) {
@@ -118,7 +129,10 @@ class HTTPRestful {
 
         RetrieveProfile loginProfile = new RetrieveProfile(request);
         loginProfile.getProfile();
-        return loginProfile.getProfileJSON();
+        String result = loginProfile.getProfileJSON();
+        loginProfile.closeMySQLConnection();
+
+        return result;
     }
 
     private boolean unregisterProfile(Request request, Response response){
@@ -126,8 +140,10 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile removeProfile = new RetrieveProfile(request);
-        removeProfile.unregisterProfile();
-        return removeProfile.unregisterProfile();
+        boolean result = removeProfile.unregisterProfile();
+        removeProfile.closeMySQLConnection();
+
+        return result;
     }
 
     private boolean updateProfile(Request request, Response response){
@@ -135,8 +151,10 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
 
         RetrieveProfile updateProfile = new RetrieveProfile(request);
-        updateProfile.updateProfile();
-        return updateProfile.updateProfile();
+        boolean result = updateProfile.updateProfile();
+        updateProfile.closeMySQLConnection();
+
+        return result;
     }
 
     private String retrieveMatches(Request request, Response response) {
@@ -147,6 +165,7 @@ class HTTPRestful {
 
         String result = retrieveMatches.getMatches();
         retrieveMatches.closeMySQLConnection();
+
         return result;
     }
 

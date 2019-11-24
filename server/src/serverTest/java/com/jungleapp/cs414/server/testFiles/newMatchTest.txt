@@ -1,0 +1,4 @@
+{
+    playerBlue: 'zizamzoe',
+    playerRed: '12345'
+}
