@@ -82,12 +82,12 @@ class GamePage extends Component {
             //empty until board is retrieved from server
             jungleBoard: null,
             board: null,
-            //TODO: get values from server for winner, playerBlue, playerRed, turnAction, whoseTurn and display relevant info
+            //TODO: get values from server for winner, playerBlue, playerRed, turnAction, playerTurn and display relevant info
             winner: null,
             playerBlue: null,
             playerRed: null,
             turnAction: null,
-            whoseTurn: null,
+            playerTurn: null,
             isActive: true,
             announceWinner: false,
             newGame: true,
@@ -147,7 +147,7 @@ class GamePage extends Component {
                 winner: gameState.winner,
                 playerBlue: gameState.playerBlue,
                 playerRed: gameState.playerRed,
-                whoseTurn: gameState.whoseTurn,
+                playerTurn: gameState.playerTurn,
                 isActive: gameState.isActive,
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
@@ -188,14 +188,14 @@ class GamePage extends Component {
     playerOwnsPiece(pieceIndices) {
         let piece = this.state.board[pieceIndices.row][pieceIndices.col];
         if (piece !== null) {
-            if (this.state.whoseTurn === this.state.playerBlue) {
+            if (this.state.playerTurn === this.state.playerBlue) {
                 if (piece.pieceColor === "BLUE") {
                     return true;
                 } else {
                     console.log("Player 1 selected the other player's piece");
                     return false;
                 }
-            } else if (this.state.whoseTurn === this.state.playerRed) {
+            } else if (this.state.playerTurn === this.state.playerRed) {
                 if (piece.pieceColor === "RED") {
                     return true;
                 } else {
@@ -203,7 +203,7 @@ class GamePage extends Component {
                     return false;
                 }
             } else {
-                console.log("Invalid value for 'whoseTurn'");
+                console.log("Invalid value for 'playerTurn'");
                 return false;
             }
         } else {
@@ -383,8 +383,8 @@ class GamePage extends Component {
     newBoard() {
         let state = this.state;
         state.board = this.props.board;
-        state.newGame = false;
-        state.whoseTurn = this.props.startGame.whoseTurn;
+        this.props.changeGame();
+        state.playerTurn = this.props.startGame.playerTurn;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
 
@@ -443,17 +443,18 @@ class GamePage extends Component {
 
         //change color and position by player
         return (<div style={{backgroundColor: 'ecc530', border: '1px solid #1e4d2b'}} id="TurnMonitor">
-            <h4 style={(this.state.whoseTurn === this.state.playerBlue ?
+            <h4 style={(this.state.playerTurn === this.state.playerBlue ?
                 {color: 'blue', textAlign: 'left'} :
                 {color: 'red', textAlign: 'right'})}>
-                {this.state.whoseTurn}{status}
+                {this.state.playerTurn}{status}
             </h4></div>);
     }
 
     render() {
-        if(this.props.newGame && this.state.newGame === true) {
+        if(this.props.startGame.createNewBoard) {
             this.newBoard()
         }
+        console.log(this.state);
         return (
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">

@@ -163,7 +163,7 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
-        RetrieveMatches retrieveMatches = new RetrieveMatches(request);
+        RetrieveMatches retrieveMatches = new RetrieveMatches(request, false);
 
         String result = retrieveMatches.getMatches();
         retrieveMatches.closeMySQLConnection();
@@ -171,11 +171,16 @@ class HTTPRestful {
         return result;
     }
 
-    private boolean retrieveMatch(Request request, Response response) {
+    private String retrieveMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        System.out.println("Retrieving Match");
-        return true;
+
+        RetrieveMatches retrieveMatches = new RetrieveMatches(request, true);
+
+        String board = retrieveMatches.getMatch();
+        retrieveMatches.closeMySQLConnection();
+
+        return board;
     }
 
     private boolean declineMatch(Request request, Response response) {
