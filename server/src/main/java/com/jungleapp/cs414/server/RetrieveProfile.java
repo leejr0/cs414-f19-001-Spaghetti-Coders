@@ -140,8 +140,7 @@ public class RetrieveProfile {
     public boolean searchPlayer(){
         try {
             Statement statement = connection.createStatement();
-            System.out.println("select * from Player where Player.nickname = '" +
-                    profile.nickname + "';");
+
             ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
                     profile.nickname + "';");
             if (resultSet.next()){

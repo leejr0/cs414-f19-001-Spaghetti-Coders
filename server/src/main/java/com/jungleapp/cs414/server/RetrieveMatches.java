@@ -15,6 +15,7 @@ class RetrieveMatches {
 
     RetrieveMatches(Request request) {
         this.nickname = request.body();
+        this.nickname = this.nickname.substring(1,this.nickname.length()-1);
         connection = MySQLConnection.establishMySQLConnection();
     }
 

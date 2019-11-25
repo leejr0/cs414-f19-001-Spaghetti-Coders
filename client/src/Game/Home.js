@@ -16,18 +16,18 @@ class Home extends Component {
             nickname: this.props.nickname,
             homeState : 'Active',
             activeMatches: [
-                {ID: 1, color: "red", opponent: "stuffity", whoseTurn: this.props.nickname, state: "active", winner: null},
-                {ID: 2, color: "red", opponent: "Dave Matthews", whoseTurn: "Dave Matthews", state: "active", winner: null},
-                {ID: 3, color: "blue", opponent: "Kim Possible", whoseTurn: "Kim Possible", state: "active", winner: null}
+                {ID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
+                {ID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
+                {ID: 3, color: "blue", opponent: "Kim Possible", playerTurn: "Kim Possible", state: "active", winner: null}
             ],
             pendingMatches: [
-                {ID: 123, color: "blue", opponent: "Toucan Sam", whoseTurn: this.props.nickname, state: "pending", winner: null},
-                {ID: 124, color: "blue", opponent: "Aang", whoseTurn: "Aang", state: "pending", winner: null},
-                {ID: 125, color: "red", opponent: "Tony Frank", whoseTurn: this.props.nickname, state: "pending", winner: null}
+                {ID: 123, color: "blue", opponent: "Toucan Sam", playerTurn: this.props.nickname, state: "pending", winner: null},
+                {ID: 124, color: "blue", opponent: "Aang", playerTurn: "Aang", state: "pending", winner: null},
+                {ID: 125, color: "red", opponent: "Tony Frank", playerTurn: this.props.nickname, state: "pending", winner: null}
             ],
             finishedMatches: [
-                {ID: 43, color: "blue", opponent: "Stitch", whoseTurn: null, state: "finished", winner: "Stitch"},
-                {ID: 45, color: "red", opponent: "Zuko", whoseTurn: null, state: "finished", winner: this.props.nickname},
+                {ID: 43, color: "blue", opponent: "Stitch", playerTurn: null, state: "finished", winner: "Stitch"},
+                {ID: 45, color: "red", opponent: "Zuko", playerTurn: null, state: "finished", winner: this.props.nickname},
                 {ID: 76, color: "red", opponent: "Ash Ketchum", whoseTurn: null, state: "finished", winner: "Ash Ketchum"}
             ],
             startGame: {
@@ -51,6 +51,7 @@ class Home extends Component {
         this.getGames = this.getGames.bind(this);
         this.getMatch = this.getMatch.bind(this);
         this.declineInvite = this.declineInvite.bind(this);
+        this.sortGames = this.sortGames.bind(this);
     }
 
     updatePlayerNames() {
@@ -80,8 +81,9 @@ class Home extends Component {
         state.activeMatches = [];
         state.pendingMatches = [];
         state.finishedMatches = [];
-        for(let i = 0; i < serverResponse.matches; i++) {
-            let match = serverResponse.matches[i];
+        for(let i = 0; i < serverResponse.length; i++) {
+            console.log("here");
+            let match = serverResponse[i];
             if(match.playerRed === state.nickname) {
                 match.opponent = match.playerBlue;
             }
@@ -90,13 +92,14 @@ class Home extends Component {
             }
 
 
-            if(match.state === "active") {
+            if(match.status.toLowerCase() === "active") {
                 state.activeMatches.push(match);
             }
-            else if(match.state === "pending") {
+            else if(match.status.toLowerCase() === "pending") {
+                console.log("pending")
                 state.pendingMatches.push(match);
             }
-            else if(match.state === "finished") {
+            else if(match.status.toLowerCase() === "finished") {
                 state.finishedMatches.push(match);
             }
         }
@@ -105,7 +108,8 @@ class Home extends Component {
     }
 
     getGames() {
-        request(this.state.getGame,"retrieveMatches").then(serverResponse => {
+        request(this.state.nickname,"retrieveMatches").then(serverResponse => {
+            console.log(serverResponse);
             this.sortGames(serverResponse);
         });
     }
@@ -115,6 +119,7 @@ class Home extends Component {
         state.board = response;
         state.displayBoard = true;
         state.newGame = true;
+        state.startGame.playerTurn = state[type][index].playerTurn;
         if(state[type][index].color === "red") {
             state.startGame.playerBlue = state[type][index].opponent;
             state.startGame.playerRed = state.nickname;
@@ -206,33 +211,35 @@ class Home extends Component {
 
     pendingGames(match) {
         let display = <p> </p>;
-        if(match.whoseTurn === this.state.nickname) {
+        if(match.playerTurn !== this.state.nickname) {
             display = (
-                <Row>
-                    <Col><div style={{marginTop: "10px"}}>Waiting for {match.opponent} to accept or decline!</div></Col>
-                </Row>);
+                <Card style={{display: "inline-block", height: "45px", minWidth: "100%"}}>
+                    <Row>
+                        <Col><div style={{marginTop: "10px"}}>Waiting for {match.opponent} to accept or decline!</div></Col>
+                    </Row>
+                </Card>);
         }
         else {
             display = (
-                <Row>
-                    <Col xs="6"><div style={{marginTop: "10px"}}>{match.opponent} wants to play!</div></Col>
-                    <Col xs="6" style={{borderLeft: "1px solid black"}}>
-                        <Button onClick={() => this.getMatch(match.ID, "pending")} color={"success"} style={{margin: "3px"}}>ACCEPT</Button>
-                        <Button onClick={() => this.declineInvite(match.ID)} color={"danger"} style={{margin: "3px"}}>DECLINE</Button></Col>
-                </Row>);
+                <Card style={{display: "inline-block", minWidth: "100%"}}>
+                    <Row>
+                        <Col xs="6"><div style={{marginTop: "10px"}}>{match.opponent} wants to play!</div></Col>
+                        <Col xs="6" style={{borderLeft: "1px solid black"}}>
+                            <Button onClick={() => this.getMatch(match.ID, "pending")} color={"success"} style={{margin: "3px"}}>ACCEPT</Button>
+                            <Button onClick={() => this.declineInvite(match.ID)} color={"danger"} style={{margin: "3px"}}>DECLINE</Button></Col>
+                    </Row>
+                </Card>);
         }
         return (
             <div>
-                <Card style={{display: "inline-block", minWidth: "100%"}}>
-                    {display}
-                </Card>
+                {display}
                 <br/>
                 <br/>
             </div>);
     }
 
     currentGames(match) {
-        let whoseTurn = match.whoseTurn;
+        let whoseTurn = match.playerTurn;
         let play = "PLAY";
         if(whoseTurn === this.state.nickname) {
             whoseTurn = "Your turn!";
@@ -308,6 +315,7 @@ class Home extends Component {
     }
 
     render() {
+        console.log(this.state)
         this.updatePlayerNames();
 
         let gameTabs = ['Active', 'Pending', 'Finished'];

@@ -384,7 +384,7 @@ class GamePage extends Component {
         let state = this.state;
         state.board = this.props.board;
         state.newGame = false;
-        state.whoseTurn = this.props.startGame.playerBlue;
+        state.whoseTurn = this.props.startGame.whoseTurn;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
 

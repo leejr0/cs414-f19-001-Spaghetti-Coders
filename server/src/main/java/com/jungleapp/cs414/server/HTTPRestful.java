@@ -43,6 +43,8 @@ class HTTPRestful {
 
         post("/invitePlayer", this::invitePlayer);
 
+        post("/retrieveMatches", this::retrieveMatches);
+
         post("/retrieveMatch", this::retrieveMatch);
 
         post("/declineMatch", this::declineMatch);
@@ -172,7 +174,7 @@ class HTTPRestful {
     private boolean retrieveMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        System.out.println("I made it!");
+        System.out.println("Retrieving Match");
         return true;
     }
 

@@ -41,7 +41,6 @@ class Match {
 
     String createNewMatch() {
         currentMatch.jungleBoard = new JungleBoard();
-        currentMatch.jungleBoard.initialize();
         currentMatch.status = "Pending";
         currentMatch.playerTurn = currentMatch.playerBlue;
 
@@ -53,9 +52,9 @@ class Match {
     //Temporary class that doesn't interfere with old functionality
     boolean createNewPendingMatch() {
         currentMatch.jungleBoard = new JungleBoard();
-        currentMatch.jungleBoard.initialize();
         currentMatch.playerTurn = currentMatch.playerBlue;
 
+        currentMatch.status = "Pending";
         return saveNewMatch();
     }
 
