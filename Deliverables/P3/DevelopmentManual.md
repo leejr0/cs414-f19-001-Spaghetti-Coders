@@ -10,7 +10,7 @@
 ## Running the Application
 1. Make sure the repo is cloned and up to date in IDEA.
 2. In a *fresh* local terminal within IntelliJ IDEA, type `./run`
-3. After compilation, the web interface should be accessible at `localhost:8090` in (most) web browsers
+3. After compilation, the web interface should be accessible at `localhost:9900` in (most) web browsers
 
 ### Information about `./run`
 This command will recompile and bundle information from both the client and the server to be rendered on the web browser. After any change to the system is made, either in the client or the server, the environment must be recompiled and bundled again to see the changes implemented. All necessary files will be made automatically with the `./run` command without any extra work from the developer.
