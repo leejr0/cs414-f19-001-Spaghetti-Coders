@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import {request} from "../api/api";
-import Rules from "./Rules";
+import PieceGuide from "./PieceGuide";
 
 import bRat from "./assets/40BR.png";
 import bRatWater from "./assets/40BRWater.png";
@@ -462,7 +462,7 @@ class GamePage extends Component {
             this.newBoard()
         }
         console.log(this.state);
-        let forfeitButton = <Button color="warning" onClick={() => {
+        let forfeitButton = <Button color="danger" onClick={() => {
             window.confirm("Are you sure you want to give up?") && this.forfeitMatch();}}>FORFEIT</Button>
         return (<div>
             <Container style={{display: 'inline-block'}}>
@@ -470,8 +470,10 @@ class GamePage extends Component {
                     {this.winMessage()}
                     {this.turnMonitor()}
                     {this.renderBoard()}
+                    <PieceGuide playerBlue={this.state.playerBlue} playerRed={this.state.playerRed}/>
                 </div>
             </Container>
+        <br/><br/><br/>
         {forfeitButton}
         </div>);
     }
