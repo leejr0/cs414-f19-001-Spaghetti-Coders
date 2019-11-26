@@ -79,15 +79,15 @@ Every request is listed below along with its purpose and the corresponding respo
 | `unregister`      | Profile deletion success/failure | Allow user to unregister from website      | **Unregister**  |
 | `login`           | Validity of login attempt        | Allow user to login to an existing account | **Login**       |
 | `retrieveProfile` | Profile JSON                     | Allow user to view profiles                | **View Profile**|
-| `updateProfile`   | Profile update success/failure   | Allow user to modify their profile info    | **View Other Users Profiles** |
+| `updateProfile`   | Profile update success/failure   | Allow user to modify their profile info    | **View Profile** |
 | `newMatch`        | Newly initialized gameState      | Allow user to start a new game             | **Play Jungle** |
 | `updateMatch`     | gameState after move is made     | Allow user to take their turn              | **Play Jungle** |
 | `forfeitMatch`    | gameState with forfeited match   | Allow user to forfeit a game               | **Forfeit Current Game** |
-| `searchPlayer`    | Searched player's profile        | Allow user take their turn                 | **Invite** |
-| `getRandomPlayer` | Random profile                   | Allow user take their turn                 | **Invite** |
+| `searchPlayer`    | Searched player's profile        | Allow user take their turn                 | **View Other Users Profiles** |
+| `getRandomPlayer` | Random profile                   | Allow user take their turn                 | **View Other Users Profiles** |
 | `invitePlayer`    | Pending match w/ invited player  | Allow user take their turn                 | **Invite,  Accept Invite** |
-| `retrieveMatches` | List of matches involving user   | Allow user to view profiles                | **Retrieve Matches, Play Multiple Games**|
-| `retrieveMatch`   | Match with corresponding ID      | Allow user to view profiles                | **Resume Active Game**|
+| `retrieveMatches` | List of matches involving user   | Allow user to view profiles                | **Retrieve Matches, Play Multiple Games, View Current Games, View Games History**|
+| `retrieveMatch`   | Match with corresponding ID      | Allow user to view profiles                | **Suspend Game, Resume Active Game**|
 | `declineMatch`    | Decline success/failure          | Allow user to decline an invite            | **Decline Invite** |
 
 
