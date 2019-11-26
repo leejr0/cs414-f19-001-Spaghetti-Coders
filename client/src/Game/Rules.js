@@ -36,6 +36,7 @@ class Rules extends Component {
             <p>Animals are not allowed to move into their own Dens. When an animal moves into the opponent’s Den, it has won the game.</p>
                 <hr/>
             <a href='http://ancientchess.com/page/play-doushouqi.htm'>[from ancientchess.com/page/play-doushouqi.htm]</a>
+            <a target="_blank" href="https://icons8.com/icons/set/wolf">Wolf</a>, <a target="_blank" href="https://icons8.com/icons/set/year-of-rat">Rat</a> and other icons by <a target="_blank" href="https://icons8.com">Icons8</a>
         </div>;
     }
 
