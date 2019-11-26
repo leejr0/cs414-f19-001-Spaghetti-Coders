@@ -192,10 +192,16 @@ class HTTPRestful {
         return true;
     }
 
-    private boolean forfeitMatch(Request request, Response response) {
+    private String forfeitMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        System.out.println("Forfeiting");
-        return true;
+
+        Match forfeitMatch = new Match(request);
+
+        String result = forfeitMatch.forfeitMatch();
+        System.out.println(result);
+        forfeitMatch.closeMySQLConnection();
+
+        return result;
     }
 }

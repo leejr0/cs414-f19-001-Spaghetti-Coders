@@ -164,7 +164,15 @@ class GamePage extends Component {
     forfeitMatch() {
         console.log(this.state.playerTurn + " has forfeited the match.");
         request(this.state, "forfeitMatch").then(gameState => {
-            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined)});
+            this.setState({
+                jungleBoard: gameState.jungleBoard,
+                winner: gameState.winner,
+                playerBlue: gameState.playerBlue,
+                playerRed: gameState.playerRed,
+                playerTurn: gameState.playerTurn,
+                isActive: gameState.isActive,
+                announceWinner: true
+            });
         });
     }
 
