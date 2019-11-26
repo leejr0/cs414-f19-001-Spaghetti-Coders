@@ -49,6 +49,8 @@ class HTTPRestful {
 
         post("/declineMatch", this::declineMatch);
 
+        post("/forfeitMatch", this::forfeitMatch);
+
         System.out.println("\n\nServer running on port: " + this.port + "\n\n");
 
     }
@@ -187,6 +189,13 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
         System.out.println("Declining");
+        return true;
+    }
+
+    private boolean forfeitMatch(Request request, Response response) {
+        response.type("application/json");
+        response.header("Access-Control-Allow-Origin", "*");
+        System.out.println("Forfeiting");
         return true;
     }
 }

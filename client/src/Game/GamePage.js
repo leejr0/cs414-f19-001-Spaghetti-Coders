@@ -161,6 +161,13 @@ class GamePage extends Component {
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
     }
 
+    forfeitMatch() {
+        console.log(this.state.playerTurn + " has forfeited the match.");
+        request(this.state, "forfeitMatch").then(gameState => {
+            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined)});
+        });
+    }
+
     resetPieces(board) {
         for (let i = 0; i < board.length; i++) {
             for (let j = 0; j < board[i].length; j++) {
@@ -455,14 +462,18 @@ class GamePage extends Component {
             this.newBoard()
         }
         console.log(this.state);
-        return (
+        let forfeitButton = <Button color="warning" onClick={() => {
+            window.confirm("Are you sure you want to give up?") && this.forfeitMatch();}}>FORFEIT</Button>
+        return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
                     {this.winMessage()}
                     {this.turnMonitor()}
                     {this.renderBoard()}
                 </div>
-            </Container>);
+            </Container>
+        {forfeitButton}
+        </div>);
     }
 }
 
