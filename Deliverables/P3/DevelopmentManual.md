@@ -83,11 +83,11 @@ Every request is listed below along with its purpose and the corresponding respo
 | `newMatch`        | Newly initialized gameState      | Allow user to start a new game             | **Play Jungle** |
 | `updateMatch`     | gameState after move is made     | Allow user to take their turn              | **Play Jungle** |
 | `forfeitMatch`    | gameState with forfeited match   | Allow user to forfeit a game               | **Forfeit Current Game** |
-| `searchPlayer`    | Searched player's profile        | Allow user take their turn                 | **View Other Users Profiles** |
-| `getRandomPlayer` | Random profile                   | Allow user take their turn                 | **View Other Users Profiles** |
-| `invitePlayer`    | Pending match w/ invited player  | Allow user take their turn                 | **Invite,  Accept Invite** |
-| `retrieveMatches` | List of matches involving user   | Allow user to view profiles                | **Retrieve Matches, Play Multiple Games, View Current Games, View Games History**|
-| `retrieveMatch`   | Match with corresponding ID      | Allow user to view profiles                | **Suspend Game, Resume Active Game**|
+| `searchPlayer`    | Searched player's profile        | Allow user to search for a player to invite  | **View Other Users Profiles** |
+| `getRandomPlayer` | Random profile                   | Allow user to find a random player to invite | **View Other Users Profiles** |
+| `invitePlayer`    | Pending match w/ invited player  | Allow user invite others to play a game    | **Invite,  Accept Invite** |
+| `retrieveMatches` | List of matches involving user   | Allow user to view current, pending, & past matches | **Retrieve Matches, Play Multiple Games, View Current Games, View Games History**|
+| `retrieveMatch`   | Match with corresponding ID      | Allow user to load any of their games      | **Suspend Game, Resume Active Game**|
 | `declineMatch`    | Decline success/failure          | Allow user to decline an invite            | **Decline Invite** |
 
 
