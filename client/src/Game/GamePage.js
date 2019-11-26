@@ -471,7 +471,7 @@ class GamePage extends Component {
         }
         console.log(this.state);
         let forfeitButton = <Button color="danger" onClick={() => {
-            window.confirm("Are you sure you want to give up?") && this.forfeitMatch();}}>FORFEIT</Button>
+            window.confirm("Are you sure you want to give up, "+ this.state.playerTurn + "?") && this.forfeitMatch();}}>FORFEIT</Button>
         return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
