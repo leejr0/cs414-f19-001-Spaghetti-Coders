@@ -132,10 +132,12 @@ When a game is opened, the server sends the current gamestate in `board` as a 9x
 The following game board format is used for a few different request types: `newMatch`, `updateMatch`, `forefeitMatch`.
 
 `newMatch`: Initializes a new game state.
+
 `updateMatch`: Update game state after a move.
+
 `forfeitMatch`: Set status to "Finished", and the player who didn't forfeit becomes the winner.
 
-**Formulaic JSON** (value types are implied by highlighted text):
+**Board Object** (Formulaic JSON - value types are implied by highlighted text):
 
 ```json
 {
