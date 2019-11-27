@@ -110,8 +110,26 @@ This page displays all of a user's current, pending, and past games and allows t
 ```
 
 ## GamePage
-When a game is opened, the server sends the current gamestate in `board` as a 2d Object array. The following json is subject to change:
-This format is used for a few different request types: `newMatch`, `updateMatch`, `forefeitMatch`.
+When a game is opened, the server sends the current gamestate in `board` as a 9x7 two-dimensional array of Piece objects. Each object can be either `null` if the space is empty, or the residing piece with the board it belongs to and the following information:
+
+**Piece Object** - `board[0][0]`
+```json
+{
+  "board"              : { BoardObject },
+  "pieceColor"         : "red",
+  "rank"               : 7,
+  "row"                : 0,
+  "col"                : 0,
+  "name"               : "lion",
+  "isTrapped"          : false,
+  "legalMoves"         : ["01", "10"],
+  "redTraps"           : ["02", "13", "04"],
+  "blueTraps"          : ["82", "73", "84"],
+  "waterTiles"         : ["31", "32", "41", "42", "51", "52", "34", "35", "44", "45", "54", "55"]
+}
+```
+
+The following game board format is used for a few different request types: `newMatch`, `updateMatch`, `forefeitMatch`.
 
 `newMatch`: Initializes a new game state.
 `updateMatch`: Update game state after a move.
@@ -124,8 +142,8 @@ This format is used for a few different request types: `newMatch`, `updateMatch`
   "board"              : [
                             [
                                {
-                                  "name": pieceName,
-                                  "player": pieceOwner,
+                                  "name": String,
+                                  "player": String,
                                   "legalMoves": [
                                       {
                                          "row": int,
@@ -137,22 +155,22 @@ This format is used for a few different request types: `newMatch`, `updateMatch`
                                       }
                                   ]
                                },
-                               { Piece Object },
-                               { Piece Object },
+                               { PieceObject },
+                               { PieceObject },
                                "..."
                             ],
                             [
-                               { Piece Object },
-                               { Piece Object },
-                               { Piece Object },
+                               { PieceObject },
+                               { PieceObject },
+                               { PieceObject },
                                "..."
                             ],
                             "..."
                          ],
-  "winner"             : { string },
-  "playerBlue"         : { string },
-  "playerRed"          : { string },
-  "playerTurn"         : { string },
+  "winner"             : String,
+  "playerBlue"         : String,
+  "playerRed"          : String,
+  "playerTurn"         : String,
   "move"               : {
                             "row": int,
                             "col": int,
