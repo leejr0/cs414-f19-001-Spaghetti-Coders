@@ -4,7 +4,7 @@ This document provides an overview of how the client and server communicate. Mos
 
 ## Login
 Upon login, the entered `nickname` and `password` are sent to the server,. If a match for both `nickname` and `password` is found in the database, the server sends **true** back to the client to indicate that the login was successful.
-*In the future, the password will be hashed before it is sent to the server for security.*
+
 ```json
 {
   "nickname"           : "junglePlayer1",
@@ -31,7 +31,18 @@ If all the above criteria are met, the server sends **true** back to the client 
 ## Profile
 The user's profile (`nickname`, `password`, `ratio`, `wins`, `losses`, `email`) is sent to the server from the Profile page's state.
 
-`retrieveProfile`: Upon viewing the profile page, this JSON object response populates the client-side state with profile information.
+`retrieveProfile`: Upon viewing the profile page, a null request is sent and the response populates the client-side state with profile information.
+
+```json
+{
+  "nickname"           : "junglePlayer1",
+  "password"           : "",
+  "ratio"              : null,
+  "wins"               : null,
+  "losses"             : null,
+  "email":             : ""
+}
+```
 
 `unregister`: The server simply nullifies the profile attributes. The unregistered profile is then removed from the database and *true* is sent back to indicate success.
 
@@ -39,9 +50,9 @@ The user's profile (`nickname`, `password`, `ratio`, `wins`, `losses`, `email`) 
 {
   "nickname"           : "junglePlayer1",
   "password"           : "spaghetti",
-  "ratio"              : 0.5
-  "wins"               : 1
-  "losses"             : 1
+  "ratio"              : 0.5,
+  "wins"               : 1,
+  "losses"             : 1,
   "email":             : "email@gmail.com"
 }
 ```
@@ -52,11 +63,11 @@ The user's profile (`nickname`, `password`, `ratio`, `wins`, `losses`, `email`) 
 {
   "nickname"           : "junglePlayer1",
   "password"           : "spaghetti",
-  "ratio"              : 0.5
-  "wins"               : 1
-  "losses"             : 1
-  "email":             : "email@gmail.com"
-  "newPassword"        : "tortellini"
+  "ratio"              : 0.5,
+  "wins"               : 1,
+  "losses"             : 1,
+  "email"              : "email@gmail.com",
+  "newPassword"        : "tortellini",
   "newEmail"           : "email@yahoo.com"
 }
 ```
@@ -68,11 +79,11 @@ When a user wants to invite another user to play, they must search for them or g
 
 `getRandomPlayer`: returns a random profile from the database.
 
-`invitePlayer`: returns a pending match with playerBlue being the invitee, and playerRed being the inviter.
+`invitePlayer`: returns a pending match with *playerBlue being the invitee, and playerRed being the inviter*.
 
 `declineMatch`: deletes the pending match and returns *true* on success.
 
-The following JSON object represents a general outline of the invitation data flow.
+*The following JSON object represents a general outline of the invitation data flow:*
 
 ```json
 {
@@ -104,7 +115,11 @@ This page displays all of a user's current, pending, and past games and allows t
 
 ## GamePage
 When a game is opened, the server sends the current gamestate in `board` as a 2d Object array. The following json is subject to change:
-This format is used for a few different request types: `newMatch`, `updateMatch`, `forefeitMatch`
+This format is used for a few different request types: `newMatch`, `updateMatch`, `forefeitMatch`.
+
+`newMatch`: Initializes a new game state.
+`updateMatch`: Update game state after a move.
+`forfeitMatch`: Set status to "Finished", and the player who didn't forfeit becomes the winner.
 
 ```json
 {
