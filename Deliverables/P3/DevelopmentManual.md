@@ -86,9 +86,9 @@ Every request is listed below along with its purpose and the corresponding respo
 | `login`           | Validity of login attempt        | Allow user to login to an existing account          | **Login**         |
 | `retrieveProfile` | Profile JSON                     | Allow user to view profiles                         | **View Profile**  |
 | `updateProfile`   | Profile update success/failure   | Allow user to modify their profile info             | **View Profile**  |
-| `newMatch`        | Newly initialized gameState      | Allow user to start a new game                      | **Play Jungle**   |
-| `updateMatch`     | gameState after move is made     | Allow user to take their turn                       | **Play Jungle**   |
-| `forfeitMatch`    | gameState with forfeited match   | Allow user to forfeit a game                        | **Forfeit Current Game** |
+| `newMatch`        | Newly initialized game state     | Allow user to start a new game                      | **Play Jungle**   |
+| `updateMatch`     | game state after move is made    | Allow user to take their turn                       | **Play Jungle**   |
+| `forfeitMatch`    | game state with forfeited match  | Allow user to forfeit a game                        | **Forfeit Current Game** |
 | `searchPlayer`    | Searched player's profile        | Allow user to search for a player to invite         | **View Other Users Profiles** |
 | `getRandomPlayer` | Random profile                   | Allow user to find a random player to invite        | **View Other Users Profiles** |
 | `invitePlayer`    | Pending match w/ invited player  | Allow user invite others to play a game             | **Invite,  Accept Invite** |
