@@ -40,7 +40,7 @@ The user's profile (`nickname`, `password`, `ratio`, `wins`, `losses`, `email`) 
   "ratio"              : null,
   "wins"               : null,
   "losses"             : null,
-  "email":             : ""
+  "email"              : ""
 }
 ```
 
@@ -53,7 +53,7 @@ The user's profile (`nickname`, `password`, `ratio`, `wins`, `losses`, `email`) 
   "ratio"              : 0.5,
   "wins"               : 1,
   "losses"             : 1,
-  "email":             : "email@gmail.com"
+  "email"              : "email@gmail.com"
 }
 ```
 
@@ -100,17 +100,13 @@ This page displays all of a user's current, pending, and past games and allows t
 `retrieveMatches`: returns every match involving the current user. The matches are sorted into three categories by `status`, which can be one of "Active", "Pending", or "Finished".
 
 ```json
-{
-  "nickname"           : "junglePlayer1",
-}
+{ "nickname": "junglePlayer1" }
 ```
 
 `retrieveMatch`: returns a specific match (game state) by `gameID`.
 
 ```json
-{
-  "gameID"           : "303",
-}
+{ "gameID": "303" }
 ```
 
 ## GamePage
@@ -120,6 +116,8 @@ This format is used for a few different request types: `newMatch`, `updateMatch`
 `newMatch`: Initializes a new game state.
 `updateMatch`: Update game state after a move.
 `forfeitMatch`: Set status to "Finished", and the player who didn't forfeit becomes the winner.
+
+**Formulaic JSON** (value types are implied by highlighted text):
 
 ```json
 {
