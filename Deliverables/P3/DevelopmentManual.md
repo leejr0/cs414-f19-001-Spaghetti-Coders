@@ -61,7 +61,7 @@ MySQL must be installed within a linux environment (operating system or virtual 
     - To change the root password, use: `mysql> ALTER USER 'root'@'localhost' IDENTIFIED BY '(new_password)';`
 3. Create the database using: `mysql> CREATE DATABASE (database_name);`
     - Use it with: `mysql> USE (database_name);` (MAKE SURE YOU USE THIS COMMAND. Without it, MySQL doesn't know what database to use.)
-4. From the 'cs414' directory, run the createDB script to create the tables necessaryfor Jungle: `mysql> source ./createDB;`
+4. From the 'cs414' directory, run the createDB script to create the tables necessaryfor Jungle: `mysql> source createDB.sql;`
     - Check if the tables exist: `mysql> show tables;`
 5. The necessary changes for the code to use the local database are as follows:
   In MySQLConnection.java, modify the following lines:
