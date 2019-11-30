@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import {request} from "../api/api";
-import Rules from "./Rules";
+import PieceGuide from "./PieceGuide";
 
 import bRat from "./assets/40BR.png";
 import bRatWater from "./assets/40BRWater.png";
@@ -82,12 +82,12 @@ class GamePage extends Component {
             //empty until board is retrieved from server
             jungleBoard: null,
             board: null,
-            //TODO: get values from server for winner, playerBlue, playerRed, turnAction, whoseTurn and display relevant info
+            //TODO: get values from server for winner, playerBlue, playerRed, turnAction, playerTurn and display relevant info
             winner: null,
             playerBlue: null,
             playerRed: null,
             turnAction: null,
-            whoseTurn: null,
+            playerTurn: null,
             isActive: true,
             announceWinner: false,
             newGame: true,
@@ -147,7 +147,7 @@ class GamePage extends Component {
                 winner: gameState.winner,
                 playerBlue: gameState.playerBlue,
                 playerRed: gameState.playerRed,
-                whoseTurn: gameState.whoseTurn,
+                playerTurn: gameState.playerTurn,
                 isActive: gameState.isActive,
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
@@ -159,6 +159,21 @@ class GamePage extends Component {
         move.toRow = null;
         move.toCol = null;
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
+    }
+
+    forfeitMatch() {
+        console.log(this.state.playerTurn + " has forfeited the match.");
+        request(this.state, "forfeitMatch").then(gameState => {
+            this.setState({
+                jungleBoard: gameState.jungleBoard,
+                winner: gameState.winner,
+                playerBlue: gameState.playerBlue,
+                playerRed: gameState.playerRed,
+                playerTurn: gameState.playerTurn,
+                isActive: gameState.isActive,
+                announceWinner: true
+            });
+        });
     }
 
     resetPieces(board) {
@@ -188,14 +203,14 @@ class GamePage extends Component {
     playerOwnsPiece(pieceIndices) {
         let piece = this.state.board[pieceIndices.row][pieceIndices.col];
         if (piece !== null) {
-            if (this.state.whoseTurn === this.state.playerBlue) {
+            if (this.state.playerTurn === this.state.playerBlue) {
                 if (piece.pieceColor === "BLUE") {
                     return true;
                 } else {
                     console.log("Player 1 selected the other player's piece");
                     return false;
                 }
-            } else if (this.state.whoseTurn === this.state.playerRed) {
+            } else if (this.state.playerTurn === this.state.playerRed) {
                 if (piece.pieceColor === "RED") {
                     return true;
                 } else {
@@ -203,7 +218,7 @@ class GamePage extends Component {
                     return false;
                 }
             } else {
-                console.log("Invalid value for 'whoseTurn'");
+                console.log("Invalid value for 'playerTurn'");
                 return false;
             }
         } else {
@@ -383,8 +398,8 @@ class GamePage extends Component {
     newBoard() {
         let state = this.state;
         state.board = this.props.board;
-        state.newGame = false;
-        state.whoseTurn = this.props.startGame.playerBlue;
+        this.props.changeGame();
+        state.playerTurn = this.props.startGame.playerTurn;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
 
@@ -443,25 +458,32 @@ class GamePage extends Component {
 
         //change color and position by player
         return (<div style={{backgroundColor: 'ecc530', border: '1px solid #1e4d2b'}} id="TurnMonitor">
-            <h4 style={(this.state.whoseTurn === this.state.playerBlue ?
+            <h4 style={(this.state.playerTurn === this.state.playerBlue ?
                 {color: 'blue', textAlign: 'left'} :
                 {color: 'red', textAlign: 'right'})}>
-                {this.state.whoseTurn}{status}
+                {this.state.playerTurn}{status}
             </h4></div>);
     }
 
     render() {
-        if(this.props.newGame && this.state.newGame === true) {
+        if(this.props.startGame.createNewBoard) {
             this.newBoard()
         }
-        return (
+        console.log(this.state);
+        let forfeitButton = <Button color="danger" onClick={() => {
+            window.confirm("Are you sure you want to give up, "+ this.state.playerTurn + "?") && this.forfeitMatch();}}>FORFEIT</Button>
+        return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
                     {this.winMessage()}
                     {this.turnMonitor()}
                     {this.renderBoard()}
+                    <PieceGuide playerBlue={this.state.playerBlue} playerRed={this.state.playerRed}/>
                 </div>
-            </Container>);
+            </Container>
+        <br/><br/><br/>
+        {forfeitButton}
+        </div>);
     }
 }
 

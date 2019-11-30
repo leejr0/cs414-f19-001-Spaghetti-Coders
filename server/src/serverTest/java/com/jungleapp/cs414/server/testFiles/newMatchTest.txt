@@ -1,0 +1,1 @@
+[{"gameID":1,"playerBlue":"zizamzoe","playerRed":"12345","status":"Pending","playerTurn":"zizamzoe"},{"gameID":2,"playerBlue":"zizamzoe","playerRed":"jmiller0","status":"Pending","playerTurn":"zizamzoe"},{"gameID":3,"playerBlue":"12345","playerRed":"zizamzoe","status":"Pending","playerTurn":"12345"}]

@@ -56,8 +56,8 @@ public class RetrieveProfile {
 
     public boolean createNewProfile() {
         if (!establishProfileIdentity()) {
-            connection = MySQLConnection.establishMySQLConnection();
             try {
+                connection = MySQLConnection.establishMySQLConnection();
                 Statement statement = connection.createStatement();
 
                 // Check if player already exists in database
@@ -146,8 +146,7 @@ public class RetrieveProfile {
     public boolean searchPlayer(){
         try {
             Statement statement = connection.createStatement();
-            System.out.println("select * from Player where Player.nickname = '" +
-                    profile.nickname + "';");
+
             ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
                     profile.nickname + "';");
             if (resultSet.next()){
@@ -164,4 +163,11 @@ public class RetrieveProfile {
         return gson.toJson(profile);
     }
 
+    void closeMySQLConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

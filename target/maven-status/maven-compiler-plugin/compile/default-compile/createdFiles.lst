@@ -14,7 +14,6 @@ com/jungleapp/cs414/server/Leopard.class
 com/jungleapp/cs414/server/IllegalMoveException.class
 com/jungleapp/cs414/server/Dog.class
 com/jungleapp/cs414/server/JungleBoard.class
-com/jungleapp/cs414/server/ValidateMove.class
 com/jungleapp/cs414/server/InitServer.class
 com/jungleapp/cs414/server/BigCat.class
 com/jungleapp/cs414/server/Lion.class

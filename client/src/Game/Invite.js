@@ -10,9 +10,11 @@ class Invite extends Component {
             nickname: this.props.nickname,
             playerSearch: {
                 opponentFound: false,
-                nickname: "",
+                playerBlue: "",
+                playerRed: this.props.nickname,
                 errorMessage: "",
-                invitationSent: false
+                invitationSent: false,
+                nickname: ""
             }
         };
 
@@ -27,18 +29,19 @@ class Invite extends Component {
     updateSearchValue(id, value) {
         let state = this.state;
         state.playerSearch[id] = value;
+        state.playerSearch.nickname = value;
         state.playerSearch.opponentFound = false;
         this.setState({state});
     }
 
     searchOpponent(random) {
-        if(this.state.playerSearch.nickname === this.state.nickname) {
+        if(this.state.playerSearch.playerBlue === this.state.nickname) {
             let state = this.state;
             state.playerSearch.errorMessage = "You can't challenge yourself, silly!";
             state.playerSearch.opponentFound = false;
             this.setState({state});
         }
-        else if(this.state.playerSearch.nickname === "") {
+        else if(this.state.playerSearch.playerBlue === "") {
             let state = this.state;
             state.playerSearch.errorMessage = "Please type in a player to search.";
             state.playerSearch.opponentFound = false;
@@ -47,7 +50,7 @@ class Invite extends Component {
         else if(random) {
             get("getRandomPlayer").then(serverResponse => {
                 let state = this.state;
-                state.playerSearch.nickname = serverResponse.nickname;
+                state.playerSearch.playerBlue = serverResponse.playerBlue;
                 state.playerSearch.errorMessage = "";
                 state.playerSearch.invitationSent = false;
                 this.setState({state});
@@ -58,7 +61,7 @@ class Invite extends Component {
                 let state = this.state;
                 state.playerSearch.invitationSent = false;
                 if(!serverResponse){
-                    state.playerSearch.errorMessage = this.state.playerSearch.nickname + " player not found!";
+                    state.playerSearch.errorMessage = this.state.playerSearch.playerBlue + " player not found!";
                     state.playerSearch.opponentFound = false;
                 }
                 else{
@@ -89,14 +92,14 @@ class Invite extends Component {
                 else {
                     state.playerSearch.errorMessage = "";
                     state.playerSearch.invitationSent = true;
-                    this.props.startGame.playerRed = this.state.nickname;
-                    this.props.startGame.playerBlue = this.state.playerSearch.nickname;
+                    this.props.startGame.playerRed = this.state.playerRed;
+                    this.props.startGame.playerBlue = this.state.playerBlue;
                     //Temporary callback to show functionality
-                    this.setState({state}, () => {
-                        this.props.beginGame();
-                    });
+                    // this.setState({state}, () => {
+                    //     this.props.beginGame();
+                    // });
                 }
-                //this.setState({state});
+                this.setState({state});
             });
         }
     }
@@ -108,7 +111,7 @@ class Invite extends Component {
         }
         let foundOpponent = <p style={{textAlign: "center"}}>Select your opponent!</p>;
         if(this.state.playerSearch.opponentFound) {
-            foundOpponent = <p style={{textAlign: "center"}}>Your opponent, {this.state.playerSearch.nickname}, has been found!</p>
+            foundOpponent = <p style={{textAlign: "center"}}>Your opponent, {this.state.playerSearch.playerBlue}, has been found!</p>
         }
         let invitationSent = <p> </p>;
         if(this.state.playerSearch.invitationSent) {
@@ -120,7 +123,7 @@ class Invite extends Component {
                 <ModalHeader><h5 style={{textAlign: "center"}}>Invite your friends or get a random opponent!</h5></ModalHeader>
                 <ModalBody>
                     {foundOpponent}
-                    <Input type="text" onChange={(input) => this.updateSearchValue("nickname", input.target.value)}/>
+                    <Input type="text" onChange={(input) => this.updateSearchValue("playerBlue", input.target.value)}/>
                     <br/>
                     <Button onClick={() => this.searchOpponent(false)}>SEARCH</Button>
                     <Button className="float-right" onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>

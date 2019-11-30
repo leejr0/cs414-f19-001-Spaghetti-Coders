@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 class Match {
-    MatchStructure currentMatch;
+    private MatchStructure currentMatch;
     private Gson gson = new Gson();
 
     private Connection connection;
@@ -29,11 +29,20 @@ class Match {
         connection = MySQLConnection.establishMySQLConnection();
     }
 
+    // Alternative constructor for JUnit testing.
+    Match(String requestBody) {
+        JsonParser jsonParser = new JsonParser();
+        JsonElement request = jsonParser.parse(requestBody);
+        Gson gson = new Gson();
+
+        currentMatch = gson.fromJson(request, MatchStructure.class);
+        connection = MySQLConnection.establishMySQLConnection();
+    }
+
     String createNewMatch() {
         currentMatch.jungleBoard = new JungleBoard();
-        currentMatch.jungleBoard.initialize();
-        currentMatch.isActive = true;
-        currentMatch.whoseTurn = currentMatch.playerBlue;
+        currentMatch.status = "Pending";
+        currentMatch.playerTurn = currentMatch.playerBlue;
 
         saveNewMatch();
 
@@ -43,10 +52,9 @@ class Match {
     //Temporary class that doesn't interfere with old functionality
     boolean createNewPendingMatch() {
         currentMatch.jungleBoard = new JungleBoard();
-        currentMatch.jungleBoard.initialize();
-        currentMatch.isActive = true;
-        currentMatch.whoseTurn = currentMatch.playerBlue;
+        currentMatch.playerTurn = currentMatch.playerBlue;
 
+        currentMatch.status = "Pending";
         return saveNewMatch();
     }
 
@@ -56,13 +64,29 @@ class Match {
 
         boolean successfulMove = currentMatch.jungleBoard.makeMove(currentMatch.move.row, currentMatch.move.col, currentMatch.move.toRow, currentMatch.move.toCol);
         if(successfulMove) {
-            if (currentMatch.whoseTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
-                currentMatch.whoseTurn = currentMatch.playerRed;
+            if (currentMatch.playerTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
+                currentMatch.playerTurn = currentMatch.playerRed;
             }else{
-                currentMatch.whoseTurn = currentMatch.playerBlue;
+                currentMatch.playerTurn = currentMatch.playerBlue;
             }
             checkWin();
         }
+        return getMatchJSON();
+    }
+
+    String forfeitMatch() {
+        currentMatch.jungleBoard.resetBoard();
+
+        currentMatch.status = "Finished";
+
+        if (currentMatch.playerTurn.equals(currentMatch.playerBlue)) {
+            currentMatch.winner = currentMatch.playerRed;
+        } else {
+            currentMatch.winner = currentMatch.playerBlue;
+        }
+
+        saveUpdatedMatch();
+        System.out.println(getMatchJSON());
         return getMatchJSON();
     }
 
@@ -95,10 +119,10 @@ class Match {
         try {
             if (currentMatch.jungleBoard.getPiece(0, 3) != null) {
                 currentMatch.winner = currentMatch.playerBlue;
-                currentMatch.isActive = false;
+                currentMatch.status = "Finished";
             } else if (currentMatch.jungleBoard.getPiece(8, 3) != null) {
                 currentMatch.winner = currentMatch.playerRed;
-                currentMatch.isActive = false;
+                currentMatch.status = "Finished";
             }
         } catch (IllegalPositionException ignored) {}
     }
@@ -112,10 +136,13 @@ class Match {
 
             String formattedTime = currentTime.format(timeFormatter);
 
-            // Register new match into the database
+            // Register new match into Game table.
             statement.execute("INSERT INTO Game VALUES (NULL, '" + currentMatch.jungleBoard.getBoardJSON() + "', " +
-                    "'" + currentMatch.isActive + "','" + currentMatch.whoseTurn + "', NULL ," +
+                    "'" + currentMatch.playerBlue + "', '" + currentMatch.playerRed + "'," +
+                    "'" + currentMatch.status + "','" + currentMatch.playerTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
+
+
             return true;
 
         } catch (SQLException e) {
@@ -127,4 +154,13 @@ class Match {
     private String getMatchJSON() {
         return gson.toJson(currentMatch);
     }
+
+    void closeMySQLConnection() {
+        try {
+            this.connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

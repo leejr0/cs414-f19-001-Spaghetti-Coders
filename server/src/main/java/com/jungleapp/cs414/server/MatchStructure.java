@@ -1,13 +1,12 @@
 package com.jungleapp.cs414.server;
 
 class MatchStructure {
+    Integer gameID;
     JungleBoard jungleBoard;
-    String winner;
-    Boolean isActive;
-    String whoseTurn;
     String playerBlue;
     String playerRed;
-    Move move;
-    Integer matchID;
     String status;
+    String playerTurn;
+    String winner;
+    Move move;
 }
