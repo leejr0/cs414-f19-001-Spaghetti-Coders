@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import {request} from "../api/api";
-import Rules from "./Rules";
+import PieceGuide from "./PieceGuide";
 
 import bRat from "./assets/40BR.png";
 import bRatWater from "./assets/40BRWater.png";
@@ -159,6 +159,21 @@ class GamePage extends Component {
         move.toRow = null;
         move.toCol = null;
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
+    }
+
+    forfeitMatch() {
+        console.log(this.state.playerTurn + " has forfeited the match.");
+        request(this.state, "forfeitMatch").then(gameState => {
+            this.setState({
+                jungleBoard: gameState.jungleBoard,
+                winner: gameState.winner,
+                playerBlue: gameState.playerBlue,
+                playerRed: gameState.playerRed,
+                playerTurn: gameState.playerTurn,
+                isActive: gameState.isActive,
+                announceWinner: true
+            });
+        });
     }
 
     resetPieces(board) {
@@ -455,14 +470,20 @@ class GamePage extends Component {
             this.newBoard()
         }
         console.log(this.state);
-        return (
+        let forfeitButton = <Button color="danger" onClick={() => {
+            window.confirm("Are you sure you want to give up, "+ this.state.playerTurn + "?") && this.forfeitMatch();}}>FORFEIT</Button>
+        return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
                     {this.winMessage()}
                     {this.turnMonitor()}
                     {this.renderBoard()}
+                    <PieceGuide playerBlue={this.state.playerBlue} playerRed={this.state.playerRed}/>
                 </div>
-            </Container>);
+            </Container>
+        <br/><br/><br/>
+        {forfeitButton}
+        </div>);
     }
 }
 

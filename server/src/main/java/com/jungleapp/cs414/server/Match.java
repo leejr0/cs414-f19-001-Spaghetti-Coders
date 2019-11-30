@@ -74,6 +74,22 @@ class Match {
         return getMatchJSON();
     }
 
+    String forfeitMatch() {
+        currentMatch.jungleBoard.resetBoard();
+
+        currentMatch.status = "Finished";
+
+        if (currentMatch.playerTurn.equals(currentMatch.playerBlue)) {
+            currentMatch.winner = currentMatch.playerRed;
+        } else {
+            currentMatch.winner = currentMatch.playerBlue;
+        }
+
+        saveUpdatedMatch();
+        System.out.println(getMatchJSON());
+        return getMatchJSON();
+    }
+
     private void saveUpdatedMatch() {
         // TODO: Finish updating match with some sort of match identifier(gameID).
 //        try {
