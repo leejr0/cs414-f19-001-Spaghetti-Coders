@@ -31,6 +31,8 @@ class Home extends Component {
                 {gameID: 76, color: "red", opponent: "Ash Ketchum", whoseTurn: null, state: "finished", winner: "Ash Ketchum"}
             ],
             startGame: {
+                gameID: "",
+                status: "",
                 playerBlue: "Player 1",
                 playerRed: "Player 2",
                 createNewBoard: true,
@@ -118,11 +120,13 @@ class Home extends Component {
         });
     }
 
-    setGame(type, index, response) {
+    setGame(type, index, response, ID, status) {
         let state = this.state;
         state.board = response;
         state.displayBoard = true;
         state.newGame = true;
+        state.startGame.gameID = ID;
+        state.startGame.status = status;
         state.startGame.createNewBoard = true;
         state.startGame.playerTurn = state[type][index].playerTurn;
         if(state[type][index].color === "red") {
@@ -149,7 +153,7 @@ class Home extends Component {
             }
             console.log(this.state.pendingMatches[index].gameID);
             request(this.state.pendingMatches[index].gameID,"retrieveMatch").then(gameState => {
-                this.setGame("pendingMatches", index, gameState);
+                this.setGame("pendingMatches", index, gameState, ID, "Active");
             });
         }
 
@@ -165,7 +169,7 @@ class Home extends Component {
             console.log(index);
             console.log(ID);
             request(this.state.activeMatches[index].gameID,"retrieveMatch").then(gameState => {
-                this.setGame("activeMatches", index, gameState);
+                this.setGame("activeMatches", index, gameState, ID, "Active");
             });
         }
 
@@ -178,7 +182,7 @@ class Home extends Component {
             }
 
             request(this.state.finishedMatches[index].gameID,"retrieveMatch").then(gameState => {
-                this.setGame("finishedMatches", index, gameState);
+                this.setGame("finishedMatches", index, gameState, ID, "Finished");
             });
         }
     }

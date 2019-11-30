@@ -69,7 +69,7 @@ class RetrieveMatches {
         try {
             Statement statement;
             statement = connection.createStatement();
-            System.out.println(this.ID);
+
             ResultSet resultSet = statement.executeQuery("select * from Game where gameID = " +
                     this.ID + ";");
 
