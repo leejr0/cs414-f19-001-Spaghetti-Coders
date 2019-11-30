@@ -12,6 +12,15 @@
 2. In a *fresh* local terminal within IntelliJ IDEA, type `./run`
 3. After compilation, the web interface should be accessible at `localhost:9900` in (most) web browsers
 
+### Hosting on a CSU Machine (allows multiple users)
+You must modify the following files: `api.js` and `InitServer.java`.
+
+- In `api.js`, change `host` in the function headers from "localhost" to the name (or IP) of the department machine to host on
+- If you wish to use a different port than the one set, within `api.js` change `port` in the function headers to a port of your choosing, and within `InitServer.java`, change the return value of getPort() to the same port you chose.
+
+When you `./run` the application, the web interface will be available at `(hostname):(port)`.
+
+
 ### Information about `./run`
 This command will recompile and bundle information from both the client and the server to be rendered on the web browser. After any change to the system is made, either in the client or the server, the environment must be recompiled and bundled again to see the changes implemented. All necessary files will be made automatically with the `./run` command without any extra work from the developer.
 
