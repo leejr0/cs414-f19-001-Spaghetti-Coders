@@ -82,6 +82,7 @@ class GamePage extends Component {
             //empty until board is retrieved from server
             jungleBoard: null,
             board: null,
+            nickname: this.props.nickname,
             gameID: this.props.startGame.gameID,
             status: this.props.startGame.status,
             //TODO: get values from server for winner, playerBlue, playerRed, turnAction, playerTurn and display relevant info
@@ -203,30 +204,64 @@ class GamePage extends Component {
     }
 
     playerOwnsPiece(pieceIndices) {
+        if(this.state.status === "Finished") {
+            return false;
+        }
+
         let piece = this.state.board[pieceIndices.row][pieceIndices.col];
-        if (piece !== null) {
-            if (this.state.playerTurn === this.state.playerBlue) {
-                if (piece.pieceColor === "BLUE") {
-                    return true;
+        if(this.state.playerTurn === this.state.nickname) {
+            if (piece !== null) {
+                if (this.state.playerBlue === this.state.nickname) {
+                    if (piece.pieceColor === "BLUE") {
+                        return true;
+                    } else {
+                        console.log("Player selected the other player's piece");
+                        return false;
+                    }
+                } else if (this.state.nickname === this.state.playerRed) {
+                    if (piece.pieceColor === "RED") {
+                        return true;
+                    } else {
+                        console.log("Player selected the other player's piece");
+                        return false;
+                    }
                 } else {
-                    console.log("Player 1 selected the other player's piece");
-                    return false;
-                }
-            } else if (this.state.playerTurn === this.state.playerRed) {
-                if (piece.pieceColor === "RED") {
-                    return true;
-                } else {
-                    console.log("Player 2 selected the other player's piece");
+                    console.log("Invalid value for 'playerTurn'");
                     return false;
                 }
             } else {
-                console.log("Invalid value for 'playerTurn'");
+                console.log("Player selected nothing");
                 return false;
             }
-        } else {
-            console.log("Player selected nothing");
+        }
+        else{
+            console.log("Not player's turn.");
             return false;
         }
+        // let piece = this.state.board[pieceIndices.row][pieceIndices.col];
+        // if (piece !== null) {
+        //     if (this.state.playerTurn === this.state.playerBlue) {
+        //         if (piece.pieceColor === "BLUE") {
+        //             return true;
+        //         } else {
+        //             console.log("Player 1 selected the other player's piece");
+        //             return false;
+        //         }
+        //     } else if (this.state.playerTurn === this.state.playerRed) {
+        //         if (piece.pieceColor === "RED") {
+        //             return true;
+        //         } else {
+        //             console.log("Player 2 selected the other player's piece");
+        //             return false;
+        //         }
+        //     } else {
+        //         console.log("Invalid value for 'playerTurn'");
+        //         return false;
+        //     }
+        // } else {
+        //     console.log("Player selected nothing");
+        //     return false;
+        // }
     }
 
     handleClick(i, j) {
