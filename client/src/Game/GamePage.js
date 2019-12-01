@@ -468,6 +468,7 @@ class GamePage extends Component {
     }
 
     render() {
+        console.log("game")
         if(this.props.startGame.createNewBoard) {
             this.newBoard()
         }

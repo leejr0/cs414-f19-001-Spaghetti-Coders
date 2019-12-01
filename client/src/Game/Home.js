@@ -4,6 +4,7 @@ import {Button, Card, CardBody, Col, Container, Jumbotron, Nav, NavItem, NavLink
 import {request} from "../api/api";
 import GamePage from "./GamePage";
 import Invite from "./Invite";
+import icon from "./assets/jungleicon.png";
 
 class Home extends Component {
     constructor(props) {
@@ -15,6 +16,8 @@ class Home extends Component {
             newGame: true,
             nickname: this.props.nickname,
             homeState : 'Active',
+            displayActive: false,
+            displayFinished: false,
             activeMatches: [
                 {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
                 {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
@@ -40,7 +43,8 @@ class Home extends Component {
             },
             getGame: {
                 nickname: this.props.nickname
-            }
+            },
+            oldState1: null
         };
 
         this.showBoard = this.showBoard.bind(this);
@@ -136,6 +140,17 @@ class Home extends Component {
         else {
             state.startGame.playerRed = state[type][index].opponent;
             state.startGame.playerBlue = state.nickname;
+        }
+
+        // state.displayActive = true;
+        // state.displayFinished = true;
+        if(status === "Active") {
+            state.displayActive = true;
+            state.displayFinished = false;
+        }
+        else {
+            state.displayActive = false;
+            state.displayFinished = true;
         }
 
         this.setState({state});
@@ -328,6 +343,40 @@ class Home extends Component {
 
     }
 
+    toggleTab(tabID) {
+        if (this.state.homeState !== tabID) {
+            this.setState({
+                homeState: tabID
+            });
+        }
+    }
+
+    renderTab(tabID) {
+        return (
+            <NavItem key={tabID}>
+                <NavLink key={tabID}
+                         onClick={() => {
+                             this.toggleTab(tabID);
+                             this.getGames();
+
+                         }}
+                >
+                    {tabID}
+                </NavLink>
+            </NavItem>
+        );
+    }
+
+    renderTabContents(tabContents, tabID) {
+        return (
+            <TabContent key={tabID} activeTab={this.state.homeState}>
+                <TabPane key={tabID} tabId={tabID}>
+                    {tabContents}
+                </TabPane>
+            </TabContent>
+        );
+    }
+
     render() {
         console.log(this.state);
         this.updatePlayerNames();
@@ -340,6 +389,20 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
+        let activeBoard = <div> I'm active </div>;
+        if(this.state.displayActive) {
+            activeBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
+        }
+
+        let finishedBoard = <div> I'm finished </div>;
+        if(this.state.displayFinished) {
+            finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
+        }
+        let active = [<div> {this.getTabContents("Active")} {activeBoard} </div>];
+
+        let pending = [<div> {this.getTabContents("Pending")} </div>];
+
+        let finished =  [<div> {this.getTabContents("Finished")} {finishedBoard} </div>];
 
         return(
             <Card>
@@ -347,7 +410,39 @@ class Home extends Component {
                     <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
                     {startButton}
                     <br/><br/>
-                        <Nav tabs>
+                    <Card>
+                    <div>
+                        <Nav tabs key="2">
+                            {gameTabs.map((tabToRender) => {
+                                return this.renderTab(tabToRender);
+                            })}
+                        </Nav>
+                    </div>
+                    <div>
+                        {this.renderTabContents(active, 'Active')}
+                        {this.renderTabContents(pending, 'Pending')}
+                        {this.renderTabContents(finished, 'Finished')}
+                    </div>
+                    </Card>
+
+                </CardBody>
+            </Card>
+        );
+    }
+}
+export default Home;
+
+
+/*if(tabID === "Active") {
+                                 this.setState({displayActive: true, displayFinished: false})
+                             }
+                             else if(tabID === "Pending") {
+                                 this.setState({displayActive: false, displayFinished: false})
+                             }
+                             else {
+                                 this.setState({displayActive: false, displayFinished: true})
+                             }
+<Nav tabs>
                             {gameTabs.map((tab) => {
                                 return (
                                     <Col sm={{size:3, offset:1}}>
@@ -386,9 +481,4 @@ class Home extends Component {
                                 })}
                             </Col>
                         </Row>
-                </CardBody>
-            </Card>
-        );
-    }
-}
-export default Home;
+ */
