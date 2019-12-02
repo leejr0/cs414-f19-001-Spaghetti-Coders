@@ -71,6 +71,8 @@ class Match {
             }
             checkWin();
         }
+        saveUpdatedMatch();
+
         return getMatchJSON();
     }
 
@@ -92,26 +94,32 @@ class Match {
 
     private void saveUpdatedMatch() {
         // TODO: Finish updating match with some sort of match identifier(gameID).
-//        try {
-//            Statement statement = connection.createStatement();
-//            String formattedTime = null;
-//            if (!isActive) {
-//                LocalDateTime matchEndTime = LocalDateTime.now();
-//                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
-//
-//                formattedTime = matchEndTime.format(timeFormatter);
-//            }
-//
-//            //Update database entry with current details.
-//            statement.execute("UPDATE Game SET board='" + gson.toJson(this.board) + "'," +
-//                    "status='" + this.isActive + "'," +
-//                    "playerTurn='" + this.whoseTurn + "'," +
-//                    "winner='" + this.winner + "'," +
-//                    "endTime='" + formattedTime + "' WHERE TODO: Insert applicable match identifier here.");
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Statement statement = connection.createStatement();
+
+            if (currentMatch.status.equals("Finished")) {
+                LocalDateTime matchEndTime = LocalDateTime.now();
+                DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
+
+                String formattedTime = matchEndTime.format(timeFormatter);
+
+                statement.execute("UPDATE Game SET board='" + currentMatch.jungleBoard.getBoardJSON() + "'," +
+                        "status='" + currentMatch.status + "'," +
+                        "playerTurn='" + currentMatch.playerTurn + "'," +
+                        "winner='" + currentMatch.winner + "'," +
+                        "endTime='" + formattedTime + "' WHERE gameID=" + currentMatch.gameID + ";");
+            }
+            else {
+                //Update database entry with current details.
+                statement.execute("UPDATE Game SET board='" + currentMatch.jungleBoard.getBoardJSON() + "'," +
+                        "status='" + currentMatch.status + "'," +
+                        "playerTurn='" + currentMatch.playerTurn + "'," +
+                        "winner='" + currentMatch.winner + "' WHERE gameID=" + currentMatch.gameID + ";");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //As long as a piece is inside the den, we know its a win for player. Same color pieces may not move into their own den.

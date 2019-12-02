@@ -82,6 +82,8 @@ class GamePage extends Component {
             //empty until board is retrieved from server
             jungleBoard: null,
             board: null,
+            gameID: this.props.startGame.gameID,
+            status: this.props.startGame.status,
             //TODO: get values from server for winner, playerBlue, playerRed, turnAction, playerTurn and display relevant info
             winner: null,
             playerBlue: null,
