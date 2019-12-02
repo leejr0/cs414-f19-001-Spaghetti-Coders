@@ -19,14 +19,14 @@ class MySQLConnection {
     static Connection openMySQLConnection() {
         try {
             //FAURE DATABASE
-//            String mySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
-//            String DBUsername = "vstepa";
-//            String DBPassword = "830982615";
+            String mySQLConnectionURL = "jdbc:mysql://faure/vstepa?useTimezone=true&serverTimezone=UTC";
+            String DBUsername = "vstepa";
+            String DBPassword = "830982615";
 
             //LOCAL DATABASE
-            String mySQLConnectionURL = "jdbc:mysql://localhost:3306/cs414?useTimezone=true&serverTimezone=UTC";
-            String DBUsername = "root";
-            String DBPassword = "pass";
+//            String mySQLConnectionURL = "jdbc:mysql://localhost:3306/cs414?useTimezone=true&serverTimezone=UTC";
+//            String DBUsername = "root";
+//            String DBPassword = "pass";
 
             return DriverManager.getConnection(mySQLConnectionURL, DBUsername, DBPassword);
         } catch (SQLException e) {

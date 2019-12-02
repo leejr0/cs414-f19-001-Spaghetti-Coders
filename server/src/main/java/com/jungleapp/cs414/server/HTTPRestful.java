@@ -15,7 +15,7 @@ class HTTPRestful {
         this.port = port;
 
         port(port);
-        path = "/mnt/c/Users/Jeff";
+
         // serve the static files: index.html and bundle.js
         Spark.staticFiles.externalLocation(path + "/IdeaProjects/cs414/client/dist/public");
 
