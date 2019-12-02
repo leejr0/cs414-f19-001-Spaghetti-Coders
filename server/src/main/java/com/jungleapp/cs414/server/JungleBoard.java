@@ -110,6 +110,21 @@ public class JungleBoard {
         return false;
     }
 
+    boolean zeroPieces(String color) {
+        int numPieces = 0;
+        for(int i = 0; i < board.length; i++) {
+            for(int j = 0; j < board[i].length; j++) {
+                if(board[i][j] != null) {
+                    if(board[i][j].getColor().equals(color)) {
+                        numPieces++;
+                    }
+                }
+            }
+        }
+
+        return numPieces == 0;
+    }
+
 
     private boolean validPosition(int row, int column) {
         return row <= 8 && row >= 0 && column >= 0 && column <= 6;

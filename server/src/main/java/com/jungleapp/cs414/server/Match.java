@@ -117,6 +117,13 @@ class Match {
     //As long as a piece is inside the den, we know its a win for player. Same color pieces may not move into their own den.
     private void checkWin() {
         try {
+            if (currentMatch.jungleBoard.zeroPieces("RED")) {
+                currentMatch.winner = currentMatch.playerBlue;
+                currentMatch.status = "Finished";
+            } else if (currentMatch.jungleBoard.zeroPieces("BLUE")) {
+                currentMatch.winner = currentMatch.playerRed;
+                currentMatch.status = "Finished";
+            }
             if (currentMatch.jungleBoard.getPiece(0, 3) != null) {
                 currentMatch.winner = currentMatch.playerBlue;
                 currentMatch.status = "Finished";
