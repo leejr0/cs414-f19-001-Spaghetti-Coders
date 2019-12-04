@@ -13,6 +13,8 @@ public class RetrieveProfile {
     private Gson gson = new Gson();
 
     private Connection connection;
+    Statement statement;
+    ResultSet resultSet;
 
     RetrieveProfile(Request request) {
         JsonParser jsonParser = new JsonParser();
@@ -105,8 +107,9 @@ public class RetrieveProfile {
                 }
             }
 
-        } catch (SQLException e) {
 
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -159,12 +162,29 @@ public class RetrieveProfile {
         return false;
     }
 
+    public String searchRandomPlayer() {
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname <> '" + profile.nickname + "' order by RAND() limit 1;");
+            if (resultSet.next()){
+                String randomPlayer = "{\"nickname\": \"" + resultSet.getString("Nickname") + "\"}";//resultSet.getString("Nickname");//
+                return randomPlayer;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
     public String getProfileJSON() {
         return gson.toJson(profile);
     }
 
     void closeMySQLConnection() {
         try {
+            //this.statement.close();
+            //this.resultSet.close();
             this.connection.close();
         } catch (SQLException e) {
             e.printStackTrace();

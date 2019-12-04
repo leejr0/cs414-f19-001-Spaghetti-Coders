@@ -38,8 +38,8 @@ class Welcome extends Component {
     renderButtons() {
         return (
             <ButtonGroup>
-                <Button color="success" onClick={this.toggleLogIn}>LOG IN</Button>
-                <Button color="success" onClick={this.toggleRegister}>REGISTER</Button>
+                <Button color="success" size="lg" onClick={this.toggleLogIn}>LOG IN</Button>
+                <Button color="success" size="lg" onClick={this.toggleRegister}>REGISTER</Button>
             </ButtonGroup>
         );
     }
@@ -127,7 +127,7 @@ class Welcome extends Component {
                                 <CardBody>
                                     <h3>About Jungle</h3>
                                     <br/>
-                                    <p>Jungle, or Dou Shou Qi, is a modern Chinese board game. The game is played on a 7×9 board and is popular with children in the Far East.
+                                    <p>Jungle, or Dou Shou Qi, is a modern Chinese chess variant board game. The game is played on a 7×9 board and is popular with children in the Far East.
                                         The Jungle gameboard represents a jungle terrain with dens, traps "set" around dens, and rivers. Each player controls eight game
                                         pieces representing different animals of various rank. Stronger-ranked animals can capture ("eat") animals of weaker or equal rank.
                                         The player who is first to maneuver any one of their pieces into the opponent's den wins the game. An alternative way to win is to capture all the opponent's pieces.</p>

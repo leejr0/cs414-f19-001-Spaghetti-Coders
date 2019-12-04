@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {
     Button,
+    ButtonGroup,
     Card,
     CardBody,
     ModalBody,
@@ -103,13 +104,16 @@ class Main extends Component {
             </Card>
         ];
 
-        let logoutButton = <Button outline color="success" style={{float: 'right'}} onClick={this.logout.bind(this)}>Logout</Button>;
+        let cornerButtons = (<ButtonGroup style = {{float: "right"}}>
+            <Button color="success" disabled>Welcome, {this.props.nickname}    </Button>
+            <Button outline color="success" onClick={this.logout.bind(this)}>Logout</Button>
+        </ButtonGroup>);
 
         return (
             <div>
                 <div>
-                    <div style={{ padding: '.5rem' }}>
-                        {logoutButton}
+                    <div style={{padding: '.5rem'}}>
+                        {cornerButtons}
                     </div>
                 </div>
                 <div>
@@ -118,7 +122,9 @@ class Main extends Component {
                         {tabs.map((tabToRender) => {
                             return this.renderTab(tabToRender);
                         })}
+
                     </Nav>
+
                 </div>
                 <div>
                     {this.renderTabContents(home, 'Home')}
