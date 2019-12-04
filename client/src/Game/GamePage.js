@@ -362,6 +362,31 @@ class GamePage extends Component {
         return null;
     }
 
+    getBorder(i, j) {
+        let border = '1px solid #1e4d2b';
+        if (i === 0) {
+            if (j === 2 || j === 4) {
+                border = '2px solid #8e2914';
+            }
+        }
+        if (i === 1) {
+            if (j === 3) {
+                border = '2px solid #8e2914';
+            }
+        }
+        if (i === 7) {
+            if (j === 3) {
+                border = '2px solid #000078';
+            }
+        }
+        if (i === 8) {
+            if (j === 2 || j === 4) {
+                border = '2px solid #000078';
+            }
+        }
+        return border;
+    }
+
     renderSquare(i, j) {
         let square = this.state.board[i][j];
         //renders the square at the given position, using the board 2d array
@@ -386,7 +411,7 @@ class GamePage extends Component {
                     textAlign: 'center',
                     verticalAlign: 'middle',
                     height: 'inherit',
-                    border: '1px solid #1e4d2b',
+                    border: this.getBorder(i, j),
                     width: '50px',
                     backgroundColor: this.colorSquare(i,j)}}>
                     {this.renderSquare(i, j)}</td>);

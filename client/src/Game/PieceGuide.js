@@ -39,7 +39,7 @@ class Rules extends Component {
             <Table>
                 <thead>
                 <tr>
-                    <th>Rank</th>
+                    <th>Rank/Type</th>
                     <th>Player 1 (Blue)</th>
                     <th>Player 2 (Red)</th>
                 </tr>
@@ -84,6 +84,24 @@ class Rules extends Component {
                     <th>8</th>
                     <td style={{color: 'blue'}}><img  src={wElephant} alt={"White Elephant"}/>{this.state.playerBlue + '\'s Elephant'}</td>
                     <td style={{color: 'red'}}><img  src={bElephant} alt={"Black Elephant"}/>{this.state.playerRed + '\'s Elephant'}</td>
+                </tr>
+                <tr>
+                    <th>TRAP</th>
+                    <td style={{color: 'blue'}}>
+                        <td style={{height: '30px', width: '30px', border: '2px solid #000078', backgroundColor: 'bbbbbb'}}></td>{this.state.playerBlue + '\'s Trap'}
+                    </td>
+                    <td style={{color: 'red'}}>
+                        <td style={{height: '30px', width: '30px', border: '2px solid #8e2914', backgroundColor: 'bbbbbb'}}></td>{this.state.playerRed + '\'s Trap'}
+                    </td>
+                </tr>
+                <tr>
+                    <th>DEN</th>
+                    <td style={{color: 'blue'}}>
+                        <td style={{height: '30px', width: '30px', border: '1px solid #1e4d2b', backgroundColor: '666666'}}></td>{this.state.playerBlue + '\'s Den'}
+                    </td>
+                    <td style={{color: 'red'}}>
+                        <td style={{height: '30px', width: '30px', border: '1px solid #1e4d2b', backgroundColor: '666666'}}></td>{this.state.playerRed + '\'s Den'}
+                    </td>
                 </tr>
                 </tbody>
             </Table>
