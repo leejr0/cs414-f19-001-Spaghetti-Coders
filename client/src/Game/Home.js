@@ -351,29 +351,36 @@ class Home extends Component {
         }
     }
 
-    renderTab(tabID) {
+    renderTab(tabID) {//style={{marginLeft: "10%", marginRight:"10%"}}
         return (
-            <NavItem key={tabID}>
-                <NavLink key={tabID}
-                         onClick={() => {
-                             this.toggleTab(tabID);
-                             this.getGames();
+            <Col>
+                <NavItem key={tabID}
+                         className={classnames({active: this.state.homeState === tabID})}>
 
-                         }}
-                >
-                    {tabID}
-                </NavLink>
-            </NavItem>
+                    <NavLink key={tabID}
+                             onClick={() => {
+                                 this.toggleTab(tabID);
+                                 this.getGames();
+                             }}
+                    >
+                        {tabID}
+                    </NavLink>
+                </NavItem>
+            </Col>
         );
     }
 
     renderTabContents(tabContents, tabID) {
         return (
+            <Row>
+                <Col md={{size:10, offset:1}}>
             <TabContent key={tabID} activeTab={this.state.homeState}>
                 <TabPane key={tabID} tabId={tabID}>
                     {tabContents}
                 </TabPane>
             </TabContent>
+                </Col>
+            </Row>
         );
     }
 
@@ -410,20 +417,24 @@ class Home extends Component {
                     <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
                     {startButton}
                     <br/><br/>
-                    <Card>
                     <div>
-                        <Nav tabs key="2">
-                            {gameTabs.map((tabToRender) => {
-                                return this.renderTab(tabToRender);
-                            })}
-                        </Nav>
+                        <Col md={{size:6, offset:3}}>
+                            <Nav tabs key="2">
+                                {gameTabs.map((tabToRender) => {
+                                    return this.renderTab(tabToRender);
+                                })}
+                            </Nav>
+                        </Col>
                     </div>
                     <div>
+                        <Col md={{size:6, offset:3}}>
+                        <Jumbotron>
                         {this.renderTabContents(active, 'Active')}
                         {this.renderTabContents(pending, 'Pending')}
                         {this.renderTabContents(finished, 'Finished')}
+                        </Jumbotron>
+                        </Col>
                     </div>
-                    </Card>
 
                 </CardBody>
             </Card>
