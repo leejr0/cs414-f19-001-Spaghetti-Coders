@@ -292,7 +292,6 @@ class GamePage extends Component {
         //legal moves
         if (this.state.selectedPiece.row !== null && this.state.selectedPiece.col !== null) {
             let piece = this.state.board[this.state.selectedPiece.row][this.state.selectedPiece.col];
-            console.log(piece);
             if (piece.legalMoves.includes(ij)) {
                 return 'eff556';
             }
@@ -468,11 +467,9 @@ class GamePage extends Component {
     }
 
     render() {
-        console.log("game")
         if(this.props.startGame.createNewBoard) {
             this.newBoard()
         }
-        console.log(this.state);
         let forfeitButton = <Button color="danger" onClick={() => {
             window.confirm("Are you sure you want to give up, "+ this.state.playerTurn + "?") && this.forfeitMatch();}}>FORFEIT</Button>
         return (<div>

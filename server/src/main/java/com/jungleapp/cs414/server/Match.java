@@ -17,6 +17,7 @@ class Match {
     private Gson gson = new Gson();
 
     private Connection connection;
+    private Statement statement;
 
     Match(Request request) {
         JsonParser jsonParser = new JsonParser();
@@ -95,7 +96,7 @@ class Match {
     private void saveUpdatedMatch() {
         // TODO: Finish updating match with some sort of match identifier(gameID).
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
 
             if (currentMatch.status.equals("Finished")) {
                 LocalDateTime matchEndTime = LocalDateTime.now();
@@ -137,7 +138,7 @@ class Match {
 
     private boolean saveNewMatch() {
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
 
             LocalDateTime currentTime = LocalDateTime.now();
             DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH-mm-ss");
@@ -149,8 +150,6 @@ class Match {
                     "'" + currentMatch.playerBlue + "', '" + currentMatch.playerRed + "'," +
                     "'" + currentMatch.status + "','" + currentMatch.playerTurn + "', NULL ," +
                     "'" + formattedTime + "', NULL);");
-
-
             return true;
 
         } catch (SQLException e) {
@@ -166,6 +165,7 @@ class Match {
     void closeMySQLConnection() {
         try {
             this.connection.close();
+            this.statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }

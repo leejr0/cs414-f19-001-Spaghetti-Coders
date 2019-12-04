@@ -92,7 +92,6 @@ class Home extends Component {
         state.pendingMatches = [];
         state.finishedMatches = [];
         for(let i = 0; i < serverResponse.length; i++) {
-            console.log("here");
             let match = serverResponse[i];
             if(match.playerRed === state.nickname) {
                 match.opponent = match.playerBlue;
@@ -106,7 +105,6 @@ class Home extends Component {
                 state.activeMatches.push(match);
             }
             else if(match.status.toLowerCase() === "pending") {
-                console.log("pending");
                 state.pendingMatches.push(match);
             }
             else if(match.status.toLowerCase() === "finished") {
@@ -119,7 +117,6 @@ class Home extends Component {
 
     getGames() {
         request(this.state.nickname,"retrieveMatches").then(serverResponse => {
-            console.log(serverResponse);
             this.sortGames(serverResponse);
         });
     }
@@ -157,7 +154,6 @@ class Home extends Component {
     }
 
     getMatch(ID, type) {
-        console.log("Let's get match: " + ID + "  of this type: " + type);
         let index = -1;
         if(type === "pending") {
             for(let i = 0; i < this.state.pendingMatches.length; i++) {
@@ -166,23 +162,18 @@ class Home extends Component {
                     break;
                 }
             }
-            console.log(this.state.pendingMatches[index].gameID);
             request(this.state.pendingMatches[index].gameID,"retrieveMatch").then(gameState => {
                 this.setGame("pendingMatches", index, gameState, ID, "Active");
             });
         }
 
         if(type === "active") {
-            console.log("active");
-            console.log(this.state.activeMatches);
             for(let i = 0; i < this.state.activeMatches.length; i++) {
                 if(this.state.activeMatches[i].gameID === ID) {
                     index = i;
                     break;
                 }
             }
-            console.log(index);
-            console.log(ID);
             request(this.state.activeMatches[index].gameID,"retrieveMatch").then(gameState => {
                 this.setGame("activeMatches", index, gameState, ID, "Active");
             });
@@ -215,7 +206,6 @@ class Home extends Component {
     }
 
     declineInvite(ID) {
-        console.log("I'm declining this match: " + ID);
         let index = -1;
         for(let i = 0; i < this.state.pendingMatches.length; i++) {
             if(this.state.pendingMatches[i].gameID === ID) {
@@ -354,10 +344,10 @@ class Home extends Component {
     renderTab(tabID) {//style={{marginLeft: "10%", marginRight:"10%"}}
         return (
             <Col>
-                <NavItem key={tabID}
-                         className={classnames({active: this.state.homeState === tabID})}>
+                <NavItem key={tabID}>
 
                     <NavLink key={tabID}
+                             className={classnames({active: this.state.homeState === tabID})}
                              onClick={() => {
                                  this.toggleTab(tabID);
                                  this.getGames();
@@ -385,8 +375,8 @@ class Home extends Component {
     }
 
     render() {
-        console.log(this.state);
         this.updatePlayerNames();
+        this.getGames();
 
         let gameTabs = ['Active', 'Pending', 'Finished'];
 
