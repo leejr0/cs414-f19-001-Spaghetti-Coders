@@ -95,7 +95,7 @@ class Rules extends Component {
                     </td>
                 </tr>
                 <tr>
-                    <th>TRAP</th>
+                    <th>DEN</th>
                     <td style={{color: 'blue'}}>
                         <td style={{height: '30px', width: '30px', border: '1px solid #1e4d2b', backgroundColor: '666666'}}></td>{this.state.playerBlue + '\'s Den'}
                     </td>
