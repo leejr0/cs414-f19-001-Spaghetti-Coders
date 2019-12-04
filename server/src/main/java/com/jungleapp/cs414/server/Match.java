@@ -59,10 +59,10 @@ class Match {
     }
 
     String updateMatch() {
-        // TODO: Retrieve an old match from the database based on player data or Match-ID
         currentMatch.jungleBoard.resetBoard();
 
         boolean successfulMove = currentMatch.jungleBoard.makeMove(currentMatch.move.row, currentMatch.move.col, currentMatch.move.toRow, currentMatch.move.toCol);
+
         if(successfulMove) {
             if (currentMatch.playerTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
                 currentMatch.playerTurn = currentMatch.playerRed;
@@ -74,6 +74,16 @@ class Match {
         saveUpdatedMatch();
 
         return getMatchJSON();
+    }
+
+    boolean deleteMatch() {
+        try {
+            Statement statement = connection.createStatement();
+            statement.execute("delete from Game where gameID = " + currentMatch.gameID + ";");
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     String forfeitMatch() {
@@ -93,7 +103,6 @@ class Match {
     }
 
     private void saveUpdatedMatch() {
-        // TODO: Finish updating match with some sort of match identifier(gameID).
         try {
             Statement statement = connection.createStatement();
 
