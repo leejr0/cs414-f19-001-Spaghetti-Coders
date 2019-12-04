@@ -111,18 +111,17 @@ public class JungleBoard {
     }
 
     boolean zeroPieces(String color) {
-        int numPieces = 0;
         for(int i = 0; i < board.length; i++) {
             for(int j = 0; j < board[i].length; j++) {
                 if(board[i][j] != null) {
                     if(board[i][j].getColor().equals(color)) {
-                        numPieces++;
+                        return false;
                     }
                 }
             }
         }
 
-        return numPieces == 0;
+        return true;
     }
 
 
