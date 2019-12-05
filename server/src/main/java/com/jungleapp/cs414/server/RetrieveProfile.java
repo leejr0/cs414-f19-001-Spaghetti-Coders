@@ -13,8 +13,8 @@ public class RetrieveProfile {
     private Gson gson = new Gson();
 
     private Connection connection;
-    Statement statement;
-    ResultSet resultSet;
+    private Statement statement;
+    private ResultSet resultSet;
 
     RetrieveProfile(Request request) {
         JsonParser jsonParser = new JsonParser();
@@ -39,8 +39,8 @@ public class RetrieveProfile {
         boolean result = false;
 
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from Player");
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select * from Player");
 
             while (resultSet.next()) {
                 if (resultSet.getString("nickname").equals(profile.nickname)
@@ -49,7 +49,6 @@ public class RetrieveProfile {
                 }
             }
 
-            connection.close();
             return result;
         } catch (Exception e) {
             return false; // Something went horribly wrong
@@ -60,10 +59,10 @@ public class RetrieveProfile {
         if (!establishProfileIdentity()) {
             try {
                 connection = MySQLConnection.establishMySQLConnection();
-                Statement statement = connection.createStatement();
+                statement = connection.createStatement();
 
                 // Check if player already exists in database
-                ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+                resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
                                 profile.nickname + "' or Player.email = '" +
                         profile.email + "'");
 
@@ -85,8 +84,8 @@ public class RetrieveProfile {
 
     public void getProfile() {
         try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
                     profile.nickname + "'");
             while (resultSet.next()) {
                 profile.email = resultSet.getString("email");
@@ -115,7 +114,7 @@ public class RetrieveProfile {
 
     public boolean unregisterProfile() {
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
 
             statement.executeUpdate("DELETE FROM Player WHERE Player.nickname = '" +
                     profile.nickname + "';");
@@ -130,7 +129,7 @@ public class RetrieveProfile {
 
     public boolean updateProfile(){
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             if (profile.newPassword != null) {
                 statement.executeUpdate("UPDATE Player SET Player.password = '" + profile.newPassword +
                         "' WHERE Player.nickname = '" + profile.nickname + "';");
@@ -148,9 +147,9 @@ public class RetrieveProfile {
 
     public boolean searchPlayer(){
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
 
-            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+            resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
                     profile.nickname + "';");
             if (resultSet.next()){
                 return true;
@@ -186,6 +185,8 @@ public class RetrieveProfile {
             //this.statement.close();
             //this.resultSet.close();
             this.connection.close();
+            this.statement.close();
+            this.resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
