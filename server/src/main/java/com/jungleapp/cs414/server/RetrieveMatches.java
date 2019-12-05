@@ -15,6 +15,8 @@ class RetrieveMatches {
     private String nickname;
     private int ID;
     private Connection connection;
+    private Statement statement;
+    private ResultSet resultSet;
 
     RetrieveMatches(Request request, Boolean getBoard) {
         if(!getBoard) {
@@ -34,9 +36,8 @@ class RetrieveMatches {
     }
     String getMatches() {
         try {
-            Statement statement;
             statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from Game where playerBlue = '" +
+            resultSet = statement.executeQuery("select * from Game where playerBlue = '" +
                     this.nickname + "' or playerRed = '" + this.nickname + "';");
 
             //Initialize and populate match list with a list of matches gathered from the database.
@@ -67,10 +68,9 @@ class RetrieveMatches {
 
     String getMatch() {
         try {
-            Statement statement;
             statement = connection.createStatement();
 
-            ResultSet resultSet = statement.executeQuery("select * from Game where gameID = " +
+            resultSet = statement.executeQuery("select * from Game where gameID = " +
                     this.ID + ";");
 
             String response = "";
@@ -98,6 +98,8 @@ class RetrieveMatches {
     void closeMySQLConnection() {
         try {
             this.connection.close();
+            this.statement.close();
+            this.resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
