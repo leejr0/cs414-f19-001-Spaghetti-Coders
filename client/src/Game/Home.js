@@ -48,7 +48,7 @@ class Home extends Component {
             getGame: {
                 nickname: this.props.nickname
             },
-            oldState1: null
+            oldBoard: null
         };
 
         this.showBoard = this.showBoard.bind(this);
@@ -64,6 +64,7 @@ class Home extends Component {
         this.sortGames = this.sortGames.bind(this);
         this.changeGame = this.changeGame.bind(this);
         this.refresh = this.refresh.bind(this);
+        this.clearGame = this.clearGame.bind(this);
     }
 
     changeGame() {
@@ -122,22 +123,20 @@ class Home extends Component {
     }
 
     getGames() {
-        if(!this.state.gotGames) {
-            request(this.state.nickname, "retrieveMatches").then(serverResponse => {
-                this.sortGames(serverResponse);
-            });
-        }
+        request(this.state.nickname, "retrieveMatches").then(serverResponse => {
+            this.sortGames(serverResponse);
+        });
     }
 
     setGame(type, index, response, ID, status) {
         let state = this.state;
-        state.board = response;
+        state.board = response.board;
         state.displayBoard = true;
         state.newGame = true;
         state.startGame.gameID = ID;
         state.startGame.status = status;
         state.startGame.createNewBoard = true;
-        state.startGame.playerTurn = state[type][index].playerTurn;
+        state.startGame.playerTurn = response.playerTurn;
         state.startGame.playerBlue = state[type][index].playerBlue;
         state.startGame.playerRed = state[type][index].playerRed;
         state.reset = true;
@@ -163,7 +162,17 @@ class Home extends Component {
             state.displayFinished = true;
         }
 
+        // console.log("something");
+        // console.log(this.state.board);
+        // console.log(response);
+        // if(this.state.board !== response) {
+        //     console.log("Updating turn!");
+        //     this.updateTurn(ID);
+        // }
+
         this.setState({state});
+
+        return response;
     }
 
     getMatch(ID, type) {
@@ -387,15 +396,29 @@ class Home extends Component {
         );
     }
 
-    refresh(gameID) {
-        console.log("polling...");
-        this.getMatch(gameID, "active");
-        this.setState({state: this.state});
+    refresh(gameID, turn, nickname, status) {
+        console.log("Trying to poll");
+        if(nickname !== turn && status === "Active") {
+            console.log("polling...");
+
+            this.getMatch(gameID, "active");
+            // if(this.state.board !== this.state.oldBoard) {
+            //     console.log("Board changed");
+            //     this.updateTurn(gameID, "active");
+            // }
+            this.setState({state: this.state});
+        }
+    }
+
+    clearGame() {
+        this.setState({activeBoard: null, reset: false});
     }
 
     render() {
         this.updatePlayerNames();
-        this.getGames();
+        if(!this.state.gotGames) {
+            this.getGames();
+        }
 
         let gameTabs = ['Active', 'Pending', 'Finished'];
 
@@ -405,9 +428,8 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
-        console.log(this.state);
         if(this.state.displayActive && this.state.reset) {
-            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
+            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
                 reset: false});
         }
 
