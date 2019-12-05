@@ -442,6 +442,7 @@ class GamePage extends Component {
         let state = this.state;
         state.board = this.props.board;
         this.props.changeGame();
+        state.newGame = false;
         state.playerTurn = this.props.startGame.playerTurn;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
@@ -516,7 +517,8 @@ class GamePage extends Component {
     }
 
     render() {
-        if(this.props.startGame.createNewBoard) {
+        console.log(this.state.gameID);
+        if(this.state.newGame) {
             this.newBoard()
         }
         let forfeitButton = <Button color="danger" onClick={() => {

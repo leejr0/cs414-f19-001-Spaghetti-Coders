@@ -18,6 +18,10 @@ class Home extends Component {
             homeState : 'Active',
             displayActive: false,
             displayFinished: false,
+            gotGames: false,
+            reset: false,
+            activeBoard: null,
+            finishedBoard: null,
             activeMatches: [
                 {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
                 {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
@@ -63,7 +67,7 @@ class Home extends Component {
     }
 
     changeGame() {
-        this.setState({startGame: {createNewBoard: false}})
+        this.setState({createNewBoard: false})
     }
     updatePlayerNames() {
         if(this.state.startGame.playerBlue === "") {
@@ -92,6 +96,7 @@ class Home extends Component {
         state.activeMatches = [];
         state.pendingMatches = [];
         state.finishedMatches = [];
+        state.gotGames = true;
         for(let i = 0; i < serverResponse.length; i++) {
             let match = serverResponse[i];
             if(match.playerRed === state.nickname) {
@@ -117,9 +122,11 @@ class Home extends Component {
     }
 
     getGames() {
-        request(this.state.nickname,"retrieveMatches").then(serverResponse => {
-            this.sortGames(serverResponse);
-        });
+        if(!this.state.gotGames) {
+            request(this.state.nickname, "retrieveMatches").then(serverResponse => {
+                this.sortGames(serverResponse);
+            });
+        }
     }
 
     setGame(type, index, response, ID, status) {
@@ -133,6 +140,9 @@ class Home extends Component {
         state.startGame.playerTurn = state[type][index].playerTurn;
         state.startGame.playerBlue = state[type][index].playerBlue;
         state.startGame.playerRed = state[type][index].playerRed;
+        state.reset = true;
+        state.activeBoard = null;
+        state.finishedBoard = null;
         // if(state[type][index].color === "red") {
         //     state.startGame.playerBlue = state[type][index].opponent;
         //     state.startGame.playerRed = state.nickname;
@@ -395,20 +405,22 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
-        let activeBoard = <div> I'm active </div>;
-        if(this.state.displayActive) {
-            activeBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>;
+        console.log(this.state);
+        if(this.state.displayActive && this.state.reset) {
+            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
+                reset: false});
         }
 
-        let finishedBoard = <div> I'm finished </div>;
-        if(this.state.displayFinished) {
-            finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
+        if(this.state.displayFinished && this.state.reset) {
+            this.setState({finishedBoard: <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>,
+                reset: false});
+            // finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
-        let active = [<div> {this.getTabContents("Active")} {activeBoard} </div>];
+        let active = [<div> {this.getTabContents("Active")} {this.state.activeBoard} </div>];
 
         let pending = [<div> {this.getTabContents("Pending")} </div>];
 
-        let finished =  [<div> {this.getTabContents("Finished")} {finishedBoard} </div>];
+        let finished =  [<div> {this.getTabContents("Finished")} {this.state.finishedBoard} </div>];
 
         return(
             <Card>
@@ -427,11 +439,11 @@ class Home extends Component {
                     </div>
                     <div>
                         <Col md={{size:6, offset:3}}>
-                        <Jumbotron>
-                        {this.renderTabContents(active, 'Active')}
-                        {this.renderTabContents(pending, 'Pending')}
-                        {this.renderTabContents(finished, 'Finished')}
-                        </Jumbotron>
+                            <Jumbotron>
+                                {this.renderTabContents(active, 'Active')}
+                                {this.renderTabContents(pending, 'Pending')}
+                                {this.renderTabContents(finished, 'Finished')}
+                            </Jumbotron>
                         </Col>
                     </div>
 
@@ -441,54 +453,3 @@ class Home extends Component {
     }
 }
 export default Home;
-
-
-/*if(tabID === "Active") {
-                                 this.setState({displayActive: true, displayFinished: false})
-                             }
-                             else if(tabID === "Pending") {
-                                 this.setState({displayActive: false, displayFinished: false})
-                             }
-                             else {
-                                 this.setState({displayActive: false, displayFinished: true})
-                             }
-<Nav tabs>
-                            {gameTabs.map((tab) => {
-                                return (
-                                    <Col sm={{size:3, offset:1}}>
-                                        <NavItem key={tab}>
-                                            <NavLink
-                                                className={classnames({active: this.state.homeState === tab})}
-                                                onClick={() => {
-                                                    if (this.state.homeState !== tab){
-                                                        this.setState({homeState : tab});
-                                                    }
-                                                    this.getGames()
-                                                }}
-                                            >
-                                                {tab} Games
-                                            </NavLink>
-                                        </NavItem>
-                                    </Col>
-                                );
-                            })}
-                        </Nav>
-                        <Row>
-                            <Col md={{size:8, offset:2}}>
-                                {gameTabs.map((tab) => {
-                                    return (
-                                        <TabContent activeTab={this.state.homeState}>
-                                            <TabPane tabId={tab}>
-                                                <br/><br/><br/>
-                                                <Jumbotron>
-                                                    <p>{tab} Games</p>
-                                                    {this.getTabContents(tab)}
-                                                    {board}
-                                                </Jumbotron>
-                                            </TabPane>
-                                        </TabContent>
-                                    );
-                                })}
-                            </Col>
-                        </Row>
- */
