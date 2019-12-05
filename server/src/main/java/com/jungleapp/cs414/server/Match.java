@@ -64,6 +64,7 @@ class Match {
         currentMatch.jungleBoard.resetBoard();
 
         boolean successfulMove = currentMatch.jungleBoard.makeMove(currentMatch.move.row, currentMatch.move.col, currentMatch.move.toRow, currentMatch.move.toCol);
+        System.out.println(currentMatch.playerTurn);
         if(successfulMove) {
             if (currentMatch.playerTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
                 currentMatch.playerTurn = currentMatch.playerRed;
@@ -89,7 +90,6 @@ class Match {
         }
 
         saveUpdatedMatch();
-        System.out.println(getMatchJSON());
         return getMatchJSON();
     }
 

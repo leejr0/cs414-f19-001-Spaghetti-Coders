@@ -75,8 +75,10 @@ class RetrieveMatches {
 
             String response = "";
             String status = "";
+            String turn = "";
             while(resultSet.next()){
                 response = resultSet.getString("board");
+                turn = resultSet.getString("playerTurn");
                 status = resultSet.getString("status");
             }
 
@@ -85,7 +87,7 @@ class RetrieveMatches {
                 statement.execute("UPDATE Game SET status='Active'" + " WHERE gameID='" + this.ID + "';");
             }
 
-            return response;
+            return "{\"board\": " + response + ", \"playerTurn\": \"" + turn + "\"}";
 
         } catch (SQLException e) {
             e.printStackTrace();

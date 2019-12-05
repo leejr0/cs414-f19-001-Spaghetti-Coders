@@ -156,7 +156,9 @@ class GamePage extends Component {
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
         });
-
+        if(this.state.winner !== undefined) {
+            clearInterval(this.interval);
+        }
         //reset selections after move attempt
         piece.row = null;
         piece.col = null;
@@ -442,6 +444,7 @@ class GamePage extends Component {
         let state = this.state;
         state.board = this.props.board;
         this.props.changeGame();
+        state.newGame = false;
         state.playerTurn = this.props.startGame.playerTurn;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
@@ -470,7 +473,7 @@ class GamePage extends Component {
     dismissWinMessage() {
         let state = this.state;
         state.announceWinner = false;
-        this.setState({state});
+        this.setState({state}, () => this.props.clearGame());
     }
 
     winMessage() {
@@ -509,14 +512,17 @@ class GamePage extends Component {
     }
 
     componentDidMount() {
-        this.interval = setInterval(() => this.props.refresh(this.state.gameID), 4000);
+        if (this.state.status === "Active") {
+            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
+        }
     }
     componentWillUnmount() {
         clearInterval(this.interval);
     }
 
     render() {
-        if(this.props.startGame.createNewBoard) {
+        console.log(this.state.gameID);
+        if(this.state.newGame) {
             this.newBoard()
         }
         let forfeitButton = <Button color="danger" onClick={() => {
