@@ -133,14 +133,16 @@ class Home extends Component {
         state.startGame.status = status;
         state.startGame.createNewBoard = true;
         state.startGame.playerTurn = state[type][index].playerTurn;
-        if(state[type][index].color === "red") {
-            state.startGame.playerBlue = state[type][index].opponent;
-            state.startGame.playerRed = state.nickname;
-        }
-        else {
-            state.startGame.playerRed = state[type][index].opponent;
-            state.startGame.playerBlue = state.nickname;
-        }
+        state.startGame.playerBlue = state[type][index].playerBlue;
+        state.startGame.playerRed = state[type][index].playerRed;
+        // if(state[type][index].color === "red") {
+        //     state.startGame.playerBlue = state[type][index].opponent;
+        //     state.startGame.playerRed = state.nickname;
+        // }
+        // else {
+        //     state.startGame.playerRed = state[type][index].opponent;
+        //     state.startGame.playerBlue = state.nickname;
+        // }
 
         // state.displayActive = true;
         // state.displayFinished = true;
@@ -391,12 +393,12 @@ class Home extends Component {
 
         let activeBoard = <div> I'm active </div>;
         if(this.state.displayActive) {
-            activeBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
+            activeBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
 
         let finishedBoard = <div> I'm finished </div>;
         if(this.state.displayFinished) {
-            finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
+            finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
         let active = [<div> {this.getTabContents("Active")} {activeBoard} </div>];
 
@@ -408,7 +410,7 @@ class Home extends Component {
             <Card>
                 <CardBody>
                     <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
-                    {startButton}
+                    {/*{startButton}*/}
                     <br/><br/>
                     <Card>
                     <div>
