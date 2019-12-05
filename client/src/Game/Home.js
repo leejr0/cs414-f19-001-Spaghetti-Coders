@@ -142,17 +142,7 @@ class Home extends Component {
         state.reset = true;
         state.activeBoard = null;
         state.finishedBoard = null;
-        // if(state[type][index].color === "red") {
-        //     state.startGame.playerBlue = state[type][index].opponent;
-        //     state.startGame.playerRed = state.nickname;
-        // }
-        // else {
-        //     state.startGame.playerRed = state[type][index].opponent;
-        //     state.startGame.playerBlue = state.nickname;
-        // }
 
-        // state.displayActive = true;
-        // state.displayFinished = true;
         if(status === "Active") {
             state.displayActive = true;
             state.displayFinished = false;
@@ -161,14 +151,6 @@ class Home extends Component {
             state.displayActive = false;
             state.displayFinished = true;
         }
-
-        // console.log("something");
-        // console.log(this.state.board);
-        // console.log(response);
-        // if(this.state.board !== response) {
-        //     console.log("Updating turn!");
-        //     this.updateTurn(ID);
-        // }
 
         this.setState({state});
 
@@ -196,6 +178,7 @@ class Home extends Component {
                     break;
                 }
             }
+
             request(this.state.activeMatches[index].gameID,"retrieveMatch").then(gameState => {
                 this.setGame("activeMatches", index, gameState, ID, "Active");
             });
@@ -215,16 +198,34 @@ class Home extends Component {
         }
     }
 
-    removeInvite(index) {
+    removeInvite(index, declined) {
         let pendingMatches = [];
-        for(let i = 0; i < this.state.pendingMatches.length; i++) {
-            if(index !== i) {
-                pendingMatches.push(this.state.pendingMatches[i]);
+        if(declined) {
+            for (let i = 0; i < this.state.pendingMatches.length; i++) {
+                console.log("Matches: " + this.state.pendingMatches[i]);
+                if (index !== i) {
+                    pendingMatches.push(this.state.pendingMatches[i]);
+                }
             }
 
+            this.setState({pendingMatches: pendingMatches});
         }
+        else{
+            let j = -1;
+            for (let i = 0; i < this.state.pendingMatches.length; i++) {
+                if (index !== this.state.pendingMatches[i].gameID) {
+                    pendingMatches.push(this.state.pendingMatches[i]);
+                }
+                else{
+                    j = i;
+                }
+            }
 
-        this.setState({pendingMatches: pendingMatches});
+            let activeMatches = this.state.activeMatches;
+            activeMatches.push(this.state.pendingMatches[j]);
+
+            this.setState({pendingMatches: pendingMatches, activeMatches: activeMatches});
+        }
     }
 
     declineInvite(ID) {
@@ -242,7 +243,7 @@ class Home extends Component {
                 //Refresh page without the game?
             }
             else {
-                this.removeInvite(index);
+                this.removeInvite(index, true);
             }
         });
     }
@@ -265,7 +266,8 @@ class Home extends Component {
                         <Col xs="6" style={{borderLeft: "1px solid black"}}>
                             <Button onClick={() => {
                                 this.setState({homeState: "Active"});
-                                this.getMatch(match.gameID, "pending")
+                                this.removeInvite(match.gameID, false);
+                                this.getMatch(match.gameID, "active");
                             }} color={"success"} style={{margin: "3px"}}>ACCEPT</Button>
                             <Button onClick={() => this.declineInvite(match.gameID)} color={"danger"} style={{margin: "3px"}}>DECLINE</Button></Col>
                     </Row>
@@ -415,6 +417,7 @@ class Home extends Component {
     }
 
     render() {
+        console.log(this.state)
         this.updatePlayerNames();
         if(!this.state.gotGames) {
             this.getGames();

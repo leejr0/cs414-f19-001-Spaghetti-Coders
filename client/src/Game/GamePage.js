@@ -156,9 +156,9 @@ class GamePage extends Component {
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
         });
-        if(this.state.winner !== undefined) {
-            clearInterval(this.interval);
-        }
+        // if(this.state.winner !== undefined) {
+        //     clearInterval(this.interval);
+        // }
         //reset selections after move attempt
         piece.row = null;
         piece.col = null;
@@ -473,7 +473,7 @@ class GamePage extends Component {
     dismissWinMessage() {
         let state = this.state;
         state.announceWinner = false;
-        this.setState({state}, () => this.props.clearGame());
+        this.setState({state});
     }
 
     winMessage() {
@@ -512,7 +512,7 @@ class GamePage extends Component {
     }
 
     componentDidMount() {
-        if (this.state.status === "Active") {
+        if (this.state.status === "Active" || this.state.status === "Pending") {
             this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
         }
     }
