@@ -49,6 +49,17 @@ class Login extends Component {
         this.setState({state});
     }
 
+    back2home(){
+        let state = this.state;
+        state.loginInfo.nickname = "";
+        state.loginInfo.password = "";
+        state.validation = false;
+        state.errorMessage = "";
+        this.setState(({state}, window.location.reload()));
+    }
+
+
+
     render() {
         let errorMessage;
         if(this.state.errorMessage !== ""){
@@ -60,6 +71,7 @@ class Login extends Component {
 
                 <Card>
                     <div style={{width: "400px", margin: "auto"}}>
+
                         <Form>
                             <FormGroup>
                                 <br/>
@@ -75,6 +87,8 @@ class Login extends Component {
                         </Form>
                     </div>
                 </Card>
+                <br/>
+                <Button outline color="success" onClick={this.back2home.bind(this)}> Back </Button>
             </div>
         );
     }

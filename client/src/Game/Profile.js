@@ -131,9 +131,8 @@ class Profile extends Component {
                                     <Form>
                                         <br></br>
                                         <FormGroup style={{padding: '.5rem', width: "550px"}}>
-                                            <Label style={{float: 'left'}}>Nickname</Label>
+                                            <h3 style={{float: 'left'}}>Nickname: {this.state.nickname}</h3>
                                             <br/>
-                                            <Label style={{float: 'left'}}>{this.state.nickname}</Label>
                                             <br></br>
                                             <br/>
                                             <Label style={{float: 'left'}}>Password</Label>
