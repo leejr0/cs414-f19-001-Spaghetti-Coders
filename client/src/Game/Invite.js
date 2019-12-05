@@ -9,6 +9,7 @@ class Invite extends Component {
             invitePlayer: false,
             nickname: this.props.nickname,
             playerSearch: {
+                randomOpponent: false,
                 opponentFound: false,
                 playerBlue: "",
                 playerRed: this.props.nickname,
@@ -41,20 +42,20 @@ class Invite extends Component {
             state.playerSearch.opponentFound = false;
             this.setState({state});
         }
-        else if(this.state.playerSearch.playerBlue === "") {
-            let state = this.state;
-            state.playerSearch.errorMessage = "Please type in a player to search.";
-            state.playerSearch.opponentFound = false;
-            this.setState({state});
-        }
         else if(random) {
-            get("getRandomPlayer").then(serverResponse => {
+            request(this.state, "getRandomPlayer").then(serverResponse => {
                 let state = this.state;
-                state.playerSearch.playerBlue = serverResponse.playerBlue;
+                state.randomOpponent = true;
+                state.playerSearch.playerBlue = serverResponse.nickname;
                 state.playerSearch.errorMessage = "";
                 state.playerSearch.invitationSent = false;
                 this.setState({state});
             });
+        }else if(this.state.playerSearch.playerBlue === "") {
+            let state = this.state;
+            state.playerSearch.errorMessage = "Please type in a player to search.";
+            state.playerSearch.opponentFound = false;
+            this.setState({state});
         }
         else {
             request(this.state.playerSearch, "searchPlayer").then(serverResponse => {
@@ -75,7 +76,7 @@ class Invite extends Component {
     }
 
     sendInvite() {
-        if(this.state.playerSearch.opponentFound === false) {
+        if(this.state.playerSearch.opponentFound === false && this.state.randomOpponent === false) {
             let state = this.state;
             state.playerSearch.errorMessage = "Please search for a player above.";
 
@@ -91,9 +92,12 @@ class Invite extends Component {
                 }
                 else {
                     state.playerSearch.errorMessage = "";
-                    state.playerSearch.invitationSent = true;
+                    //state.playerSearch.invitationSent = true;
                     this.props.startGame.playerRed = this.state.playerRed;
                     this.props.startGame.playerBlue = this.state.playerBlue;
+                    state.invitePlayer = false;
+                    state.opponentFound = false;
+                    state.randomOpponent = false;
                     //Temporary callback to show functionality
                     // this.setState({state}, () => {
                     //     this.props.beginGame();
@@ -106,15 +110,19 @@ class Invite extends Component {
 
     displayInvite() {
         let errorMessage;
-        if(this.state.playerSearch.errorMessage !== ""){
+        if (this.state.playerSearch.errorMessage !== ""){
             errorMessage = <Alert color="danger">{this.state.playerSearch.errorMessage}</Alert>
         }
         let foundOpponent = <p style={{textAlign: "center"}}>Select your opponent!</p>;
-        if(this.state.playerSearch.opponentFound) {
+        if (this.state.playerSearch.opponentFound) {
             foundOpponent = <p style={{textAlign: "center"}}>Your opponent, {this.state.playerSearch.playerBlue}, has been found!</p>
         }
+        let randomMessage = <p> </p>;
+        if (this.state.randomOpponent) {
+            randomMessage = <Alert>Click INVITE to challenge random player: {this.state.playerSearch.playerBlue}</Alert>
+        }
         let invitationSent = <p> </p>;
-        if(this.state.playerSearch.invitationSent) {
+        if (this.state.playerSearch.invitationSent) {
             invitationSent = <Alert color="success">Your invitation was successfully sent!</Alert>
         }
         // TODO: Center top text in Modal
@@ -129,6 +137,7 @@ class Invite extends Component {
                     <Button className="float-right" onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
                     <br/>
                     <br/>
+                    {randomMessage}
                     {errorMessage}
                     {invitationSent}
                 </ModalBody>

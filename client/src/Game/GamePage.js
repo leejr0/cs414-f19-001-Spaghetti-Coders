@@ -82,6 +82,7 @@ class GamePage extends Component {
             //empty until board is retrieved from server
             jungleBoard: null,
             board: null,
+            nickname: this.props.nickname,
             gameID: this.props.startGame.gameID,
             status: this.props.startGame.status,
             //TODO: get values from server for winner, playerBlue, playerRed, turnAction, playerTurn and display relevant info
@@ -92,6 +93,7 @@ class GamePage extends Component {
             playerTurn: null,
             isActive: true,
             announceWinner: false,
+            winMessage: "But winning isn't everything. It's just the only thing that matters.",
             newGame: true,
             selectedPiece: {
                 row: null,
@@ -154,7 +156,9 @@ class GamePage extends Component {
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
         });
-
+        if(this.state.winner !== undefined) {
+            clearInterval(this.interval);
+        }
         //reset selections after move attempt
         piece.row = null;
         piece.col = null;
@@ -163,19 +167,24 @@ class GamePage extends Component {
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
     }
 
-    forfeitMatch() {
-        console.log(this.state.playerTurn + " has forfeited the match.");
+    forfeitMatch(forfeiter) {
+        console.log("winner: " + this.state.winner);
         request(this.state, "forfeitMatch").then(gameState => {
-            this.setState({
-                jungleBoard: gameState.jungleBoard,
-                winner: gameState.winner,
-                playerBlue: gameState.playerBlue,
-                playerRed: gameState.playerRed,
-                playerTurn: gameState.playerTurn,
-                isActive: gameState.isActive,
-                announceWinner: true
-            });
+            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined), winMessage: forfeiter + " didn't want to play anymore..."});
         });
+    }
+
+    setWinnerAndForfeit() {
+        let forfeiter = this.state.nickname;
+
+        if (forfeiter === this.state.playerBlue) {
+            this.setState({winner: this.state.playerRed}, () => this.forfeitMatch(forfeiter));
+        } else if (forfeiter === this.state.playerRed) {
+            this.setState({winner: this.state.playerBlue}, () => this.forfeitMatch(forfeiter));
+        } else {
+            console.log("Invalid Forfeit");
+        }
+        console.log(forfeiter + " has forfeited the match.");
     }
 
     resetPieces(board) {
@@ -203,28 +212,38 @@ class GamePage extends Component {
     }
 
     playerOwnsPiece(pieceIndices) {
+        if(this.state.status === "Finished") {
+            return false;
+        }
+
         let piece = this.state.board[pieceIndices.row][pieceIndices.col];
-        if (piece !== null) {
-            if (this.state.playerTurn === this.state.playerBlue) {
-                if (piece.pieceColor === "BLUE") {
-                    return true;
+        if(this.state.playerTurn === this.state.nickname) {
+            if (piece !== null) {
+                if (this.state.playerBlue === this.state.nickname) {
+                    if (piece.pieceColor === "BLUE") {
+                        return true;
+                    } else {
+                        console.log("Player selected the other player's piece");
+                        return false;
+                    }
+                } else if (this.state.nickname === this.state.playerRed) {
+                    if (piece.pieceColor === "RED") {
+                        return true;
+                    } else {
+                        console.log("Player selected the other player's piece");
+                        return false;
+                    }
                 } else {
-                    console.log("Player 1 selected the other player's piece");
-                    return false;
-                }
-            } else if (this.state.playerTurn === this.state.playerRed) {
-                if (piece.pieceColor === "RED") {
-                    return true;
-                } else {
-                    console.log("Player 2 selected the other player's piece");
+                    console.log("Invalid value for 'playerTurn'");
                     return false;
                 }
             } else {
-                console.log("Invalid value for 'playerTurn'");
+                console.log("Player selected nothing");
                 return false;
             }
-        } else {
-            console.log("Player selected nothing");
+        }
+        else{
+            console.log("Not player's turn.");
             return false;
         }
     }
@@ -292,7 +311,6 @@ class GamePage extends Component {
         //legal moves
         if (this.state.selectedPiece.row !== null && this.state.selectedPiece.col !== null) {
             let piece = this.state.board[this.state.selectedPiece.row][this.state.selectedPiece.col];
-            console.log(piece);
             if (piece.legalMoves.includes(ij)) {
                 return 'eff556';
             }
@@ -363,6 +381,31 @@ class GamePage extends Component {
         return null;
     }
 
+    getBorder(i, j) {
+        let border = '1px solid #1e4d2b';
+        if (i === 0) {
+            if (j === 2 || j === 4) {
+                border = '3px solid #8e2914';
+            }
+        }
+        if (i === 1) {
+            if (j === 3) {
+                border = '3px solid #8e2914';
+            }
+        }
+        if (i === 7) {
+            if (j === 3) {
+                border = '3px solid #000078';
+            }
+        }
+        if (i === 8) {
+            if (j === 2 || j === 4) {
+                border = '3px solid #000078';
+            }
+        }
+        return border;
+    }
+
     renderSquare(i, j) {
         let square = this.state.board[i][j];
         //renders the square at the given position, using the board 2d array
@@ -387,7 +430,7 @@ class GamePage extends Component {
                     textAlign: 'center',
                     verticalAlign: 'middle',
                     height: 'inherit',
-                    border: '1px solid #1e4d2b',
+                    border: this.getBorder(i, j),
                     width: '50px',
                     backgroundColor: this.colorSquare(i,j)}}>
                     {this.renderSquare(i, j)}</td>);
@@ -401,6 +444,7 @@ class GamePage extends Component {
         let state = this.state;
         state.board = this.props.board;
         this.props.changeGame();
+        state.newGame = false;
         state.playerTurn = this.props.startGame.playerTurn;
         state.playerBlue = this.props.startGame.playerBlue;
         state.playerRed = this.props.startGame.playerRed;
@@ -429,13 +473,13 @@ class GamePage extends Component {
     dismissWinMessage() {
         let state = this.state;
         state.announceWinner = false;
-        this.setState({state});
+        this.setState({state}, () => this.props.clearGame());
     }
 
     winMessage() {
         return <Modal isOpen={this.state.announceWinner}>
             <ModalHeader>{this.state.winner} wins!</ModalHeader>
-            <ModalBody>But winning isn't everything. It's just the only thing that matters.</ModalBody>
+            <ModalBody>{this.state.winMessage}</ModalBody>
             <ModalFooter>
                 <Button color="secondary" onClick={this.dismissWinMessage.bind(this)}>Exit</Button>
             </ModalFooter>
@@ -467,17 +511,29 @@ class GamePage extends Component {
             </h4></div>);
     }
 
+    componentDidMount() {
+        if (this.state.status === "Active") {
+            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
+        }
+    }
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     render() {
-        if(this.props.startGame.createNewBoard) {
+        console.log(this.state.gameID);
+        if(this.state.newGame) {
             this.newBoard()
         }
-        console.log(this.state);
         let forfeitButton = <Button color="danger" onClick={() => {
-            window.confirm("Are you sure you want to give up, "+ this.state.playerTurn + "?") && this.forfeitMatch();}}>FORFEIT</Button>
+            window.confirm("Are you sure you want to give up, "+ this.state.nickname + "?") && this.setWinnerAndForfeit();}}>FORFEIT</Button>;
+        let yourTurn = this.state.playerTurn === this.state.nickname ? <h5>It's your turn. Make a move!</h5> : <h5>Waiting for opponent...</h5>;
         return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
                     {this.winMessage()}
+                    {yourTurn}
+                    <Button onClick = {() => { this.props.refresh(this.state.gameID) }}>REFRESH</Button>
                     {this.turnMonitor()}
                     {this.renderBoard()}
                     <PieceGuide playerBlue={this.state.playerBlue} playerRed={this.state.playerRed}/>

@@ -42,7 +42,7 @@ class Rules extends Component {
 
     render() {
         return <div>
-            <Jumbotron style={{backgroundColor: '323031', color: "white"}}>
+            <Jumbotron style={{backgroundColor: '323031', color: "white", width: "1200px", display: "inline-block"}}>
                 <h3 style={{color: "ecc530"}}>THE LAW OF THE JUNGLE [RULES]</h3>
                 {this.rules()}
             </Jumbotron></div>

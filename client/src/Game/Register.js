@@ -129,6 +129,17 @@ class Register extends Component {
         //TODO: Hash the given password verification for security
     }
 
+    back2home(){
+        let state = this.state;
+        state.profileInfo.nickname = "";
+        state.profileInfo.password = "";
+        state.profileInfo.verifyPassword= "";
+        state.profileInfo.email = "";
+        state.validation = false;
+        state.errorMessage = "";
+        window.location.reload()
+    }
+
     render() {
         let errorMessage;
         if(this.state.errorMessage !== ""){
@@ -160,6 +171,8 @@ class Register extends Component {
                         </Form>
                     </div>
                 </Card>
+                <br/>
+                <Button outline color="success" onClick={this.back2home.bind(this)}> Back </Button>
             </div>
         );
     }

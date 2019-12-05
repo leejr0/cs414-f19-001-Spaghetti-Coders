@@ -4,6 +4,7 @@ import {Button, Card, CardBody, Col, Container, Jumbotron, Nav, NavItem, NavLink
 import {request} from "../api/api";
 import GamePage from "./GamePage";
 import Invite from "./Invite";
+import icon from "./assets/jungleicon.png";
 
 class Home extends Component {
     constructor(props) {
@@ -15,6 +16,12 @@ class Home extends Component {
             newGame: true,
             nickname: this.props.nickname,
             homeState : 'Active',
+            displayActive: false,
+            displayFinished: false,
+            gotGames: false,
+            reset: false,
+            activeBoard: null,
+            finishedBoard: null,
             activeMatches: [
                 {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
                 {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
@@ -40,7 +47,8 @@ class Home extends Component {
             },
             getGame: {
                 nickname: this.props.nickname
-            }
+            },
+            oldBoard: null
         };
 
         this.showBoard = this.showBoard.bind(this);
@@ -55,10 +63,12 @@ class Home extends Component {
         this.declineInvite = this.declineInvite.bind(this);
         this.sortGames = this.sortGames.bind(this);
         this.changeGame = this.changeGame.bind(this);
+        this.refresh = this.refresh.bind(this);
+        this.clearGame = this.clearGame.bind(this);
     }
 
     changeGame() {
-        this.setState({startGame: {createNewBoard: false}})
+        this.setState({createNewBoard: false})
     }
     updatePlayerNames() {
         if(this.state.startGame.playerBlue === "") {
@@ -87,8 +97,8 @@ class Home extends Component {
         state.activeMatches = [];
         state.pendingMatches = [];
         state.finishedMatches = [];
+        state.gotGames = true;
         for(let i = 0; i < serverResponse.length; i++) {
-            console.log("here");
             let match = serverResponse[i];
             if(match.playerRed === state.nickname) {
                 match.opponent = match.playerBlue;
@@ -102,7 +112,6 @@ class Home extends Component {
                 state.activeMatches.push(match);
             }
             else if(match.status.toLowerCase() === "pending") {
-                console.log("pending");
                 state.pendingMatches.push(match);
             }
             else if(match.status.toLowerCase() === "finished") {
@@ -114,35 +123,59 @@ class Home extends Component {
     }
 
     getGames() {
-        request(this.state.nickname,"retrieveMatches").then(serverResponse => {
-            console.log(serverResponse);
+        request(this.state.nickname, "retrieveMatches").then(serverResponse => {
             this.sortGames(serverResponse);
         });
     }
 
     setGame(type, index, response, ID, status) {
         let state = this.state;
-        state.board = response;
+        state.board = response.board;
         state.displayBoard = true;
         state.newGame = true;
         state.startGame.gameID = ID;
         state.startGame.status = status;
         state.startGame.createNewBoard = true;
-        state.startGame.playerTurn = state[type][index].playerTurn;
-        if(state[type][index].color === "red") {
-            state.startGame.playerBlue = state[type][index].opponent;
-            state.startGame.playerRed = state.nickname;
+        state.startGame.playerTurn = response.playerTurn;
+        state.startGame.playerBlue = state[type][index].playerBlue;
+        state.startGame.playerRed = state[type][index].playerRed;
+        state.reset = true;
+        state.activeBoard = null;
+        state.finishedBoard = null;
+        // if(state[type][index].color === "red") {
+        //     state.startGame.playerBlue = state[type][index].opponent;
+        //     state.startGame.playerRed = state.nickname;
+        // }
+        // else {
+        //     state.startGame.playerRed = state[type][index].opponent;
+        //     state.startGame.playerBlue = state.nickname;
+        // }
+
+        // state.displayActive = true;
+        // state.displayFinished = true;
+        if(status === "Active") {
+            state.displayActive = true;
+            state.displayFinished = false;
         }
         else {
-            state.startGame.playerRed = state[type][index].opponent;
-            state.startGame.playerBlue = state.nickname;
+            state.displayActive = false;
+            state.displayFinished = true;
         }
 
+        // console.log("something");
+        // console.log(this.state.board);
+        // console.log(response);
+        // if(this.state.board !== response) {
+        //     console.log("Updating turn!");
+        //     this.updateTurn(ID);
+        // }
+
         this.setState({state});
+
+        return response;
     }
 
     getMatch(ID, type) {
-        console.log("Let's get match: " + ID + "  of this type: " + type);
         let index = -1;
         if(type === "pending") {
             for(let i = 0; i < this.state.pendingMatches.length; i++) {
@@ -151,23 +184,18 @@ class Home extends Component {
                     break;
                 }
             }
-            console.log(this.state.pendingMatches[index].gameID);
             request(this.state.pendingMatches[index].gameID,"retrieveMatch").then(gameState => {
                 this.setGame("pendingMatches", index, gameState, ID, "Active");
             });
         }
 
         if(type === "active") {
-            console.log("active");
-            console.log(this.state.activeMatches);
             for(let i = 0; i < this.state.activeMatches.length; i++) {
                 if(this.state.activeMatches[i].gameID === ID) {
                     index = i;
                     break;
                 }
             }
-            console.log(index);
-            console.log(ID);
             request(this.state.activeMatches[index].gameID,"retrieveMatch").then(gameState => {
                 this.setGame("activeMatches", index, gameState, ID, "Active");
             });
@@ -200,7 +228,6 @@ class Home extends Component {
     }
 
     declineInvite(ID) {
-        console.log("I'm declining this match: " + ID);
         let index = -1;
         for(let i = 0; i < this.state.pendingMatches.length; i++) {
             if(this.state.pendingMatches[i].gameID === ID) {
@@ -328,9 +355,70 @@ class Home extends Component {
 
     }
 
+    toggleTab(tabID) {
+        if (this.state.homeState !== tabID) {
+            this.setState({
+                homeState: tabID
+            });
+        }
+    }
+
+    renderTab(tabID) {//style={{marginLeft: "10%", marginRight:"10%"}}
+        return (
+            <Col>
+                <NavItem key={tabID}>
+
+                    <NavLink key={tabID}
+                             className={classnames({active: this.state.homeState === tabID})}
+                             onClick={() => {
+                                 this.toggleTab(tabID);
+                                 this.getGames();
+                             }}
+                    >
+                        {tabID}
+                    </NavLink>
+                </NavItem>
+            </Col>
+        );
+    }
+
+    renderTabContents(tabContents, tabID) {
+        return (
+            <Row>
+                <Col md={{size:10, offset:1}}>
+            <TabContent key={tabID} activeTab={this.state.homeState}>
+                <TabPane key={tabID} tabId={tabID}>
+                    {tabContents}
+                </TabPane>
+            </TabContent>
+                </Col>
+            </Row>
+        );
+    }
+
+    refresh(gameID, turn, nickname, status) {
+        console.log("Trying to poll");
+        if(nickname !== turn && status === "Active") {
+            console.log("polling...");
+
+            this.getMatch(gameID, "active");
+            // if(this.state.board !== this.state.oldBoard) {
+            //     console.log("Board changed");
+            //     this.updateTurn(gameID, "active");
+            // }
+            this.setState({state: this.state});
+        }
+    }
+
+    clearGame() {
+        this.setState({activeBoard: null, reset: false});
+    }
+
     render() {
-        console.log(this.state);
         this.updatePlayerNames();
+        if(!this.state.gotGames) {
+            this.getGames();
+        }
 
         let gameTabs = ['Active', 'Pending', 'Finished'];
 
@@ -340,52 +428,47 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
+        if(this.state.displayActive && this.state.reset) {
+            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
+                reset: false});
+        }
+
+        if(this.state.displayFinished && this.state.reset) {
+            this.setState({finishedBoard: <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>,
+                reset: false});
+            // finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
+        }
+        let active = [<div> {this.getTabContents("Active")} {this.state.activeBoard} </div>];
+
+        let pending = [<div> {this.getTabContents("Pending")} </div>];
+
+        let finished =  [<div> {this.getTabContents("Finished")} {this.state.finishedBoard} </div>];
 
         return(
             <Card>
                 <CardBody>
                     <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
-                    {startButton}
+                    {/*{startButton}*/}
                     <br/><br/>
-                        <Nav tabs>
-                            {gameTabs.map((tab) => {
-                                return (
-                                    <Col sm={{size:3, offset:1}}>
-                                        <NavItem key={tab}>
-                                            <NavLink
-                                                className={classnames({active: this.state.homeState === tab})}
-                                                onClick={() => {
-                                                    if (this.state.homeState !== tab){
-                                                        this.setState({homeState : tab});
-                                                    }
-                                                    this.getGames()
-                                                }}
-                                            >
-                                                {tab} Games
-                                            </NavLink>
-                                        </NavItem>
-                                    </Col>
-                                );
-                            })}
-                        </Nav>
-                        <Row>
-                            <Col md={{size:8, offset:2}}>
-                                {gameTabs.map((tab) => {
-                                    return (
-                                        <TabContent activeTab={this.state.homeState}>
-                                            <TabPane tabId={tab}>
-                                                <br/><br/><br/>
-                                                <Jumbotron>
-                                                    <p>{tab} Games</p>
-                                                    {this.getTabContents(tab)}
-                                                    {board}
-                                                </Jumbotron>
-                                            </TabPane>
-                                        </TabContent>
-                                    );
+                    <div>
+                        <Col md={{size:6, offset:3}}>
+                            <Nav tabs key="2">
+                                {gameTabs.map((tabToRender) => {
+                                    return this.renderTab(tabToRender);
                                 })}
-                            </Col>
-                        </Row>
+                            </Nav>
+                        </Col>
+                    </div>
+                    <div>
+                        <Col md={{size:6, offset:3}}>
+                            <Jumbotron>
+                                {this.renderTabContents(active, 'Active')}
+                                {this.renderTabContents(pending, 'Pending')}
+                                {this.renderTabContents(finished, 'Finished')}
+                            </Jumbotron>
+                        </Col>
+                    </div>
+
                 </CardBody>
             </Card>
         );

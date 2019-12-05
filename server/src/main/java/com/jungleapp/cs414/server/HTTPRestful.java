@@ -23,7 +23,7 @@ class HTTPRestful {
         // start with HTTP GET
         get("/hello", (req, res) -> "Hello World");
 
-        get("/getRandomPlayer", this::getRandomPlayer);
+        post("/getRandomPlayer", this::getRandomPlayer);
 
         post("/login", this::login);
 
@@ -90,10 +90,10 @@ class HTTPRestful {
     private String getRandomPlayer(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        // TODO: Implement random player search
-        RetrieveProfile loginProfile = new RetrieveProfile(request);
-
-        return "";
+        RetrieveProfile randomProfile = new RetrieveProfile(request);
+        String randomName = randomProfile.searchRandomPlayer();
+        randomProfile.closeMySQLConnection();
+        return randomName;
     }
 
     //Class that doesn't interfere with other functionality
