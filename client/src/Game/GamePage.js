@@ -429,21 +429,40 @@ class GamePage extends Component {
 
     renderBoard() {
         //responsible for rendering all 63 squares within the board
+
         let board = [];
-        for (let i=0; i<9; i++) {
-            let row = [];
-            for (let j=0; j<7; j++) {
-                row.push(<td style={{
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                    height: 'inherit',
-                    border: this.getBorder(i, j),
-                    width: '50px',
-                    backgroundColor: this.colorSquare(i,j)}}>
-                    {this.renderSquare(i, j)}</td>);
+        if (this.state.nickname === this.state.playerBlue) {
+            for (let i=0; i<9; i++) {
+                let row = [];
+                for (let j=0; j<7; j++) {
+                    row.push(<td style={{
+                        textAlign: 'center',
+                        verticalAlign: 'middle',
+                        height: 'inherit',
+                        border: this.getBorder(i, j),
+                        width: '50px',
+                        backgroundColor: this.colorSquare(i,j)}}>
+                        {this.renderSquare(i, j)}</td>);
+                }
+                board.push(<tr style={{height: '50px'}}>{row}</tr>);
             }
-            board.push(<tr style={{height: '50px'}}>{row}</tr>);
+        } else {
+            for (let i=8; i>=0; i--) {
+                let row = [];
+                for (let j=6; j>=0; j--) {
+                    row.push(<td style={{
+                        textAlign: 'center',
+                        verticalAlign: 'middle',
+                        height: 'inherit',
+                        border: this.getBorder(i, j),
+                        width: '50px',
+                        backgroundColor: this.colorSquare(i,j)}}>
+                        {this.renderSquare(i, j)}</td>);
+                }
+                board.push(<tr style={{height: '50px'}}>{row}</tr>);
+            }
         }
+
         return <Table borderless style={{width: '280px', height: '360px', backgroundColor: '1e4d2b'}}><tbody>{board}</tbody></Table>
     }
 
