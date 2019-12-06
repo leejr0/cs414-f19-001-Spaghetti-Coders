@@ -355,7 +355,7 @@ class Home extends Component {
             let finishedGames = [];
             for(let i = 0; i < this.state.finishedMatches.length; i++) {
                 finishedGames.push(this.finishedGames(this.state.finishedMatches[i]));
-                if(gameID === this.state.activeMatches[i].gameID) {
+                if(gameID === this.state.finishedMatches[i].gameID) {
                     finishedGames.push(this.state.finishedBoard)
                 }
             }
