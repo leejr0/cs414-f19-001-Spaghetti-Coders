@@ -238,13 +238,14 @@ class Home extends Component {
             }
         }
 
-        request(this.state.pendingMatches[index],"declineMatch").then(status => {
+        request(this.state.pendingMatches[index].gameID,"declineMatch").then(status => {
             if(!status) {
                 //Error or something?
                 //Refresh page without the game?
             }
             else {
-                this.removeInvite(index, true);
+                this.removeInvite(index);
+                this.getGames();
             }
         });
     }

@@ -24,9 +24,15 @@ class Match {
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
-
         currentMatch = gson.fromJson(requestBody, MatchStructure.class);
 
+        connection = MySQLConnection.establishMySQLConnection();
+    }
+
+    // Constructor for declining match
+    Match(Integer gameID) {
+        currentMatch = new MatchStructure();
+        currentMatch.gameID = gameID;
         connection = MySQLConnection.establishMySQLConnection();
     }
 
@@ -60,11 +66,10 @@ class Match {
     }
 
     String updateMatch() {
-        // TODO: Retrieve an old match from the database based on player data or Match-ID
         currentMatch.jungleBoard.resetBoard();
 
         boolean successfulMove = currentMatch.jungleBoard.makeMove(currentMatch.move.row, currentMatch.move.col, currentMatch.move.toRow, currentMatch.move.toCol);
-        System.out.println(currentMatch.playerTurn);
+
         if(successfulMove) {
             if (currentMatch.playerTurn.equals(currentMatch.playerBlue)){     //if piece was placed, switch turn to other player
                 currentMatch.playerTurn = currentMatch.playerRed;
@@ -76,6 +81,16 @@ class Match {
         saveUpdatedMatch();
 
         return getMatchJSON();
+    }
+
+    boolean deleteMatch() {
+        try {
+            statement = connection.createStatement();
+            statement.execute("delete from Game where gameID = " + currentMatch.gameID + ";");
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     String forfeitMatch() {
@@ -94,7 +109,6 @@ class Match {
     }
 
     private void saveUpdatedMatch() {
-        // TODO: Finish updating match with some sort of match identifier(gameID).
         try {
             statement = connection.createStatement();
 
