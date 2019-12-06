@@ -189,7 +189,7 @@ class HTTPRestful {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
 
-        Match declineMatch = new Match(request);
+        Match declineMatch = new Match(Integer.parseInt(request.body()));
         boolean result = declineMatch.deleteMatch();
         declineMatch.closeMySQLConnection();
 

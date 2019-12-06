@@ -24,9 +24,15 @@ class Match {
         JsonElement requestBody = jsonParser.parse(request.body());
         Gson gson = new Gson();
 
-
         currentMatch = gson.fromJson(requestBody, MatchStructure.class);
 
+        connection = MySQLConnection.establishMySQLConnection();
+    }
+
+    // Constructor for declining match
+    Match(Integer gameID) {
+        currentMatch = new MatchStructure();
+        currentMatch.gameID = gameID;
         connection = MySQLConnection.establishMySQLConnection();
     }
 
@@ -79,7 +85,7 @@ class Match {
 
     boolean deleteMatch() {
         try {
-            Statement statement = connection.createStatement();
+            statement = connection.createStatement();
             statement.execute("delete from Game where gameID = " + currentMatch.gameID + ";");
             return true;
         } catch (SQLException e) {
