@@ -328,11 +328,14 @@ class Home extends Component {
             </div>);
     }
 
-    getTabContents(type) {
+    getTabContents(type, gameID) {
         if(type === "Active") {
             let activeGames = [];
             for(let i = 0; i < this.state.activeMatches.length; i++) {
                 activeGames.push(this.currentGames(this.state.activeMatches[i]));
+                if(gameID === this.state.activeMatches[i].gameID) {
+                    activeGames.push(this.state.activeBoard)
+                }
             }
 
             return activeGames;
@@ -351,6 +354,9 @@ class Home extends Component {
             let finishedGames = [];
             for(let i = 0; i < this.state.finishedMatches.length; i++) {
                 finishedGames.push(this.finishedGames(this.state.finishedMatches[i]));
+                if(gameID === this.state.activeMatches[i].gameID) {
+                    finishedGames.push(this.state.finishedBoard)
+                }
             }
 
             return finishedGames;
@@ -455,11 +461,11 @@ class Home extends Component {
                 reset: false});
             // finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
-        let active = [<div> {this.getTabContents("Active")} {this.state.activeBoard} </div>];
+        let active = [<div> {this.getTabContents("Active",this.state.startGame.gameID)}</div>];
 
-        let pending = [<div> {this.getTabContents("Pending")} </div>];
+        let pending = [<div> {this.getTabContents("Pending", "")} </div>];
 
-        let finished =  [<div> {this.getTabContents("Finished")} {this.state.finishedBoard} </div>];
+        let finished =  [<div> {this.getTabContents("Finished",this.state.startGame.gameID)} </div>];
 
         return(
             <Card>
