@@ -188,8 +188,12 @@ class HTTPRestful {
     private boolean declineMatch(Request request, Response response) {
         response.type("application/json");
         response.header("Access-Control-Allow-Origin", "*");
-        System.out.println("Declining");
-        return true;
+
+        Match declineMatch = new Match(Integer.parseInt(request.body()));
+        boolean result = declineMatch.deleteMatch();
+        declineMatch.closeMySQLConnection();
+
+        return result;
     }
 
     private String forfeitMatch(Request request, Response response) {
