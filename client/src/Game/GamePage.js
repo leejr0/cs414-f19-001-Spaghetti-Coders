@@ -112,6 +112,7 @@ class GamePage extends Component {
         };
 
         this.newBoard = this.newBoard.bind(this);
+        this.stopPolling = this.stopPolling.bind(this);
     }
 
     setPieces(retrievedBoard) {
@@ -164,7 +165,13 @@ class GamePage extends Component {
         piece.col = null;
         move.toRow = null;
         move.toCol = null;
-        this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
+        this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move}, () => this.stopPolling);
+    }
+
+    stopPolling() {
+        if(this.state.winner !== undefined) {
+            clearInterval(this.interval);
+        }
     }
 
     forfeitMatch(forfeiter) {

@@ -9,7 +9,7 @@ public class InitServer {
         if (args.length > 0) {
             return Integer.parseInt(args[0]);
         } else {
-            return 30631;
+            return 9900;
         }
     }
 }

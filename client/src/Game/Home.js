@@ -22,6 +22,7 @@ class Home extends Component {
             reset: false,
             activeBoard: null,
             finishedBoard: null,
+            displayGames: true,
             activeMatches: [
                 {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
                 {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
@@ -416,6 +417,10 @@ class Home extends Component {
         this.setState({activeBoard: null, reset: false});
     }
 
+    // toggleGames() {
+    //     this.setState({displayGames: !this.state.displayGames})
+    // }
+
     render() {
         console.log(this.state)
         this.updatePlayerNames();
@@ -430,6 +435,15 @@ class Home extends Component {
         if(this.state.displayBoard === true) {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
+
+        // let games = <div/>
+        // if(this.state.displayGames) {
+        //     games = <div>
+        //         {this.renderTabContents(active, 'Active')}
+        //         {this.renderTabContents(pending, 'Pending')}
+        //         {this.renderTabContents(finished, 'Finished')}
+        //     </div>
+        // }
 
         if(this.state.displayActive && this.state.reset) {
             this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
