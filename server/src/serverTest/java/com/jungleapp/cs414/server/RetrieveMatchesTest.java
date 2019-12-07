@@ -1,5 +1,6 @@
 package com.jungleapp.cs414.server;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RetrieveMatchesTest {
-    private Connection connection;
+    private static Connection connection;
     ResultSet resultSet;
-    private Statement statement;
+    private static Statement statement;
 
     @BeforeEach
     void initialize() {
@@ -27,6 +28,7 @@ class RetrieveMatchesTest {
             e.printStackTrace();
         }
     }
+
     @Disabled
     @Test
     void getMatches() throws SQLException {
@@ -72,4 +74,13 @@ class RetrieveMatchesTest {
         statement.execute("DELETE from Game" +
                 " where Game.playerBlue = '" + playerBlue + "' and Game.playerRed = '" + playerRed + "';");
     }
+
+    @AfterAll
+    static void closeConnection() throws SQLException {
+        if (connection != null && statement != null) {
+            connection.close();
+            statement.close();
+        }
+    }
+
 }

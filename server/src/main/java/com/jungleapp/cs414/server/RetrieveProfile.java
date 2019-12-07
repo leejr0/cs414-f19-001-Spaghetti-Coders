@@ -55,31 +55,26 @@ public class RetrieveProfile {
         }
     }
 
-    public boolean createNewProfile() {
-        if (!establishProfileIdentity()) {
-            try {
-                connection = MySQLConnection.establishMySQLConnection();
-                statement = connection.createStatement();
+    boolean createNewProfile() {
+        try {
+            statement = connection.createStatement();
 
-                // Check if player already exists in database
-                resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
-                                profile.nickname + "' or Player.email = '" +
-                        profile.email + "'");
+            // Check if player already exists in database
+            resultSet = statement.executeQuery("select * from Player where Player.nickname = '" +
+                            profile.nickname + "' or Player.email = '" +
+                    profile.email + "'");
 
-                if (resultSet.next())
-                    return false;
-
-                // Register player into the database
-                statement.execute("insert into Player values ('" + profile.nickname + "', " +
-                        "'" + profile.email + "','" + profile.password + "', 0, 0);");
-
-                return true;
-            } catch (SQLException e) {
+            if (resultSet.next())
                 return false;
-            }
-        }
 
-        return false;
+            // Register player into the database
+            statement.execute("insert into Player value ('" + profile.nickname + "', " +
+                    "'" + profile.email + "','" + profile.password + "', 0, 0);");
+
+            return true;
+        } catch (SQLException e) {
+            return false;
+        }
     }
 
     public void getProfile() {
@@ -108,7 +103,7 @@ public class RetrieveProfile {
 
 
         } catch (SQLException e) {
-            e.printStackTrace();
+
         }
     }
 
@@ -116,10 +111,19 @@ public class RetrieveProfile {
         try {
             statement = connection.createStatement();
 
-            statement.executeUpdate("DELETE FROM Player WHERE Player.nickname = '" +
+            // Query the database to update all the games an unregistered user played to a dummy player.
+            statement.execute("UPDATE Game " +
+                    "    SET winner = IF(playerBlue = '" + profile.nickname + "', playerRed, playerBlue), " +
+                    "        playerBlue = IF(playerBlue = '" + profile.nickname + "', 'ComputerBot', playerBlue), " +
+                    "        playerRed = IF(playerRed = '" + profile.nickname + "', 'ComputerBot', playerRed), " +
+                    "        status = 'Finished' " +
+                    "    WHERE " +
+                    "        playerBlue = '" + profile.nickname + "' OR playerRed = '" + profile.nickname + "';");
+
+            // Query the database to delete unregistered user from Player.
+            statement.execute("DELETE FROM Player WHERE Player.nickname = '" +
                     profile.nickname + "';");
-//            statement.executeUpdate("DELETE FROM Played_By WHERE Played_By.nickname = '" +
-//                    profile.nickname + "';");
+
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -182,11 +186,16 @@ public class RetrieveProfile {
 
     void closeMySQLConnection() {
         try {
-            //this.statement.close();
-            //this.resultSet.close();
             this.connection.close();
-  //          this.statement.close();
-//            this.resultSet.close();
+
+            if (this.statement != null) {
+                this.statement.close();
+            }
+
+            if (this.resultSet != null) {
+                this.resultSet.close();
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
