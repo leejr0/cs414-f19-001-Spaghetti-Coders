@@ -1,17 +1,13 @@
 package com.jungleapp.cs414.server;
-import com.jungleapp.cs414.server.RetrieveProfile;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.*;
 
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Random;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class RetrieveProfileTest {
+class RetrieveProfileTest {
     private RetrieveProfile retrieveProfile;
 
     @Test
@@ -40,7 +36,6 @@ public class RetrieveProfileTest {
     }
 
     //Test passes but needs to be ignored due to the current lack of ability to delete newly created users easily.
-    @Disabled
     @Test
     void createNewProfileValid() {
         retrieveProfile = new RetrieveProfile("newguy", "1234", "newguy@gmail.com");
@@ -62,5 +57,20 @@ public class RetrieveProfileTest {
         retrieveProfile = new RetrieveProfile("anotherguy", "13tn31t1", "newguy@gmail.com");
 
         assertFalse(retrieveProfile.createNewProfile());
+    }
+
+    @AfterAll
+    static void deleteData() {
+        try {
+            Connection connection = MySQLConnection.establishMySQLConnection();
+            Statement statement = connection.createStatement();
+            statement.execute("DELETE FROM Player WHERE nickname = 'newguy'");
+
+            connection.close();
+            statement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

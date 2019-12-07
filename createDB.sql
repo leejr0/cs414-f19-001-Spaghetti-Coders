@@ -21,3 +21,6 @@ CREATE TABLE Game(
     endTime			datetime,
     PRIMARY KEY 	(gameID)
 );
+
+INSERT INTO Player VALUES ('ComputerBot', 'bot@fakemail.com', '{(zxzhs2Eg.&]5NsXJq[', '0', '0'),
+                          ('zizamzoe', 'zizamzoe@gmail.com', '1234', '0', '0');
