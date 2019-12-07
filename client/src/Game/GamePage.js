@@ -112,6 +112,7 @@ class GamePage extends Component {
         };
 
         this.newBoard = this.newBoard.bind(this);
+        this.stopPolling = this.stopPolling.bind(this);
     }
 
     setPieces(retrievedBoard) {
@@ -156,15 +157,21 @@ class GamePage extends Component {
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
         });
-        if(this.state.winner !== undefined) {
-            clearInterval(this.interval);
-        }
+        // if(this.state.winner !== undefined) {
+        //     clearInterval(this.interval);
+        // }
         //reset selections after move attempt
         piece.row = null;
         piece.col = null;
         move.toRow = null;
         move.toCol = null;
-        this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
+        this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move}, () => this.stopPolling);
+    }
+
+    stopPolling() {
+        if(this.state.winner !== undefined) {
+            clearInterval(this.interval);
+        }
     }
 
     forfeitMatch(forfeiter) {
@@ -422,21 +429,40 @@ class GamePage extends Component {
 
     renderBoard() {
         //responsible for rendering all 63 squares within the board
+
         let board = [];
-        for (let i=0; i<9; i++) {
-            let row = [];
-            for (let j=0; j<7; j++) {
-                row.push(<td style={{
-                    textAlign: 'center',
-                    verticalAlign: 'middle',
-                    height: 'inherit',
-                    border: this.getBorder(i, j),
-                    width: '50px',
-                    backgroundColor: this.colorSquare(i,j)}}>
-                    {this.renderSquare(i, j)}</td>);
+        if (this.state.nickname === this.state.playerBlue) {
+            for (let i=0; i<9; i++) {
+                let row = [];
+                for (let j=0; j<7; j++) {
+                    row.push(<td style={{
+                        textAlign: 'center',
+                        verticalAlign: 'middle',
+                        height: 'inherit',
+                        border: this.getBorder(i, j),
+                        width: '50px',
+                        backgroundColor: this.colorSquare(i,j)}}>
+                        {this.renderSquare(i, j)}</td>);
+                }
+                board.push(<tr style={{height: '50px'}}>{row}</tr>);
             }
-            board.push(<tr style={{height: '50px'}}>{row}</tr>);
+        } else {
+            for (let i=8; i>=0; i--) {
+                let row = [];
+                for (let j=6; j>=0; j--) {
+                    row.push(<td style={{
+                        textAlign: 'center',
+                        verticalAlign: 'middle',
+                        height: 'inherit',
+                        border: this.getBorder(i, j),
+                        width: '50px',
+                        backgroundColor: this.colorSquare(i,j)}}>
+                        {this.renderSquare(i, j)}</td>);
+                }
+                board.push(<tr style={{height: '50px'}}>{row}</tr>);
+            }
         }
+
         return <Table borderless style={{width: '280px', height: '360px', backgroundColor: '1e4d2b'}}><tbody>{board}</tbody></Table>
     }
 
@@ -473,7 +499,7 @@ class GamePage extends Component {
     dismissWinMessage() {
         let state = this.state;
         state.announceWinner = false;
-        this.setState({state}, () => this.props.clearGame());
+        this.setState({state});
     }
 
     winMessage() {
@@ -512,7 +538,7 @@ class GamePage extends Component {
     }
 
     componentDidMount() {
-        if (this.state.status === "Active") {
+        if (this.state.status === "Active" || this.state.status === "Pending") {
             this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
         }
     }

@@ -92,7 +92,7 @@ class HTTPRestful {
         response.header("Access-Control-Allow-Origin", "*");
         RetrieveProfile randomProfile = new RetrieveProfile(request);
         String randomName = randomProfile.searchRandomPlayer();
-        randomProfile.closeMySQLConnection();
+        //randomProfile.closeMySQLConnection();
         return randomName;
     }
 

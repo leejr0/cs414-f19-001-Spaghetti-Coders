@@ -22,6 +22,7 @@ class Home extends Component {
             reset: false,
             activeBoard: null,
             finishedBoard: null,
+            displayGames: true,
             activeMatches: [
                 {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
                 {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
@@ -142,17 +143,7 @@ class Home extends Component {
         state.reset = true;
         state.activeBoard = null;
         state.finishedBoard = null;
-        // if(state[type][index].color === "red") {
-        //     state.startGame.playerBlue = state[type][index].opponent;
-        //     state.startGame.playerRed = state.nickname;
-        // }
-        // else {
-        //     state.startGame.playerRed = state[type][index].opponent;
-        //     state.startGame.playerBlue = state.nickname;
-        // }
 
-        // state.displayActive = true;
-        // state.displayFinished = true;
         if(status === "Active") {
             state.displayActive = true;
             state.displayFinished = false;
@@ -161,14 +152,6 @@ class Home extends Component {
             state.displayActive = false;
             state.displayFinished = true;
         }
-
-        // console.log("something");
-        // console.log(this.state.board);
-        // console.log(response);
-        // if(this.state.board !== response) {
-        //     console.log("Updating turn!");
-        //     this.updateTurn(ID);
-        // }
 
         this.setState({state});
 
@@ -196,6 +179,7 @@ class Home extends Component {
                     break;
                 }
             }
+
             request(this.state.activeMatches[index].gameID,"retrieveMatch").then(gameState => {
                 this.setGame("activeMatches", index, gameState, ID, "Active");
             });
@@ -215,16 +199,34 @@ class Home extends Component {
         }
     }
 
-    removeInvite(index) {
+    removeInvite(index, declined) {
         let pendingMatches = [];
-        for(let i = 0; i < this.state.pendingMatches.length; i++) {
-            if(index !== i) {
-                pendingMatches.push(this.state.pendingMatches[i]);
+        if(declined) {
+            for (let i = 0; i < this.state.pendingMatches.length; i++) {
+                console.log("Matches: " + this.state.pendingMatches[i]);
+                if (index !== i) {
+                    pendingMatches.push(this.state.pendingMatches[i]);
+                }
             }
 
+            this.setState({pendingMatches: pendingMatches});
         }
+        else{
+            let j = -1;
+            for (let i = 0; i < this.state.pendingMatches.length; i++) {
+                if (index !== this.state.pendingMatches[i].gameID) {
+                    pendingMatches.push(this.state.pendingMatches[i]);
+                }
+                else{
+                    j = i;
+                }
+            }
 
-        this.setState({pendingMatches: pendingMatches});
+            let activeMatches = this.state.activeMatches;
+            activeMatches.push(this.state.pendingMatches[j]);
+
+            this.setState({pendingMatches: pendingMatches, activeMatches: activeMatches});
+        }
     }
 
     declineInvite(ID) {
@@ -266,7 +268,8 @@ class Home extends Component {
                         <Col xs="6" style={{borderLeft: "1px solid black"}}>
                             <Button onClick={() => {
                                 this.setState({homeState: "Active"});
-                                this.getMatch(match.gameID, "pending")
+                                this.removeInvite(match.gameID, false);
+                                this.getMatch(match.gameID, "active");
                             }} color={"success"} style={{margin: "3px"}}>ACCEPT</Button>
                             <Button onClick={() => this.declineInvite(match.gameID)} color={"danger"} style={{margin: "3px"}}>DECLINE</Button></Col>
                     </Row>
@@ -326,11 +329,14 @@ class Home extends Component {
             </div>);
     }
 
-    getTabContents(type) {
+    getTabContents(type, gameID) {
         if(type === "Active") {
             let activeGames = [];
             for(let i = 0; i < this.state.activeMatches.length; i++) {
                 activeGames.push(this.currentGames(this.state.activeMatches[i]));
+                if(gameID === this.state.activeMatches[i].gameID) {
+                    activeGames.push(this.state.activeBoard)
+                }
             }
 
             return activeGames;
@@ -349,6 +355,9 @@ class Home extends Component {
             let finishedGames = [];
             for(let i = 0; i < this.state.finishedMatches.length; i++) {
                 finishedGames.push(this.finishedGames(this.state.finishedMatches[i]));
+                if(gameID === this.state.finishedMatches[i].gameID) {
+                    finishedGames.push(this.state.finishedBoard)
+                }
             }
 
             return finishedGames;
@@ -415,7 +424,12 @@ class Home extends Component {
         this.setState({activeBoard: null, reset: false});
     }
 
+    // toggleGames() {
+    //     this.setState({displayGames: !this.state.displayGames})
+    // }
+
     render() {
+        console.log(this.state)
         this.updatePlayerNames();
         if(!this.state.gotGames) {
             this.getGames();
@@ -429,6 +443,15 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
+        // let games = <div/>
+        // if(this.state.displayGames) {
+        //     games = <div>
+        //         {this.renderTabContents(active, 'Active')}
+        //         {this.renderTabContents(pending, 'Pending')}
+        //         {this.renderTabContents(finished, 'Finished')}
+        //     </div>
+        // }
+
         if(this.state.displayActive && this.state.reset) {
             this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
                 reset: false});
@@ -439,11 +462,11 @@ class Home extends Component {
                 reset: false});
             // finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
-        let active = [<div> {this.getTabContents("Active")} {this.state.activeBoard} </div>];
+        let active = [<div> {this.getTabContents("Active",this.state.startGame.gameID)}</div>];
 
-        let pending = [<div> {this.getTabContents("Pending")} </div>];
+        let pending = [<div> {this.getTabContents("Pending", "")} </div>];
 
-        let finished =  [<div> {this.getTabContents("Finished")} {this.state.finishedBoard} </div>];
+        let finished =  [<div> {this.getTabContents("Finished",this.state.startGame.gameID)} </div>];
 
         return(
             <Card>

@@ -118,8 +118,8 @@ public class RetrieveProfile {
 
             statement.executeUpdate("DELETE FROM Player WHERE Player.nickname = '" +
                     profile.nickname + "';");
-            statement.executeUpdate("DELETE FROM Played_By WHERE Played_By.nickname = '" +
-                    profile.nickname + "';");
+//            statement.executeUpdate("DELETE FROM Played_By WHERE Played_By.nickname = '" +
+//                    profile.nickname + "';");
             return true;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,8 +185,8 @@ public class RetrieveProfile {
             //this.statement.close();
             //this.resultSet.close();
             this.connection.close();
-            this.statement.close();
-            this.resultSet.close();
+  //          this.statement.close();
+//            this.resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
