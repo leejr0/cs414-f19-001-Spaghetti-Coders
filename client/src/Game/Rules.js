@@ -22,7 +22,7 @@ class Rules extends Component {
                 <hr/>
             <h5 style={{color: "ecc530"}}>Movement</h5>
             <p>All pieces have the same basic move, although some have special powers (described below). The basic move is just one space either forward, backward, left or right. The pieces never move diagonally.</p>
-            <p>The Rat, although it is the least powerful piece, has the power to capture the Elephant. The Elephant can not capture the Rat.</p>
+            <p>The Rat, although it is the least powerful piece, has the power to capture the Elephant.</p>
             <p>The Rat, and no other animal, can move freely in the water. It can not, however, attack the Elephant from the water.</p>
             <p>Both the Lion and the Tiger can jump over the water, moving from one bank straight forward, backward, left or right (like a rook in chess) to the first square of dry land on the other side. They may capture in this move as well. The Lion and Tiger may not, however, jump over a rat if it is in the way, in the water.</p>
                 <hr/>
