@@ -135,10 +135,12 @@ public class RetrieveProfile {
         try {
             statement = connection.createStatement();
             if (profile.newPassword != null) {
+                if (!profile.newPassword.equals(""))
                 statement.executeUpdate("UPDATE Player SET Player.password = '" + profile.newPassword +
                         "' WHERE Player.nickname = '" + profile.nickname + "';");
             }
             if (profile.newEmail != null) {
+                if(!profile.newEmail.equals(""))
                 statement.executeUpdate("UPDATE Player SET Player.email = '" + profile.newEmail +
                         "' WHERE Player.nickname = '" + profile.nickname + "';");
             }

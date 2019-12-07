@@ -18,6 +18,7 @@ class Profile extends Component {
             newEmail: null,
             errorMessage: null,
             confirmMessage: false,
+            updateBool: false,
         };
 
         this.retrieveInformation = this.retrieveInformation.bind(this);
@@ -55,16 +56,17 @@ class Profile extends Component {
     }
 
     validateEmail() {
-        if (this.newEmail != null){
+        if (this.state.newEmail !== null){
             let email = this.state.newEmail;
-            let validation = /[\w.]+@[\w]+(.com|.org)$/;
+            let validation = /[\w.]+@[\w]+(.com|.org|.edu|.net|.gov)$/;
             if (!email.includes("@") || email === "") {
                 return false;
             }
             if (!validation.test(email)) {
-                console.log("validating email!");
                 return false;
             }
+        }else{
+            return true;
         }
         return true;
     }
@@ -72,15 +74,15 @@ class Profile extends Component {
     update(){
         if(this.validateEmail() === false) {
             this.setState({errorMessage: "Please enter a valid email."});
-            console.log("email error");
             return;
         }
         request(this.state,"updateProfile").then(profile => {
             let state = this.state;
-            state.password = profile.password;
-            state.email = profile.email;
+            state.password = this.state.newPassword;
+            state.email = this.state.newEmail;
             state.gotProfile = true;
             state.errorMessage = null;
+            state.updateBool = false;
             this.setState( {state});
         });
     }
@@ -108,6 +110,37 @@ class Profile extends Component {
         </Modal>
     }
 
+    updateModal(){
+        let errorMessage;
+        if(this.state.errorMessage !== null){
+            errorMessage = <Alert color="danger">{this.state.errorMessage}</Alert>
+        }
+        return <Modal isOpen = {this.state.updateBool}>
+            <ModalHeader>To change email or password, enter new information below and click submit</ModalHeader>
+            <Form>
+                <br></br>
+                <FormGroup style={{padding: '.5rem', width: "400px"}}>
+                    <Label style={{float: 'left'}}>New Password:</Label>
+                    <Input type="password" placeholder={"new password"} onChange={(input) => this.updateValue("newPassword", input.target.value)}/>
+                    <br></br>
+                    <Label style={{float: 'left'}}>New Email:</Label>
+                    <Input type="email" placeholder={"new email"} onChange={(input) => this.updateValue("newEmail", input.target.value)}/>
+                </FormGroup>
+                {errorMessage}
+            </Form>
+                <ModalFooter>
+                    <Button color="success" style={{float: 'right', padding: '.5rem'}} onClick={this.update.bind(this)}>Submit</Button>
+                    <Button outline color="success" style={{float: 'left', padding: '.5rem'}} onClick={this.dismissUpdate.bind(this)}>Back</Button>
+                </ModalFooter>
+        </Modal>
+    }
+
+    dismissUpdate(){
+        let state = this.state;
+        state.updateBool = false;
+        this.setState({state});
+    }
+
     render() {
         if(this.state.gotProfile === false) {
             this.retrieveInformation();
@@ -118,7 +151,7 @@ class Profile extends Component {
         }
 
         let unregisterButton = <Button outline color="success" style={{float: 'right', padding: '.5rem'}} onClick={() => this.setState({confirmMessage: true})}>Unregister</Button>;
-        let updateButton = <Button outline color="success" style={{float: 'left', padding: '.5rem'}} onClick={this.update.bind(this)}>Update Info</Button>;
+        let updateButton = <Button outline color="success" style={{float: 'left', padding: '.5rem'}} onClick={() => this.setState({updateBool:true})}>Update Info</Button>;
 
         return (
             <div style={{display: "inline-block", width: "1200px"}}>
@@ -135,11 +168,13 @@ class Profile extends Component {
                                             <br/>
                                             <br></br>
                                             <br/>
-                                            <Label style={{float: 'left'}}>Password</Label>
-                                            <Input type="password" placeholder={"********"} onChange={(input) => this.updateValue("newPassword", input.target.value)}/>
+                                            <br/>
+                                            <h3 style={{float: 'left'}}>Email: {this.state.email}</h3>
                                             <br></br>
-                                            <Label style={{float: 'left'}}>Email</Label>
-                                            <Input type="email" placeholder={this.state.email} onChange={(input) => this.updateValue("newEmail", input.target.value)}/>
+                                            <br/>
+                                            <br/>
+                                            <br/>
+                                            <h3 style={{float: 'left'}}>Password: ***********</h3>
                                         </FormGroup>
                                     </Form>
                                 </Col>
@@ -166,9 +201,9 @@ class Profile extends Component {
                     </Card>
                     <br></br>
                     {this.confirmationMessage()}
-                    {errorMessage}
                     {updateButton}
                     {unregisterButton}
+                    {this.updateModal()}
                 </div>
 
             </div>
