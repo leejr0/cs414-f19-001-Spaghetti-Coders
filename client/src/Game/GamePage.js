@@ -559,7 +559,6 @@ class GamePage extends Component {
                 <div style={{display: 'inline-block'}} id="GamePage">
                     {this.winMessage()}
                     {yourTurn}
-                    <Button onClick = {() => { this.props.refresh(this.state.gameID) }}>REFRESH</Button>
                     {this.turnMonitor()}
                     {this.renderBoard()}
                     <PieceGuide playerBlue={this.state.playerBlue} playerRed={this.state.playerRed}/>
