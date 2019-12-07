@@ -124,6 +124,7 @@ class Home extends Component {
     }
 
     getGames() {
+        console.log("Polling homepage");
         request(this.state.nickname, "retrieveMatches").then(serverResponse => {
             this.sortGames(serverResponse);
         });
@@ -428,6 +429,13 @@ class Home extends Component {
     //     this.setState({displayGames: !this.state.displayGames})
     // }
 
+    componentDidMount() {
+        this.interval = setInterval(() => this.getGames(), 4000);
+    }
+    componentWillUnmount() {
+        clearInterval(this.interval);
+    }
+
     render() {
         console.log(this.state)
         this.updatePlayerNames();
@@ -472,6 +480,7 @@ class Home extends Component {
             <Card>
                 <CardBody>
                     <Invite nickname={this.props.nickname} beginGame={this.beginGame} startGame={this.state.startGame}/>
+                    {/*<Button onClick={this.getGames}>REFRESH</Button>*/}
                     {/*{startButton}*/}
                     <br/><br/>
                     <div>
