@@ -123,6 +123,15 @@ class Match {
                         "playerTurn='" + currentMatch.playerTurn + "'," +
                         "winner='" + currentMatch.winner + "'," +
                         "endTime='" + formattedTime + "' WHERE gameID=" + currentMatch.gameID + ";");
+
+                //statements to add to wins and losses depending on who wins
+                if (currentMatch.winner.equals(currentMatch.playerBlue)){
+                    statement.execute("UPDATE Player SET wins = wins + 1 WHERE nickname = '" + currentMatch.playerBlue+ "';" );
+                    statement.execute("UPDATE Player SET losses = losses + 1 WHERE nickname = '" + currentMatch.playerRed + "';" );
+                }else{
+                    statement.execute("UPDATE Player SET wins = wins + 1 WHERE nickname = '" + currentMatch.playerRed+ "';" );
+                    statement.execute("UPDATE Player SET losses = losses + 1 WHERE nickname = '" + currentMatch.playerBlue + "';" );
+                }
             }
             else {
                 //Update database entry with current details.
