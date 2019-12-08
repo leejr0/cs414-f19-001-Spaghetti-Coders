@@ -142,9 +142,9 @@ class Profile extends Component {
     }
 
     render() {
-        if(this.state.gotProfile === false) {
-            this.retrieveInformation();
-        }
+        //if(this.state.gotProfile === false) {
+        this.retrieveInformation();
+        //}
         let errorMessage;
         if(this.state.errorMessage !== null){
             errorMessage = <Alert color="danger">{this.state.errorMessage}</Alert>
