@@ -19,7 +19,6 @@ class Invite extends Component {
             }
         };
 
-
         this.updateSearchValue = this.updateSearchValue.bind(this);
         this.searchOpponent = this.searchOpponent.bind(this);
         this.sendInvite = this.sendInvite.bind(this);
@@ -69,7 +68,6 @@ class Invite extends Component {
                     state.playerSearch.opponentFound = serverResponse;
                     state.playerSearch.errorMessage = "";
                 }
-
                 this.setState({state});
             });
         }
@@ -79,7 +77,6 @@ class Invite extends Component {
         if(this.state.playerSearch.opponentFound === false && this.state.randomOpponent === false) {
             let state = this.state;
             state.playerSearch.errorMessage = "Please search for a player above.";
-
             this.setState({state});
         }
         else {
@@ -98,10 +95,6 @@ class Invite extends Component {
                     state.invitePlayer = false;
                     state.opponentFound = false;
                     state.randomOpponent = false;
-                    //Temporary callback to show functionality
-                    // this.setState({state}, () => {
-                    //     this.props.beginGame();
-                    // });
                 }
                 this.setState({state});
             });
@@ -125,7 +118,6 @@ class Invite extends Component {
         if (this.state.playerSearch.invitationSent) {
             invitationSent = <Alert color="success">Your invitation was successfully sent!</Alert>
         }
-        // TODO: Center top text in Modal
         return (
             <Modal isOpen={this.state.invitePlayer}>
                 <ModalHeader><h5 style={{textAlign: "center"}}>Invite your friends or get a random opponent!</h5></ModalHeader>
@@ -133,8 +125,8 @@ class Invite extends Component {
                     {foundOpponent}
                     <Input type="text" onChange={(input) => this.updateSearchValue("playerBlue", input.target.value)}/>
                     <br/>
-                    <Button onClick={() => this.searchOpponent(false)}>SEARCH</Button>
-                    <Button className="float-right" onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
+                    <Button color="success" onClick={() => this.searchOpponent(false)}>SEARCH</Button>
+                    <Button color="success" className="float-right" onClick={() => this.searchOpponent(true)}>RANDOM OPPONENT</Button>
                     <br/>
                     <br/>
                     {randomMessage}
@@ -142,8 +134,8 @@ class Invite extends Component {
                     {invitationSent}
                 </ModalBody>
                 <ModalFooter>
-                    <Button onClick={this.sendInvite}>INVITE</Button>
-                    <Button onClick={this.toggleModal}>EXIT</Button>
+                    <Button color="success" onClick={this.sendInvite}>INVITE</Button>
+                    <Button outline color="success" onClick={this.toggleModal}>CLOSE</Button>
                 </ModalFooter>
             </Modal>
         );
@@ -158,7 +150,7 @@ class Invite extends Component {
     render() {
         return (
             <div>
-                <Button onClick={this.toggleModal}>Invite</Button>
+                <Button size="lg" color="success" onClick={this.toggleModal}>INVITE</Button>
                 {this.displayInvite()}
             </div>
         );

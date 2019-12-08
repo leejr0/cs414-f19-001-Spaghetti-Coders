@@ -122,9 +122,7 @@ class Main extends Component {
                         {tabs.map((tabToRender) => {
                             return this.renderTab(tabToRender);
                         })}
-
                     </Nav>
-
                 </div>
                 <div>
                     {this.renderTabContents(home, 'Home')}

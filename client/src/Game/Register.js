@@ -119,14 +119,12 @@ class Register extends Component {
         let state = this.state;
         state.profileInfo.password = password;
         this.setState({state});
-        //TODO: Hash the given password for security
     }
 
     updateVerifyPassword(password) {
         let state = this.state;
         state.profileInfo.verifyPassword = password;
         this.setState({state});
-        //TODO: Hash the given password verification for security
     }
 
     back2home(){
@@ -145,7 +143,6 @@ class Register extends Component {
         if(this.state.errorMessage !== ""){
             errorMessage = <Alert color="danger">{this.state.errorMessage}</Alert>
         }
-
         return (
             <div id="Register" style={{width: "600px", display: "inline-block"}}>
                 <Card>

@@ -114,8 +114,8 @@ public class RetrieveProfile {
             // Query the database to update all the games an unregistered user played to a dummy player.
             statement.execute("UPDATE Game " +
                     "    SET winner = IF(playerBlue = '" + profile.nickname + "', playerRed, playerBlue), " +
-                    "        playerBlue = IF(playerBlue = '" + profile.nickname + "', 'ComputerBot', playerBlue), " +
-                    "        playerRed = IF(playerRed = '" + profile.nickname + "', 'ComputerBot', playerRed), " +
+                    "        playerBlue = IF(playerBlue = '" + profile.nickname + "', '{Deleted Player}', playerBlue), " +
+                    "        playerRed = IF(playerRed = '" + profile.nickname + "', '{Deleted Player}', playerRed), " +
                     "        status = 'Finished' " +
                     "    WHERE " +
                     "        playerBlue = '" + profile.nickname + "' OR playerRed = '" + profile.nickname + "';");
@@ -170,7 +170,7 @@ public class RetrieveProfile {
     public String searchRandomPlayer() {
         try {
             Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname <> '" + profile.nickname + "' order by RAND() limit 1;");
+            ResultSet resultSet = statement.executeQuery("select * from Player where Player.nickname <> '" + profile.nickname + "' and Player.nickname <> '{Deleted Player}' order by RAND() limit 1;");
             if (resultSet.next()){
                 String randomPlayer = "{\"nickname\": \"" + resultSet.getString("Nickname") + "\"}";//resultSet.getString("Nickname");//
                 return randomPlayer;

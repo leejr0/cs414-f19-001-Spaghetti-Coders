@@ -33,9 +33,6 @@ public class Piece {
         this.pieceColor = piece.pieceColor;
         this.isTrapped = piece.isTrapped;
         this.legalMoves = piece.legalMoves;
-//        this.redTraps = piece.redTraps;
-//        this.blueTraps = piece.blueTraps;
-//        this.waterTiles = piece.waterTiles;
     }
 
     public String getColor(){

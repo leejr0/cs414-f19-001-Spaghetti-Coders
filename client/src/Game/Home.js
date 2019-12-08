@@ -451,15 +451,6 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
-        // let games = <div/>
-        // if(this.state.displayGames) {
-        //     games = <div>
-        //         {this.renderTabContents(active, 'Active')}
-        //         {this.renderTabContents(pending, 'Pending')}
-        //         {this.renderTabContents(finished, 'Finished')}
-        //     </div>
-        // }
-
         if(this.state.displayActive && this.state.reset) {
             this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
                 reset: false});
@@ -468,7 +459,6 @@ class Home extends Component {
         if(this.state.displayFinished && this.state.reset) {
             this.setState({finishedBoard: <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>,
                 reset: false});
-            // finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
         let active = [<div> {this.getTabContents("Active",this.state.startGame.gameID)}</div>];
 

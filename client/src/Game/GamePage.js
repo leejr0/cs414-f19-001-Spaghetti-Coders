@@ -21,11 +21,6 @@ import bLion from "./assets/40BL.png";
 import wLion from "./assets/40WL.png";
 import bElephant from "./assets/40BE.png";
 import wElephant from "./assets/40WE.png";
-import bDen from "./assets/40BDen.png";
-import wDen from "./assets/40WDen.png";
-import water from "./assets/40Water.png";
-import trap from "./assets/40Trap.png";
-
 
 class Piece {
     constructor(color, rank, isTrapped, row, column, legalMoves, redTraps, blueTraps, waterTiles) {
@@ -115,34 +110,12 @@ class GamePage extends Component {
         this.stopPolling = this.stopPolling.bind(this);
     }
 
-    setPieces(retrievedBoard) {
-        retrievedBoard[0][0] = new Piece("red", "lion");
-        retrievedBoard[0][6] = new Piece("red", "tiger");
-        retrievedBoard[1][1] = new Piece("red", "dog");
-        retrievedBoard[1][5] = new Piece("red", "cat");
-        retrievedBoard[2][0] = new Piece("red", "rat");
-        retrievedBoard[2][2] = new Piece("red", "panther");
-        retrievedBoard[2][4] = new Piece("red", "wolf");
-        retrievedBoard[2][6] = new Piece("red", "elephant");
-
-        retrievedBoard[8][0] = new Piece("blue", "tiger");
-        retrievedBoard[8][6] = new Piece("blue", "lion");
-        retrievedBoard[7][1] = new Piece("blue", "cat");
-        retrievedBoard[7][5] = new Piece("blue", "dog");
-        retrievedBoard[6][0] = new Piece("blue", "elephant");
-        retrievedBoard[6][2] = new Piece("blue", "wolf");
-        retrievedBoard[6][4] = new Piece("blue", "panther");
-        retrievedBoard[6][6] = new Piece("blue", "rat");
-        return retrievedBoard;
-    }
-
     makeMove() {
         let piece = this.state.selectedPiece;
         let move = this.state.chosenMove;
 
         //send move to server and retrieve new board
         let updatedBoard = this.state.board;
-        console.log("Attempting to make move: " + piece.row + ',' + piece.col + '->' + move.toRow + ',' + move.toCol);
 
         request(this.state,"updateMatch").then(gameState => {
             let newBoard = this.resetPieces(gameState.jungleBoard.board);
@@ -157,10 +130,7 @@ class GamePage extends Component {
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
             });
         });
-        // if(this.state.winner !== undefined) {
-        //     clearInterval(this.interval);
-        // }
-        //reset selections after move attempt
+
         piece.row = null;
         piece.col = null;
         move.toRow = null;
@@ -191,7 +161,7 @@ class GamePage extends Component {
         } else {
             console.log("Invalid Forfeit");
         }
-        console.log(forfeiter + " has forfeited the match.");
+
     }
 
     resetPieces(board) {
@@ -212,10 +182,6 @@ class GamePage extends Component {
             }
         }
         return board;
-    }
-
-    saveGame() {
-        //TODO: save the game when the user leaves the session
     }
 
     playerOwnsPiece(pieceIndices) {
