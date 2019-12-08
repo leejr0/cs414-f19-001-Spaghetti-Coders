@@ -265,8 +265,9 @@ class Home extends Component {
             display = (
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
+                        <Col xs="1" md="1"><div style={{marginTop: "10px"}}>{match.gameID}</div></Col>
                         <Col xs="6"><div style={{marginTop: "10px"}}>{match.opponent} wants to play!</div></Col>
-                        <Col xs="6" style={{borderLeft: "1px solid black"}}>
+                        <Col xs="5" style={{borderLeft: "1px solid black"}}>
                             <Button onClick={() => {
                                 this.setState({homeState: "Active"});
                                 this.removeInvite(match.gameID, false);
@@ -298,9 +299,10 @@ class Home extends Component {
             <div>
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
+                        <Col xs="1" md="1"><div style={{marginTop: "10px"}}>{match.gameID}</div></Col>
                         <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{whoseTurn}</div></Col>
-                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.gameID,"active")} color={"success"} style={{margin: "3px"}}>{play}</Button></Col>
+                        <Col xs="3" md="3" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.gameID,"active")} color={"success"} style={{margin: "3px"}}>{play}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -320,9 +322,10 @@ class Home extends Component {
             <div>
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
+                        <Col xs="1" md="1"><div style={{marginTop: "10px"}}>{match.gameID}</div></Col>
                         <Col xs="4" md="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{winner}</div></Col>
-                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.gameID, "finished")} color={"success"} style={{margin: "3px"}}>VIEW</Button></Col>
+                        <Col xs="3" md="3" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.gameID, "finished")} color={"success"} style={{margin: "3px"}}>VIEW</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -409,7 +412,7 @@ class Home extends Component {
 
     refresh(gameID, turn, nickname, status) {
         console.log("Trying to poll");
-        if(nickname !== turn && status === "Active") {
+        if(/*nickname !== turn && */status === "Active") {
             console.log("polling...");
 
             this.getMatch(gameID, "active");
@@ -429,12 +432,12 @@ class Home extends Component {
     //     this.setState({displayGames: !this.state.displayGames})
     // }
 
-    componentDidMount() {
-        this.interval = setInterval(() => this.getGames(), 4000);
-    }
-    componentWillUnmount() {
-        clearInterval(this.interval);
-    }
+    // componentDidMount() {
+    //     this.interval = setInterval(() => this.getGames(), 4000);
+    // }
+    // componentWillUnmount() {
+    //     clearInterval(this.interval);
+    // }
 
     render() {
         console.log(this.state)

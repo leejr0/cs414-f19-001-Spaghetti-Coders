@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import { Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
+import { Alert, Container, Table, Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap'
 import {request} from "../api/api";
 import PieceGuide from "./PieceGuide";
 
@@ -154,7 +154,7 @@ class GamePage extends Component {
                 playerRed: gameState.playerRed,
                 playerTurn: gameState.playerTurn,
                 isActive: gameState.isActive,
-                announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
+                announceWinner: (gameState.winner !== null) //evaluates to true if there is a winner}
             });
         });
         // if(this.state.winner !== undefined) {
@@ -177,7 +177,7 @@ class GamePage extends Component {
     forfeitMatch(forfeiter) {
         console.log("winner: " + this.state.winner);
         request(this.state, "forfeitMatch").then(gameState => {
-            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined), winMessage: forfeiter + " didn't want to play anymore..."});
+            this.setState({winner: gameState.winner, announceWinner: true, winMessage: forfeiter + " didn't want to play anymore..."});
         });
     }
 
@@ -496,21 +496,21 @@ class GamePage extends Component {
         this.setState({state});
     }
 
-    dismissWinMessage() {
-        let state = this.state;
-        state.announceWinner = false;
-        this.setState({state});
-    }
+    // dismissWinMessage() {
+    //     let state = this.state;
+    //     state.announceWinner = false;
+    //     this.setState({state});
+    // }
 
-    winMessage() {
-        return <Modal isOpen={this.state.announceWinner}>
-            <ModalHeader>{this.state.winner} wins!</ModalHeader>
-            <ModalBody>{this.state.winMessage}</ModalBody>
-            <ModalFooter>
-                <Button color="secondary" onClick={this.dismissWinMessage.bind(this)}>Exit</Button>
-            </ModalFooter>
-        </Modal>
-    }
+    // winMessage() {
+    //     return <Modal isOpen={this.state.announceWinner}>
+    //         <ModalHeader>{this.state.winner} wins!</ModalHeader>
+    //         <ModalBody>{this.state.winMessage}</ModalBody>
+    //         <ModalFooter>
+    //             <Button color="secondary" onClick={this.dismissWinMessage.bind(this)}>Exit</Button>
+    //         </ModalFooter>
+    //     </Modal>
+    // }
 
     turnMonitor() {
         let row = this.state.selectedPiece.row;
@@ -541,6 +541,8 @@ class GamePage extends Component {
         if (this.state.status === "Active" || this.state.status === "Pending") {
             this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
         }
+
+
     }
     componentWillUnmount() {
         clearInterval(this.interval);
@@ -554,10 +556,14 @@ class GamePage extends Component {
         let forfeitButton = <Button color="danger" onClick={() => {
             window.confirm("Are you sure you want to give up, "+ this.state.nickname + "?") && this.setWinnerAndForfeit();}}>FORFEIT</Button>;
         let yourTurn = this.state.playerTurn === this.state.nickname ? <h5>It's your turn. Make a move!</h5> : <h5>Waiting for opponent...</h5>;
+        console.log("announce winner: " + this.state.announceWinner);
+        if (this.state.announceWinner) {
+            yourTurn = <Alert color='success'>{this.state.winner + " wins! " + this.state.winMessage}</Alert>
+        }
         return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
-                    {this.winMessage()}
+                    {/*{this.winMessage()}*/}
                     {yourTurn}
                     {this.turnMonitor()}
                     {this.renderBoard()}
