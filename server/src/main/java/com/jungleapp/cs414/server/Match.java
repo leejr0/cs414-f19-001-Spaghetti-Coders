@@ -98,11 +98,11 @@ class Match {
 
         currentMatch.status = "Finished";
 
-        if (currentMatch.playerTurn.equals(currentMatch.playerBlue)) {
-            currentMatch.winner = currentMatch.playerRed;
-        } else {
-            currentMatch.winner = currentMatch.playerBlue;
-        }
+//        if (currentMatch.playerTurn.equals(currentMatch.playerBlue)) {
+//            currentMatch.winner = currentMatch.playerRed;
+//        } else {
+//            currentMatch.winner = currentMatch.playerBlue;
+//        }
 
         saveUpdatedMatch();
         return getMatchJSON();
