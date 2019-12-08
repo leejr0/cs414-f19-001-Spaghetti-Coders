@@ -81,7 +81,7 @@ class Register extends Component {
 
     validateEmail() {
         let email = this.state.profileInfo.email;
-        var validation = /[\w.]+@[\w]+(.com|.org)$/;
+        let validation = /[\w.]+@[\w]+(.com|.org|.net|.edu|.gov)$/;
         if(email === ""){
             return false;
         }

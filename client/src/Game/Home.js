@@ -1,6 +1,20 @@
 import React, {Component} from 'react';
 import classnames from 'classnames';
-import {Button, Card, CardBody, Col, Container, Jumbotron, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
+import {
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    Jumbotron,
+    Modal, ModalBody, ModalFooter, ModalHeader,
+    Nav,
+    NavItem,
+    NavLink,
+    Row,
+    TabContent,
+    TabPane
+} from "reactstrap";
 import {request} from "../api/api";
 import GamePage from "./GamePage";
 import Invite from "./Invite";
@@ -15,7 +29,7 @@ class Home extends Component {
             displayBoard: false,
             newGame: true,
             nickname: this.props.nickname,
-            homeState : 'Active',
+            homeState: 'Active',
             displayActive: false,
             displayFinished: false,
             gotGames: false,
@@ -23,33 +37,24 @@ class Home extends Component {
             activeBoard: null,
             finishedBoard: null,
             displayGames: true,
-            activeMatches: [
-                {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
-                {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
-                {gameID: 3, color: "blue", opponent: "Kim Possible", playerTurn: "Kim Possible", state: "active", winner: null}
-            ],
-            pendingMatches: [
-                {gameID: 123, color: "blue", opponent: "Toucan Sam", playerTurn: this.props.nickname, state: "pending", winner: null},
-                {gameID: 124, color: "blue", opponent: "Aang", playerTurn: "Aang", state: "pending", winner: null},
-                {gameID: 125, color: "red", opponent: "Tony Frank", playerTurn: this.props.nickname, state: "pending", winner: null}
-            ],
-            finishedMatches: [
-                {gameID: 43, color: "blue", opponent: "Stitch", playerTurn: null, state: "finished", winner: "Stitch"},
-                {gameID: 45, color: "red", opponent: "Zuko", playerTurn: null, state: "finished", winner: this.props.nickname},
-                {gameID: 76, color: "red", opponent: "Ash Ketchum", whoseTurn: null, state: "finished", winner: "Ash Ketchum"}
-            ],
+            showWinner: false,
+            winner: "",
+            winMessage: "But winning isn't everything. It's just the only thing that matters.",
+            activeMatches: [],
+            pendingMatches: [],
+            finishedMatches: [],
             startGame: {
                 gameID: "",
                 status: "",
                 playerBlue: "Player 1",
                 playerRed: "Player 2",
                 createNewBoard: true,
-                playerTurn: "Player 1"
+                playerTurn: "Player 1",
+                showWinner: false
             },
             getGame: {
                 nickname: this.props.nickname
-            },
-            oldBoard: null
+            }
         };
 
         this.showBoard = this.showBoard.bind(this);
@@ -66,6 +71,9 @@ class Home extends Component {
         this.changeGame = this.changeGame.bind(this);
         this.refresh = this.refresh.bind(this);
         this.clearGame = this.clearGame.bind(this);
+        this.showWinner = this.showWinner.bind(this);
+        this.dismissWinMessage = this.dismissWinMessage.bind(this);
+        this.winMessage = this.winMessage.bind(this);
     }
 
     changeGame() {
@@ -120,7 +128,31 @@ class Home extends Component {
             }
         }
 
-        this.setState({state});
+        this.setState({state}, () => this.checkWon());
+    }
+
+    checkWon() {
+        console.log("checkWon");
+        if(this.state.showWinner === false && this.state.startGame.gameID !== "" && this.state.activeBoard != null) {
+            let gameID = this.state.startGame.gameID;
+            let removed = false;
+            let index = -1;
+            for(let i = 0; i < this.state.finishedMatches.length; i++) {
+                if(gameID === this.state.finishedMatches[i].gameID) {
+                    removed = true;
+                    index = i;
+                }
+            }
+
+            if(removed === true && this.state.startGame.showWinner === true) {
+                let state = this.state;
+                state.showWinner = true;
+                state.startGame.showWinner = false;
+                state.activeBoard = null;
+                state.winner = this.state.finishedMatches[index].winner;
+                this.setState({state});
+            }
+        }
     }
 
     getGames() {
@@ -142,6 +174,7 @@ class Home extends Component {
         state.startGame.playerBlue = state[type][index].playerBlue;
         state.startGame.playerRed = state[type][index].playerRed;
         state.reset = true;
+        state.startGame.showWinner = true;
         state.activeBoard = null;
         state.finishedBoard = null;
 
@@ -287,7 +320,10 @@ class Home extends Component {
     currentGames(match) {
         let whoseTurn = match.playerTurn;
         let play = "PLAY";
-        if(whoseTurn === this.state.nickname) {
+        if(this.state.displayActive === true) {
+            play = "MINIMIZE"
+        }
+        else if(whoseTurn === this.state.nickname) {
             whoseTurn = "Your turn!";
         }
         else {
@@ -298,9 +334,11 @@ class Home extends Component {
             <div>
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
-                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent}</div></Col>
+                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent} | Game: {match.gameID}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{whoseTurn}</div></Col>
-                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.gameID,"active")} color={"success"} style={{margin: "3px"}}>{play}</Button></Col>
+                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() =>
+                            this.state.displayActive === true ? this.setState({displayActive: false, activeBoard: null}) : this.getMatch(match.gameID,"active")
+                                } color={this.state.displayActive !== true ? "success" : "danger"} style={{margin: "3px"}}>{play}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -309,6 +347,10 @@ class Home extends Component {
     }
 
     finishedGames(match) {
+        let view = "VIEW";
+        if(this.state.displayFinished === true) {
+            view = "MINIMIZE"
+        }
         let winner = match.winner;
         if(winner === this.state.nickname) {
             winner = "You won!"
@@ -320,9 +362,11 @@ class Home extends Component {
             <div>
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
-                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
+                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent} | Game: {match.gameID}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{winner}</div></Col>
-                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() => this.getMatch(match.gameID, "finished")} color={"success"} style={{margin: "3px"}}>VIEW</Button></Col>
+                        <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() =>
+                            this.state.displayFinished === true ? this.setState({displayFinished: false, finishedBoard: null}) : this.getMatch(match.gameID,"finished")
+                        } color={this.state.displayFinished !== true ? "success" : "danger"} style={{margin: "3px"}}>{view}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -330,9 +374,27 @@ class Home extends Component {
             </div>);
     }
 
+    dismissWinMessage() {
+        let state = this.state;
+        state.showWinner = false;
+        state.winner = "";
+        this.setState({state});
+    }
+
+    winMessage() {
+        return <Modal isOpen={this.state.showWinner}>
+            <ModalHeader>{this.state.winner} wins!</ModalHeader>
+            <ModalBody>{this.state.winMessage}</ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={this.dismissWinMessage.bind(this)}>Exit</Button>
+            </ModalFooter>
+        </Modal>
+    }
+
     getTabContents(type, gameID) {
         if(type === "Active") {
             let activeGames = [];
+            activeGames.push(this.winMessage());
             for(let i = 0; i < this.state.activeMatches.length; i++) {
                 activeGames.push(this.currentGames(this.state.activeMatches[i]));
                 if(gameID === this.state.activeMatches[i].gameID) {
@@ -413,10 +475,6 @@ class Home extends Component {
             console.log("polling...");
 
             this.getMatch(gameID, "active");
-            // if(this.state.board !== this.state.oldBoard) {
-            //     console.log("Board changed");
-            //     this.updateTurn(gameID, "active");
-            // }
             this.setState({state: this.state});
         }
     }
@@ -425,10 +483,6 @@ class Home extends Component {
         this.setState({activeBoard: null, reset: false});
     }
 
-    // toggleGames() {
-    //     this.setState({displayGames: !this.state.displayGames})
-    // }
-
     componentDidMount() {
         this.interval = setInterval(() => this.getGames(), 4000);
     }
@@ -436,8 +490,20 @@ class Home extends Component {
         clearInterval(this.interval);
     }
 
+    showWinner(winner, winMessage) {
+        console.log("showing winner");
+        let state = this.state;
+        state.winner = winner;
+        state.showWinner = true;
+        state.winMessage = winMessage;
+        state.displayActive = false;
+        state.activeBoard = null;
+        state.homeState = "Finished";
+        this.setState({state});
+    }
+
     render() {
-        console.log(this.state)
+        console.log(this.state);
         this.updatePlayerNames();
         if(!this.state.gotGames) {
             this.getGames();
@@ -451,17 +517,8 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
-        // let games = <div/>
-        // if(this.state.displayGames) {
-        //     games = <div>
-        //         {this.renderTabContents(active, 'Active')}
-        //         {this.renderTabContents(pending, 'Pending')}
-        //         {this.renderTabContents(finished, 'Finished')}
-        //     </div>
-        // }
-
         if(this.state.displayActive && this.state.reset) {
-            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
+            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} showWinner={this.showWinner} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
                 reset: false});
         }
 
@@ -493,8 +550,8 @@ class Home extends Component {
                         </Col>
                     </div>
                     <div>
-                        <Col md={{size:6, offset:3}}>
-                            <Jumbotron>
+                        <Col md={{size:10, offset:1}}>
+                            <Jumbotron style={{display: "block"}}>
                                 {this.renderTabContents(active, 'Active')}
                                 {this.renderTabContents(pending, 'Pending')}
                                 {this.renderTabContents(finished, 'Finished')}
