@@ -39,6 +39,7 @@ class Home extends Component {
             displayGames: true,
             showWinner: false,
             winner: "",
+            winMessage: "But winning isn't everything. It's just the only thing that matters.",
             activeMatches: [],
             pendingMatches: [],
             finishedMatches: [],
@@ -127,17 +128,19 @@ class Home extends Component {
             }
         }
 
-        this.setState({state}); //() => this.checkWon()
+        this.setState({state}, () => this.checkWon());
     }
 
     checkWon() {
         console.log("checkWon");
-        if(this.state.showWinner === false && this.state.startGame.gameID !== "") {
+        if(this.state.showWinner === false && this.state.startGame.gameID !== "" && this.state.activeBoard != null) {
             let gameID = this.state.startGame.gameID;
             let removed = false;
+            let index = -1;
             for(let i = 0; i < this.state.finishedMatches.length; i++) {
                 if(gameID === this.state.finishedMatches[i].gameID) {
                     removed = true;
+                    index = i;
                 }
             }
 
@@ -145,6 +148,8 @@ class Home extends Component {
                 let state = this.state;
                 state.showWinner = true;
                 state.startGame.showWinner = false;
+                state.activeBoard = null;
+                state.winner = this.state.finishedMatches[index].winner;
                 this.setState({state});
             }
         }
@@ -318,7 +323,7 @@ class Home extends Component {
         if(this.state.displayActive === true) {
             play = "MINIMIZE"
         }
-        if(whoseTurn === this.state.nickname) {
+        else if(whoseTurn === this.state.nickname) {
             whoseTurn = "Your turn!";
         }
         else {
@@ -492,6 +497,7 @@ class Home extends Component {
         state.showWinner = true;
         state.winMessage = winMessage;
         state.displayActive = false;
+        state.activeBoard = null;
         state.homeState = "Finished";
         this.setState({state});
     }
@@ -544,8 +550,8 @@ class Home extends Component {
                         </Col>
                     </div>
                     <div>
-                        <Col md={{size:6, offset:3}}>
-                            <Jumbotron>
+                        <Col md={{size:10, offset:1}}>
+                            <Jumbotron style={{display: "block"}}>
                                 {this.renderTabContents(active, 'Active')}
                                 {this.renderTabContents(pending, 'Pending')}
                                 {this.renderTabContents(finished, 'Finished')}

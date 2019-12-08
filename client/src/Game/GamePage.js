@@ -541,7 +541,7 @@ class GamePage extends Component {
 
     componentDidMount() {
         if (this.state.status === "Active" || this.state.status === "Pending") {
-            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
+            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 1500);
         }
     }
     componentWillUnmount() {
