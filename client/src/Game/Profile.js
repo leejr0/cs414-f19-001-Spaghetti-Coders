@@ -26,7 +26,6 @@ class Profile extends Component {
     }
 
     retrieveInformation() {
-        console.log("Profile information");
         let state = this.state;
         state.gotProfile = true;
         state.nickname = this.props.profile.nickname;
@@ -143,9 +142,6 @@ class Profile extends Component {
     }
 
     render() {
-        console.log("Profile state: " + this.state.losses);
-        console.log("Profile state1: " + this.props.profile.losses);
-        console.log(this.state.gotProfile);
         if(this.state.gotProfile === false) {
             this.retrieveInformation();
         }
