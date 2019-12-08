@@ -1,6 +1,20 @@
 import React, {Component} from 'react';
 import classnames from 'classnames';
-import {Button, Card, CardBody, Col, Container, Jumbotron, Nav, NavItem, NavLink, Row, TabContent, TabPane} from "reactstrap";
+import {
+    Button,
+    Card,
+    CardBody,
+    Col,
+    Container,
+    Jumbotron,
+    Modal, ModalBody, ModalFooter, ModalHeader,
+    Nav,
+    NavItem,
+    NavLink,
+    Row,
+    TabContent,
+    TabPane
+} from "reactstrap";
 import {request} from "../api/api";
 import GamePage from "./GamePage";
 import Invite from "./Invite";
@@ -15,7 +29,7 @@ class Home extends Component {
             displayBoard: false,
             newGame: true,
             nickname: this.props.nickname,
-            homeState : 'Active',
+            homeState: 'Active',
             displayActive: false,
             displayFinished: false,
             gotGames: false,
@@ -23,21 +37,11 @@ class Home extends Component {
             activeBoard: null,
             finishedBoard: null,
             displayGames: true,
-            activeMatches: [
-                {gameID: 1, color: "red", opponent: "stuffity", playerTurn: this.props.nickname, state: "active", winner: null},
-                {gameID: 2, color: "red", opponent: "Dave Matthews", playerTurn: "Dave Matthews", state: "active", winner: null},
-                {gameID: 3, color: "blue", opponent: "Kim Possible", playerTurn: "Kim Possible", state: "active", winner: null}
-            ],
-            pendingMatches: [
-                {gameID: 123, color: "blue", opponent: "Toucan Sam", playerTurn: this.props.nickname, state: "pending", winner: null},
-                {gameID: 124, color: "blue", opponent: "Aang", playerTurn: "Aang", state: "pending", winner: null},
-                {gameID: 125, color: "red", opponent: "Tony Frank", playerTurn: this.props.nickname, state: "pending", winner: null}
-            ],
-            finishedMatches: [
-                {gameID: 43, color: "blue", opponent: "Stitch", playerTurn: null, state: "finished", winner: "Stitch"},
-                {gameID: 45, color: "red", opponent: "Zuko", playerTurn: null, state: "finished", winner: this.props.nickname},
-                {gameID: 76, color: "red", opponent: "Ash Ketchum", whoseTurn: null, state: "finished", winner: "Ash Ketchum"}
-            ],
+            showWinner: false,
+            winner: "",
+            activeMatches: [],
+            pendingMatches: [],
+            finishedMatches: [],
             startGame: {
                 gameID: "",
                 status: "",
@@ -48,8 +52,7 @@ class Home extends Component {
             },
             getGame: {
                 nickname: this.props.nickname
-            },
-            oldBoard: null
+            }
         };
 
         this.showBoard = this.showBoard.bind(this);
@@ -66,6 +69,9 @@ class Home extends Component {
         this.changeGame = this.changeGame.bind(this);
         this.refresh = this.refresh.bind(this);
         this.clearGame = this.clearGame.bind(this);
+        this.showWinner = this.showWinner.bind(this);
+        this.dismissWinMessage = this.dismissWinMessage.bind(this);
+        this.winMessage = this.winMessage.bind(this);
     }
 
     changeGame() {
@@ -330,9 +336,27 @@ class Home extends Component {
             </div>);
     }
 
+    dismissWinMessage() {
+        let state = this.state;
+        state.showWinner = false;
+        state.winner = "";
+        this.setState({state});
+    }
+
+    winMessage() {
+        return <Modal isOpen={this.state.showWinner}>
+            <ModalHeader>{this.state.winner} wins!</ModalHeader>
+            <ModalBody>{this.state.winMessage}</ModalBody>
+            <ModalFooter>
+                <Button color="secondary" onClick={this.dismissWinMessage.bind(this)}>Exit</Button>
+            </ModalFooter>
+        </Modal>
+    }
+
     getTabContents(type, gameID) {
         if(type === "Active") {
             let activeGames = [];
+            activeGames.push(this.winMessage());
             for(let i = 0; i < this.state.activeMatches.length; i++) {
                 activeGames.push(this.currentGames(this.state.activeMatches[i]));
                 if(gameID === this.state.activeMatches[i].gameID) {
@@ -413,10 +437,6 @@ class Home extends Component {
             console.log("polling...");
 
             this.getMatch(gameID, "active");
-            // if(this.state.board !== this.state.oldBoard) {
-            //     console.log("Board changed");
-            //     this.updateTurn(gameID, "active");
-            // }
             this.setState({state: this.state});
         }
     }
@@ -425,10 +445,6 @@ class Home extends Component {
         this.setState({activeBoard: null, reset: false});
     }
 
-    // toggleGames() {
-    //     this.setState({displayGames: !this.state.displayGames})
-    // }
-
     componentDidMount() {
         this.interval = setInterval(() => this.getGames(), 4000);
     }
@@ -436,8 +452,19 @@ class Home extends Component {
         clearInterval(this.interval);
     }
 
+    showWinner(winner, winMessage) {
+        console.log("showing winner");
+        let state = this.state;
+        state.winner = winner;
+        state.showWinner = true;
+        state.winMessage = winMessage;
+        state.displayActive = false;
+        state.homeState = "Finished";
+        this.setState({state});
+    }
+
     render() {
-        console.log(this.state)
+        console.log(this.state);
         this.updatePlayerNames();
         if(!this.state.gotGames) {
             this.getGames();
@@ -451,17 +478,8 @@ class Home extends Component {
             board = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame}/>;
         }
 
-        // let games = <div/>
-        // if(this.state.displayGames) {
-        //     games = <div>
-        //         {this.renderTabContents(active, 'Active')}
-        //         {this.renderTabContents(pending, 'Pending')}
-        //         {this.renderTabContents(finished, 'Finished')}
-        //     </div>
-        // }
-
         if(this.state.displayActive && this.state.reset) {
-            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
+            this.setState({activeBoard: <GamePage board={this.state.board} newGame={this.state.newGame} showWinner={this.showWinner} updateTurn={this.updateTurn} clearGame={this.clearGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname} refresh={this.refresh}/>,
                 reset: false});
         }
 
