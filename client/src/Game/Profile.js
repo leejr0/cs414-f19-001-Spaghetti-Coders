@@ -7,12 +7,12 @@ class Profile extends Component {
         super(props);
 
         this.state = {
-            nickname: this.props.nickname,
-            password: "",
-            ratio: null,
-            wins: null,
-            losses: null,
-            email: "",
+            nickname: this.props.profile.nickname,
+            password: this.props.profile.password,
+            ratio: this.props.profile.ratio,
+            wins: this.props.profile.wins,
+            losses: this.props.profile.losses,
+            email: this.props.profile.email,
             gotProfile: false,
             newPassword: null,
             newEmail: null,
@@ -26,17 +26,17 @@ class Profile extends Component {
     }
 
     retrieveInformation() {
-        request(this.state,"retrieveProfile").then(profile => {
-            let state = this.state;
-            state.nickname = profile.nickname;
-            state.password = profile.password;
-            state.ratio = profile.ratio.toFixed(2);
-            state.wins = profile.wins;
-            state.losses = profile.losses;
-            state.email = profile.email;
-            state.gotProfile = true;
-            this.setState( {state});
-        });
+        console.log("Profile information");
+        let state = this.state;
+        state.gotProfile = true;
+        state.nickname = this.props.profile.nickname;
+        state.password = this.props.profile.password;
+        state.ratio = this.props.profile.ratio;
+        state.wins = this.props.profile.wins;
+        state.losses = this.props.profile.losses;
+        state.email = this.props.profile.email;
+        this.setState({state});
+
     }
 
     unregister() {
@@ -143,8 +143,14 @@ class Profile extends Component {
     }
 
     render() {
+        console.log("Profile state: " + this.state.losses);
+        console.log("Profile state1: " + this.props.profile.losses);
+        console.log(this.state.gotProfile);
         if(this.state.gotProfile === false) {
-        this.retrieveInformation();
+            this.retrieveInformation();
+        }
+        if(this.state.losses !== this.props.profile.losses || this.state.wins !== this.props.profile.wins) {
+            this.retrieveInformation();
         }
         let errorMessage;
         if(this.state.errorMessage !== null){
