@@ -329,7 +329,7 @@ class Home extends Component {
             <div>
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
-                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent}</div></Col>
+                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent} | Game: {match.gameID}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{whoseTurn}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() =>
                             this.state.displayActive === true ? this.setState({displayActive: false, activeBoard: null}) : this.getMatch(match.gameID,"active")
@@ -357,7 +357,7 @@ class Home extends Component {
             <div>
                 <Card style={{display: "inline-block", minWidth: "100%"}}>
                     <Row>
-                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>{match.opponent}</div></Col>
+                        <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent} | Game: {match.gameID}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{winner}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() =>
                             this.state.displayFinished === true ? this.setState({displayFinished: false, finishedBoard: null}) : this.getMatch(match.gameID,"finished")
