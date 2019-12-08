@@ -165,7 +165,7 @@ class GamePage extends Component {
         piece.col = null;
         move.toRow = null;
         move.toCol = null;
-        this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move}, () => this.stopPolling);
+        this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move});
     }
 
     stopPolling() {
@@ -174,24 +174,19 @@ class GamePage extends Component {
         }
     }
 
-    forfeitMatch(forfeiter) {
-        console.log("winner: " + this.state.winner);
+    forfeitMatch() {
+        console.log(this.state.playerTurn + " has forfeited the match.");
         request(this.state, "forfeitMatch").then(gameState => {
-            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined), winMessage: forfeiter + " didn't want to play anymore..."});
+            this.setState({
+                jungleBoard: gameState.jungleBoard,
+                winner: gameState.winner,
+                playerBlue: gameState.playerBlue,
+                playerRed: gameState.playerRed,
+                playerTurn: gameState.playerTurn,
+                isActive: gameState.isActive,
+                announceWinner: true
+            }, () => this.stopPolling());
         });
-    }
-
-    setWinnerAndForfeit() {
-        let forfeiter = this.state.nickname;
-
-        if (forfeiter === this.state.playerBlue) {
-            this.setState({winner: this.state.playerRed}, () => this.forfeitMatch(forfeiter));
-        } else if (forfeiter === this.state.playerRed) {
-            this.setState({winner: this.state.playerBlue}, () => this.forfeitMatch(forfeiter));
-        } else {
-            console.log("Invalid Forfeit");
-        }
-        console.log(forfeiter + " has forfeited the match.");
     }
 
     resetPieces(board) {
@@ -539,7 +534,7 @@ class GamePage extends Component {
 
     componentDidMount() {
         if (this.state.status === "Active" || this.state.status === "Pending") {
-            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
+            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 1500);
         }
     }
     componentWillUnmount() {
@@ -551,13 +546,13 @@ class GamePage extends Component {
         if(this.state.newGame) {
             this.newBoard()
         }
-        let forfeitButton = <Button color="danger" onClick={() => {
-            window.confirm("Are you sure you want to give up, "+ this.state.nickname + "?") && this.setWinnerAndForfeit();}}>FORFEIT</Button>;
+        let forfeitButton = <Button disabled={this.state.playerTurn !== this.state.nickname} color="danger" onClick={() => {
+            window.confirm("Are you sure you want to give up, "+ this.state.nickname + "?") && this.forfeitMatch();}}>FORFEIT</Button>;
         let yourTurn = this.state.playerTurn === this.state.nickname ? <h5>It's your turn. Make a move!</h5> : <h5>Waiting for opponent...</h5>;
         return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
-                    {this.winMessage()}
+                    {/*{this.winMessage()}*/}
                     {yourTurn}
                     {this.turnMonitor()}
                     {this.renderBoard()}
