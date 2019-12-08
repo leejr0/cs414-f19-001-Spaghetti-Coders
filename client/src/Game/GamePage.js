@@ -555,6 +555,9 @@ class GamePage extends Component {
         }
         let forfeitButton = <Button color="danger" onClick={() => {
             window.confirm("Are you sure you want to give up, "+ this.state.nickname + "?") && this.setWinnerAndForfeit();}}>FORFEIT</Button>;
+        if(this.state.winner !== "") {
+            forfeitButton = <div/>
+        }
         let yourTurn = this.state.playerTurn === this.state.nickname ? <h5>It's your turn. Make a move!</h5> : <h5>Waiting for opponent...</h5>;
         return (<div>
             <Container style={{display: 'inline-block'}}>

@@ -320,7 +320,7 @@ class Home extends Component {
     currentGames(match) {
         let whoseTurn = match.playerTurn;
         let play = "PLAY";
-        if(this.state.displayActive === true) {
+        if(this.state.displayActive === true && this.state.startGame.gameID === match.gameID) {
             play = "MINIMIZE"
         }
         else if(whoseTurn === this.state.nickname) {
@@ -337,8 +337,8 @@ class Home extends Component {
                         <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent} | Game: {match.gameID}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{whoseTurn}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() =>
-                            this.state.displayActive === true ? this.setState({displayActive: false, activeBoard: null}) : this.getMatch(match.gameID,"active")
-                                } color={this.state.displayActive !== true ? "success" : "danger"} style={{margin: "3px"}}>{play}</Button></Col>
+                            this.state.displayActive === true && this.state.startGame.gameID === match.gameID ? this.setState({displayActive: false, activeBoard: null}) : this.getMatch(match.gameID,"active")
+                                } color={this.state.displayActive === true && this.state.startGame.gameID === match.gameID ? "danger" : "success"} style={{margin: "3px"}}>{play}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
@@ -348,7 +348,7 @@ class Home extends Component {
 
     finishedGames(match) {
         let view = "VIEW";
-        if(this.state.displayFinished === true) {
+        if(this.state.displayFinished === true && this.state.startGame.gameID === match.gameID) {
             view = "MINIMIZE"
         }
         let winner = match.winner;
@@ -365,8 +365,8 @@ class Home extends Component {
                         <Col xs="4" md="4"><div style={{marginTop: "10px"}}>Opponent: {match.opponent} | Game: {match.gameID}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><div style={{marginTop: "10px"}}>{winner}</div></Col>
                         <Col xs="4" md="4" style={{borderLeft: "1px solid black"}}><Button onClick={() =>
-                            this.state.displayFinished === true ? this.setState({displayFinished: false, finishedBoard: null}) : this.getMatch(match.gameID,"finished")
-                        } color={this.state.displayFinished !== true ? "success" : "danger"} style={{margin: "3px"}}>{view}</Button></Col>
+                            this.state.displayFinished === true  && this.state.startGame.gameID === match.gameID ? this.setState({displayFinished: false, finishedBoard: null}) : this.getMatch(match.gameID,"finished")
+                        } color={this.state.displayFinished === true  && this.state.startGame.gameID === match.gameID ? "danger" : "success"} style={{margin: "3px"}}>{view}</Button></Col>
                     </Row>
                 </Card>
                 <br/>
