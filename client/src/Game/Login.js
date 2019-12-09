@@ -32,7 +32,6 @@ class Login extends Component {
     }
 
     validateCredentials() {
-        //TODO: Hash given password
         request(this.state.loginInfo, "login").then(serverResponse => {
             this.updateValidation(serverResponse);
         });
@@ -58,8 +57,6 @@ class Login extends Component {
         this.setState(({state}, window.location.reload()));
     }
 
-
-
     render() {
         let errorMessage;
         if(this.state.errorMessage !== ""){
@@ -68,7 +65,6 @@ class Login extends Component {
 
         return (
             <div id="logIn" style={{width: "600px", display: "inline-block"}}>
-
                 <Card>
                     <div style={{width: "400px", margin: "auto"}}>
 

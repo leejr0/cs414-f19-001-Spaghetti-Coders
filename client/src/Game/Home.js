@@ -525,7 +525,6 @@ class Home extends Component {
         if(this.state.displayFinished && this.state.reset) {
             this.setState({finishedBoard: <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>,
                 reset: false});
-            // finishedBoard = <GamePage board={this.state.board} newGame={this.state.newGame} startGame={this.state.startGame} changeGame={this.changeGame} nickname={this.state.nickname}/>;
         }
         let active = [<div> {this.getTabContents("Active",this.state.startGame.gameID)}</div>];
 

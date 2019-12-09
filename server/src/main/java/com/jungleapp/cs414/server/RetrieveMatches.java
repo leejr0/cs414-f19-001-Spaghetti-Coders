@@ -25,7 +25,6 @@ class RetrieveMatches {
         else{
             this.ID = Integer.parseInt(request.body());
         }
-
         connection = MySQLConnection.establishMySQLConnection();
     }
 
@@ -91,7 +90,6 @@ class RetrieveMatches {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         // Something went horribly wrong with the database, return red flag.
         return null;
     }

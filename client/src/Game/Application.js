@@ -23,7 +23,6 @@ class Application extends Component {
             state.profile.nickname = nickname;
             this.setState(state);
         }
-
     }
 
     render() {
@@ -40,7 +39,7 @@ class Application extends Component {
                 <Welcome
                 updateLogin={this.updateLogin}/>
             </div>
-        )//In case we want more space at the top: style={{margin: '50 0 0 0'}}
+        )
     }
 }
 
