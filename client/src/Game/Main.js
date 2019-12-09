@@ -30,7 +30,19 @@ class Main extends Component {
         this.state = {
             display: true,
             activeTab: "Home",
+            getProfile: false,
+            requestProfile: true,
+            profile: {
+                nickname: this.props.nickname,
+                password: "",
+                ratio: null,
+                wins: null,
+                losses: null,
+                email: ""
+            }
         };
+
+        this.retrieveInformation = this.retrieveInformation.bind(this);
     }
 
     toggleTab(tabID) {
@@ -41,11 +53,28 @@ class Main extends Component {
         }
     }
 
+    retrieveInformation() {
+        console.log("retrieving");
+        request(this.state.profile,"retrieveProfile").then(profile => {
+            console.log("Main's: " + profile.ratio);
+            let state = this.state;
+            state.getProfile = true;
+            state.profile.nickname = profile.nickname;
+            state.profile.password = profile.password;
+            state.profile.ratio = profile.ratio.toFixed(2);
+            state.profile.wins = profile.wins;
+            state.profile.losses = profile.losses;
+            state.profile.email = profile.email;
+            this.setState( {state});
+        });
+    }
+
     renderTab(tabID) {
         return (
             <NavItem key={tabID}>
                 <NavLink key={tabID}
                          onClick={() => {
+                             this.retrieveInformation();
                              this.toggleTab(tabID);
                          }}
                 >
@@ -79,19 +108,22 @@ class Main extends Component {
     }
 
     render() {
+        if(this.state.getProfile === false) {
+            this.retrieveInformation();
+        }
         if(!this.state.display) {
             return (<h5> </h5>);
         }
 
         let tabs = ["Home", "Profile", "Rules"];
         let home = [
-            <Home nickname={this.props.nickname}/>
+            <Home nickname={this.props.nickname} updateProfile={this.updateProfile}/>
         ];
         let profile = [
             <Card key="cardkey">
                 <CardBody key="cardbodykey">
                     <br/>
-                    <Profile nickname={this.props.nickname}/>
+                    <Profile nickname={this.props.nickname} profile={this.state.profile} updateProfile={this.updateProfile} requestProfile={this.state.requestProfile}/>
                 </CardBody>
             </Card>
         ];

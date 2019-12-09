@@ -7,12 +7,12 @@ class Profile extends Component {
         super(props);
 
         this.state = {
-            nickname: this.props.nickname,
-            password: "",
-            ratio: null,
-            wins: null,
-            losses: null,
-            email: "",
+            nickname: this.props.profile.nickname,
+            password: this.props.profile.password,
+            ratio: this.props.profile.ratio,
+            wins: this.props.profile.wins,
+            losses: this.props.profile.losses,
+            email: this.props.profile.email,
             gotProfile: false,
             newPassword: null,
             newEmail: null,
@@ -26,17 +26,16 @@ class Profile extends Component {
     }
 
     retrieveInformation() {
-        request(this.state,"retrieveProfile").then(profile => {
-            let state = this.state;
-            state.nickname = profile.nickname;
-            state.password = profile.password;
-            state.ratio = profile.ratio.toFixed(2);
-            state.wins = profile.wins;
-            state.losses = profile.losses;
-            state.email = profile.email;
-            state.gotProfile = true;
-            this.setState( {state});
-        });
+        let state = this.state;
+        state.gotProfile = true;
+        state.nickname = this.props.profile.nickname;
+        state.password = this.props.profile.password;
+        state.ratio = this.props.profile.ratio;
+        state.wins = this.props.profile.wins;
+        state.losses = this.props.profile.losses;
+        state.email = this.props.profile.email;
+        this.setState({state});
+
     }
 
     unregister() {
@@ -58,7 +57,8 @@ class Profile extends Component {
     validateEmail() {
         if (this.state.newEmail !== null){
             let email = this.state.newEmail;
-            let validation = /[\w.]+@[\w]+(.com|.org|.edu|.net|.gov)$/;
+            //let validation = /[\w.]+@[\w]+(.com|.org|.edu|.net|.gov)$/;
+            let validation = /(?:[a-z0-9!#$%&'*+=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
             if (!email.includes("@") || email === "") {
                 return false;
             }
@@ -143,7 +143,10 @@ class Profile extends Component {
 
     render() {
         if(this.state.gotProfile === false) {
-        this.retrieveInformation();
+            this.retrieveInformation();
+        }
+        if(this.state.losses !== this.props.profile.losses || this.state.wins !== this.props.profile.wins) {
+            this.retrieveInformation();
         }
         let errorMessage;
         if(this.state.errorMessage !== null){
