@@ -143,7 +143,7 @@ class Profile extends Component {
 
     render() {
         if(this.state.gotProfile === false) {
-            this.retrieveInformation();
+        this.retrieveInformation();
         }
         let errorMessage;
         if(this.state.errorMessage !== null){

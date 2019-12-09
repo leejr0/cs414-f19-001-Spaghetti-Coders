@@ -108,6 +108,7 @@ class GamePage extends Component {
 
         this.newBoard = this.newBoard.bind(this);
         this.stopPolling = this.stopPolling.bind(this);
+        this.checkWinner = this.checkWinner.bind(this);
     }
 
     makeMove() {
@@ -128,14 +129,23 @@ class GamePage extends Component {
                 playerTurn: gameState.playerTurn,
                 isActive: gameState.isActive,
                 announceWinner: (gameState.winner !== undefined) //evaluates to true if there is a winner}
-            });
+            }, () => this.checkWinner(gameState.winner, this.state.winMessage));
         });
 
+
+        //reset selections after move attempt
         piece.row = null;
         piece.col = null;
         move.toRow = null;
         move.toCol = null;
         this.setState({board: updatedBoard, selectedPiece: piece, chosenMove: move}, () => this.stopPolling);
+    }
+
+    checkWinner(winner, winMessage) {
+        console.log("Winner(for testing): " + this.state.winner);
+        if(winner !== undefined && winner !== null && winner !== "") {
+            this.props.showWinner(winner, winMessage);
+        }
     }
 
     stopPolling() {
@@ -147,7 +157,7 @@ class GamePage extends Component {
     forfeitMatch(forfeiter) {
         console.log("winner: " + this.state.winner);
         request(this.state, "forfeitMatch").then(gameState => {
-            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined), winMessage: forfeiter + " didn't want to play anymore..."});
+            this.setState({winner: gameState.winner, announceWinner: (gameState.winner !== undefined), winMessage: forfeiter + " didn't want to play anymore..."}, () => this.props.showWinner(gameState.winner, this.state.winMessage));
         });
     }
 
@@ -505,7 +515,7 @@ class GamePage extends Component {
 
     componentDidMount() {
         if (this.state.status === "Active" || this.state.status === "Pending") {
-            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 4000);
+            this.interval = setInterval(() => this.props.refresh(this.state.gameID, this.state.playerTurn, this.state.nickname, this.state.status), 1500);
         }
     }
     componentWillUnmount() {
@@ -523,7 +533,6 @@ class GamePage extends Component {
         return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
-                    {this.winMessage()}
                     {yourTurn}
                     {this.turnMonitor()}
                     {this.renderBoard()}
