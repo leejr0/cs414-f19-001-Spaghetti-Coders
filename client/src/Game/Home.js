@@ -278,7 +278,7 @@ class Home extends Component {
                 //Refresh page without the game?
             }
             else {
-                this.removeInvite(index);
+                this.removeInvite(index,true);
                 this.getGames();
             }
         });
