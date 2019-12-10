@@ -536,8 +536,8 @@ class GamePage extends Component {
         return (<div>
             <Container style={{display: 'inline-block'}}>
                 <div style={{display: 'inline-block'}} id="GamePage">
-                    {yourTurn}
-                    {this.turnMonitor()}
+                    {this.state.status === "Active" ? yourTurn : null}
+                    {this.state.status === "Active" ? this.turnMonitor(): null}
                     {this.renderBoard()}
                     <PieceGuide playerBlue={this.state.playerBlue} playerRed={this.state.playerRed}/>
                 </div>
